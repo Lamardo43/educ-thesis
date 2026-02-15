@@ -1,0 +1,21 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{import}\PYG{+w}{ }\PYG{n+nx}{cookieParser}\PYG{+w}{ }\PYG{k+kr}{from}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}cookie\PYGZhy{}parser\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{import}\PYG{+w}{ }\PYG{n+nx}{csurf}\PYG{+w}{ }\PYG{k+kr}{from}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}csurf\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{async}\PYG{+w}{ }\PYG{k+kd}{function}\PYG{+w}{ }\PYG{n+nx}{bootstrap}\PYG{p}{()}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{  }\PYG{k+kd}{const}\PYG{+w}{ }\PYG{n+nx}{app}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n+nx}{NestFactory}\PYG{p}{.}\PYG{n+nx}{create}\PYG{p}{(}\PYG{n+nx}{AppModule}\PYG{p}{);}
+\PYG{+w}{  }\PYG{n+nx}{app}\PYG{p}{.}\PYG{n+nx}{use}\PYG{p}{(}\PYG{n+nx}{cookieParser}\PYG{p}{());}
+\PYG{+w}{  }\PYG{n+nx}{app}\PYG{p}{.}\PYG{n+nx}{use}\PYG{p}{(}
+\PYG{+w}{    }\PYG{n+nx}{csurf}\PYG{p}{(\PYGZob{}}
+\PYG{+w}{      }\PYG{n+nx}{cookie}\PYG{o}{:}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n+nx}{httpOnly}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{true}\PYG{p}{,}\PYG{+w}{ }\PYG{c+c1}{// токен CSRF недоступен через JS}
+\PYG{+w}{        }\PYG{n+nx}{secure}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{true}\PYG{p}{,}
+\PYG{+w}{        }\PYG{n+nx}{sameSite}\PYG{o}{:}\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}strict\PYGZsq{}}\PYG{p}{,}
+\PYG{+w}{      }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}),}
+\PYG{+w}{  }\PYG{p}{);}
+\PYG{+w}{  }\PYG{n+nx}{app}\PYG{p}{.}\PYG{n+nx}{useGlobalFilters}\PYG{p}{(}\PYG{o+ow}{new}\PYG{+w}{ }\PYG{n+nx}{HttpExceptionFilter}\PYG{p}{());}
+\PYG{+w}{  }\PYG{n+nx}{app}\PYG{p}{.}\PYG{n+nx}{useGlobalPipes}\PYG{p}{(}\PYG{o+ow}{new}\PYG{+w}{ }\PYG{n+nx}{ValidationPipe}\PYG{p}{(\PYGZob{}}\PYG{+w}{ }\PYG{n+nx}{whitelist}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{true}\PYG{+w}{ }\PYG{p}{\PYGZcb{}));}
+\PYG{+w}{  }\PYG{n+nx}{app}\PYG{p}{.}\PYG{n+nx}{enableCors}\PYG{p}{(\PYGZob{}}\PYG{n+nx}{origin}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{process.env.CORS}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{credentials}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{true}\PYG{p}{\PYGZcb{});}
+\PYG{+w}{  }\PYG{k}{await}\PYG{+w}{ }\PYG{n+nx}{app}\PYG{p}{.}\PYG{n+nx}{listen}\PYG{p}{(}\PYG{n+nx}{process}\PYG{p}{.}\PYG{n+nx}{env}\PYG{p}{.}\PYG{n+nx}{PORT}\PYG{+w}{ }\PYG{o}{??}\PYG{+w}{ }\PYG{l+m+mf}{3000}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

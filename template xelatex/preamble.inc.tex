@@ -1,0 +1,182 @@
+\sloppy
+
+% Настройки стиля ГОСТ 7-32
+% Для начала определяем, хотим мы или нет, чтобы рисунки и таблицы нумеровались в пределах раздела, или нам нужна сквозная нумерация.
+% \EqInChapter % формулы будут нумероваться в пределах раздела
+% \TableInChapter % таблицы будут нумероваться в пределах раздела
+% \PicInChapter % рисунки будут нумероваться в пределах раздела
+
+% Добавляем гипертекстовое оглавление в PDF
+\usepackage[
+bookmarks=true, colorlinks=true, unicode=true,
+urlcolor=black,linkcolor=black, anchorcolor=black,
+citecolor=black, menucolor=black, filecolor=black,
+]{hyperref}
+
+\urlstyle{same}
+
+\usepackage{pdfpages}
+
+% Изменение начертания шрифта --- после чего выглядит таймсоподобно.
+% apt-get install scalable-cyrfonts-tex
+
+% \IfFileExists{cyrtimes.sty}
+%     {
+        % \usepackage{cyrtimespatched}
+%     }
+%     {
+%         % А если Times нету, то будет CM...
+%     }
+
+\usepackage{graphicx}   % Пакет для включения рисунков
+\graphicspath{{images/}}
+
+% С такими оно полями оно работает по-умолчанию:
+% \RequirePackage[left=20mm,right=10mm,top=20mm,bottom=20mm,headsep=0pt]{geometry}
+% Если вас тошнит от поля в 10мм --- увеличивайте до 20-ти, ну и про переплёт не забывайте:
+
+% Пакет Tikz
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning,shadows}
+
+% Произвольная нумерация списков.
+\usepackage{enumerate}
+
+% ячейки в несколько строчек
+\usepackage{multirow}
+
+% itemize внутри tabular
+\usepackage{paralist,array}
+
+% Таблицы
+\usepackage{array} % расширенные возможности для работы с таблицами
+\usepackage{tabularx} % автоматический подбор ширины столбцов
+\usepackage{dcolumn} % выравнивание чисел по разделителю
+
+\usepackage{setspace} % полуторный интервал
+\setstretch{1.43}
+
+\newenvironment{compactlist}{%
+    \renewcommand{\labelenumi}{\hspace{13mm}\arabic{enumi}.}
+    \setlength{\topsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\itemsep}{0pt}%
+    \setlength{\parsep}{0pt}%
+    \begin{enumerate}%
+}{%
+    \end{enumerate}%
+}
+
+\makeatletter
+\renewcommand*\l@section{\@dottedtocline{1}{0em}{2.3em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{0em}{3.2em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{0em}{4.1em}}
+\makeatother
+
+
+\usepackage{caption}
+\usepackage{ragged2e}
+
+\DeclareCaptionJustification{centerednohyphen}{\Centering\hyphenpenalty=10000\exhyphenpenalty=10000}
+\DeclareCaptionLabelSeparator{shortdash}{ \textendash\ }
+
+\usepackage{caption}
+
+\usepackage{float}
+\setlength{\floatsep}{0pt}
+\setlength{\textfloatsep}{0pt}
+\setlength{\intextsep}{7pt}
+
+\captionsetup{aboveskip=7pt,belowskip=0pt,justification=centerednohyphen,singlelinecheck=false,labelsep=shortdash}
+\captionsetup[table]{justification=RaggedRight,singlelinecheck=false}
+\captionsetup[figure]{justification=centerednohyphen,singlelinecheck=false}
+\captionsetup[listing]{justification=RaggedRight,singlelinecheck=false, position=top}
+\captionsetup[listing]{position=top}
+
+\usepackage{chngcntr}
+
+\usepackage{mdframed}
+\usepackage{xcolor}
+
+\mdfsetup{
+linecolor=black,
+linewidth=1pt,
+roundcorner=5pt,
+innerleftmargin=5pt,
+innerrightmargin=5pt,
+innertopmargin=5pt,
+innerbottommargin=5pt,
+skipabove=0pt, % Reduces space above the frame
+skipbelow=0pt, % Reduces space below the frame
+leftmargin=0pt, % Reduces left outer margin
+rightmargin=0pt % Reduces right outer margin
+}
+
+\usepackage[chapter]{minted}
+
+% Configure captions for minted's listing environment
+\captionsetup[listing]{
+    position=top,
+    justification=RaggedRight,
+    singlelinecheck=false
+}
+
+% Alternative: Force all float captions to top
+\floatstyle{plaintop}
+\restylefloat{listing}
+
+\setminted{
+    linenos=true,           % включить номера строк
+    numberblanklines=false, % не нумеровать пустые строки
+    numbersep=5pt,          % расстояние между номерами строк и кодом
+    xleftmargin=1em,        % отступ слева, чтобы номера не вылезали за границы
+    fontsize=\small,
+    breakanywhere=true,
+    breakautoindent=true,
+    breaklines=true,
+}
+
+\renewcommand{\listingscaption}{Листинг}
+\renewcommand{\listoflistingscaption}{Листинги}
+
+
+\makeatletter
+\let\oldtableofcontents\tableofcontents
+\renewcommand{\tableofcontents}{%
+  \begingroup
+  \hyphenpenalty=10000
+  \exhyphenpenalty=10000
+  \oldtableofcontents
+  \endgroup
+}
+\makeatother
+
+\makeatletter
+\def\@hangfrom#1{\setbox\@tempboxa\hbox{{#1}}%
+      \hangindent 0pt%\wd\@tempboxa
+      \noindent\box\@tempboxa}
+\makeatother
+
+\usepackage{etoolbox}
+\AtEndEnvironment{listing}{\vspace{-10pt}}
+\AtEndEnvironment{table}{\vspace{-10pt}}
+\AtEndEnvironment{center}{\vspace{-14pt}}
+\AtEndEnvironment{figure}{\vspace{-14pt}}
+
+
+\usepackage{fontspec}
+
+% Указываем шрифты для основного текста и для кириллицы:
+\setmainfont{Times New Roman} % если установлен в системе
+% \setsansfont{Times New Roman}
+% \setmonofont{Times New Roman}
+\newfontfamily\cyrillicfont{Times New Roman} % для кириллического текста
+
+% Убирает точку после номера главы
+\makeatletter
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\@seccntformat}[1]{%
+  {\fontsize{14pt}{21pt}\selectfont\bfseries \csname the#1\endcsname}\hspace{1em}%
+}
+\makeatother

@@ -1,0 +1,35 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+
+\PYG{+w}{    }\PYG{n+nt}{volumes}\PYG{p}{:}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{./nginx.conf:/etc/nginx/conf.d/default.conf:ro}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{/etc/letsencrypt/:/etc/letsencrypt:ro}
+\PYG{+w}{    }\PYG{n+nt}{depends\PYGZus{}on}\PYG{p}{:}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{frontend}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{app}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{documentation}
+\PYG{+w}{ }\PYG{+w+wError}{ }\PYG{n+nt}{db}\PYG{p}{:}
+\PYG{+w}{    }\PYG{n+nt}{image}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{postgres:16}
+\PYG{+w}{    }\PYG{n+nt}{ports}\PYG{p}{:}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}5432:5432\PYGZdq{}}
+\PYG{+w}{    }\PYG{n+nt}{env\PYGZus{}file}\PYG{p}{:}\PYG{+w}{  }\PYG{l+lScalar+lScalarPlain}{./backand/.env}
+\PYG{+w}{    }\PYG{n+nt}{environment}\PYG{p}{:}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{POSTGRES\PYGZus{}USER=\PYGZdl{}\PYGZob{}DATABASE\PYGZus{}USER\PYGZcb{}}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{POSTGRES\PYGZus{}PASSWORD=\PYGZdl{}\PYGZob{}DATABASE\PYGZus{}PASSWORD\PYGZcb{}}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{POSTGRES\PYGZus{}DB=\PYGZdl{}\PYGZob{}DATABASE\PYGZus{}NAME\PYGZcb{}}
+\PYG{+w}{    }\PYG{n+nt}{volumes}\PYG{p}{:}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{db\PYGZus{}data:/var/lib/postgresql/data}
+\PYG{+w}{  }\PYG{n+nt}{donorBb}\PYG{p}{:}
+\PYG{+w}{    }\PYG{n+nt}{image}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{postgres:16}
+\PYG{+w}{    }\PYG{n+nt}{ports}\PYG{p}{:}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}5433:5432\PYGZdq{}}
+\PYG{+w}{    }\PYG{n+nt}{env\PYGZus{}file}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{./backand/.env}
+\PYG{+w}{    }\PYG{n+nt}{environment}\PYG{p}{:}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{POSTGRES\PYGZus{}USER=\PYGZdl{}\PYGZob{}DONOR\PYGZus{}DATABASE\PYGZus{}USER\PYGZcb{}}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{POSTGRES\PYGZus{}PASSWORD=\PYGZdl{}\PYGZob{}DONOR\PYGZus{}DATABASE\PYGZus{}PASSWORD\PYGZcb{}}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{POSTGRES\PYGZus{}DB=\PYGZdl{}\PYGZob{}DONOR\PYGZus{}DATABASE\PYGZus{}NAME\PYGZcb{}}
+\PYG{+w}{    }\PYG{n+nt}{volumes}\PYG{p}{:}
+\PYG{+w}{      }\PYG{p+pIndicator}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{donor\PYGZus{}data:/var/lib/postgresql/data}
+\PYG{n+nt}{volumes}\PYG{p}{:}
+\PYG{+w}{  }\PYG{n+nt}{db\PYGZus{}data}\PYG{p}{:}
+\PYG{+w}{  }\PYG{n+nt}{donor\PYGZus{}data}\PYG{p}{:}
+\end{MintedVerbatim}

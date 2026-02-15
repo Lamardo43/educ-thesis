@@ -1,0 +1,132 @@
+\chapter{{\fontsize{14pt}{21pt}\selectfont\MakeUppercase{ПРИЛОЖЕНИЕ А}}}
+\label{cha:appendix1}
+
+\counterwithin{figure}{chapter}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{A.\arabic{figure}}
+
+\begin{center}
+    \begin{figure}
+      \fbox{\includegraphics[width=\textwidth]{UML.png}}
+      \captionof{figure}{Создание кампании сегментированных рассылок}
+      \label{fig:UML}
+    \end{figure}
+\end{center}
+
+\begin{figure}
+\centering
+\fbox{\includegraphics[angle=90, height=0.9\textheight]{a0000-img001.png}}
+\caption{Даталогическая модель пользователя}
+\label{fig:userSQL}
+\end{figure}
+
+\begin{listing}[H]
+\caption{Реализация <<permissions.guard.ts>>}
+\label{listing:guardPremission}
+\begin{mdframed}
+\begin{minted}{typescript}
+@Injectable()
+export class PermissionsGuard implements CanActivate {
+  constructor(
+    private reflector: Reflector,
+    private permissionsService: PermissionsService,
+  ) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    try {
+      const requiredPermissions = this.reflector
+        .get<string[]>('permissions', context.getHandler())
+        .join('_');
+      if (!requiredPermissions) { return true }
+      const request = context.switchToHttp().getRequest();
+      const user = request.user;
+      return this.permissionsService.hasPermission(user, requiredPermissions);
+    } catch {
+      return false;
+    }
+  }
+}
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\begin{listing}[H]
+\caption{Конфигурация для <<docker-compose>>}
+\label{listing:docker}
+\begin{mdframed}
+\begin{minted}{yaml}
+services:
+  documentation:
+    build: ./docs
+    ports:
+      - "3002:80"
+  app:
+    build: ./backand
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - donorBb
+    env_file: ./backand/.env
+    environment:
+      - DATABASE_URL=postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/${DATABASE_NAME}
+      - DONOR_DATABASE_URL=postgresql://${DONOR_DATABASE_USER}:${DONOR_DATABASE_PASSWORD}@donorBb:5432/${DONOR_DATABASE_NAME}
+      - DONOR_DATABASE_PORT=5432
+  frontend:
+    build: ./frontend
+    ports:
+      - "3001:3000"
+    depends_on:
+      - app
+    env_file: ./frontend/.env
+    environment:
+      - NEXT_PUBLIC_BASE_URL=/api
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\begin{listing}[H]
+\caption*{Продолжение листинга \ref{listing:docker}}
+\begin{mdframed}
+\begin{minted}{yaml}
+
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt/:/etc/letsencrypt:ro
+    depends_on:
+      - frontend
+      - app
+      - documentation
+  db:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    env_file:  ./backand/.env
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  donorBb:
+    image: postgres:16
+    ports:
+      - "5433:5432"
+    env_file: ./backand/.env
+    environment:
+      - POSTGRES_USER=${DONOR_DATABASE_USER}
+      - POSTGRES_PASSWORD=${DONOR_DATABASE_PASSWORD}
+      - POSTGRES_DB=${DONOR_DATABASE_NAME}
+    volumes:
+      - donor_data:/var/lib/postgresql/data
+volumes:
+  db_data:
+  donor_data:
+\end{minted}
+\end{mdframed}
+\end{listing}

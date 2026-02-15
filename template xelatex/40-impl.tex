@@ -1,0 +1,52 @@
+\chapter{{\fontsize{14pt}{21pt}\selectfont\MakeUppercase{Заголовок}}}
+
+\section{Заголовок}
+
+В рамках ВКР удалось реализовать следующие ключевые функции:
+
+\begin{enumerate}
+\item список
+\end{enumerate}
+
+Пример изображения и ссылки на него \ref{fig:CVE}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{CVE-2025-29927.png}
+\captionof{figure}{Обработка запросов на переход без заголовка}
+\label{fig:CVE}
+\end{figure}
+
+Пример кода и ссылка на него \ref{listing:CSRF}.
+
+\begin{listing}[H]
+\caption{Подключение CSRF-токена}
+\label{listing:CSRF}
+\begin{mdframed}
+\begin{minted}{typescript}
+import cookieParser from 'cookie-parser';
+import csurf from 'csurf';
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
+  app.use(
+    csurf({
+      cookie: {
+        httpOnly: true, // токен CSRF недоступен через JS
+        secure: true,
+        sameSite: 'strict',
+      },
+    }),
+  );
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.enableCors({origin: process.env.CORS, credentials: true});
+  await app.listen(process.env.PORT ?? 3000);
+}
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\section{Вывод}
+
+Вывод по главе

@@ -1,0 +1,70 @@
+\chapter{{\fontsize{14pt}{21pt}\selectfont\MakeUppercase{Заголовок 1}}}
+\label{cha:analysis}
+
+\section{Заголовок 2}
+
+
+% Информация об источниках хранится здесь - rpz.bib, ее проще всего сначала собрать через zotero и потом экспортировать в bib.
+Пример цитирования \cite{law125fz1} или \cite{who2025stats} или \cite{_laravel_2023} или \cite{nestjs-docs1}.
+
+
+Пример создания таблиц~\ref{tab:role}, в которую были занесены основные аспекты каждой реализации.
+% Перед \ref рекомендуется ставить тильду (~) чтобы цифру не отрывало.
+% Для генерации таблиц можно использовать https://www.tablesgenerator.com/
+
+\begin{table}[h]
+\caption{Сравнительная таблица ролевых моделей}
+\label{tab:role}
+\begin{tabular}{|p{2cm}|p{2.5cm}|p{2.3cm}|p{4.5cm}|p{3cm}|}
+\hline
+\centering Модель &  \centering Подходит для CRM & \centering Гибкость &  \centering Масштабируемость & \multicolumn{1}{c|}{Сложность} \\ \hline
+RBAC   & Да                         & Средняя  & Высокая          & Низкая    \\ \hline
+ABAC   & Да                         & Высокая  & Высокая          & Средняя   \\ \hline
+DAC    & Нет                        & Высокая  & Низкая           & Средняя   \\ \hline
+MAC    & Нет                        & Низкая   & Средняя          & Высокая   \\ \hline
+\end{tabular}
+\end{table}
+
+На основе проведенного анализа и сравнения различных моделей управления доступом можно выделить два наиболее подходящих подхода: RBAC и ABAC.
+
+Пример таблицы с разрывом на две страницы \ref{tab:client}.
+
+\begin{table}[H]
+  \caption{Сравнение технологий для разработки клиентской части}
+  \label{tab:client}
+  \begingroup
+    \begin{spacing}{1} % Одинарный интервал
+      \begin{tabular}{|p{4.5cm}|p{3cm}|p{3cm}|p{4cm}|}
+        \hline
+        \multicolumn{1}{|c}{Характеристика}       & \multicolumn{1}{|c}{Next.js}                 & \multicolumn{1}{|c|}{Nuxt.js}                    & \multicolumn{1}{c|}{Angular}   \\ \hline
+        \multicolumn{1}{|c}{1}       & \multicolumn{1}{|c}{2}                 & \multicolumn{1}{|c|}{3}                    & \multicolumn{1}{c|}{4} \\ \hline
+        Базовая технология   & React                   & Vue.js                     & Фреймворк от Google         \\ \hline
+        Язык разработки      & JavaScript / TypeScript & JavaScript / TypeScript    & TypeScript                  \\ \hline
+      \end{tabular}
+    \end{spacing}
+  \endgroup
+\end{table}
+
+\begin{table}[H]
+  \caption*{Продолжение таблицы \ref{tab:client}}
+  \begingroup
+    \begin{spacing}{1} % Одинарный интервал
+      \begin{tabular}{|p{4.5cm}|p{3cm}|p{3cm}|p{4cm}|}
+        \hline
+        \multicolumn{1}{|c}{1}       & \multicolumn{1}{|c}{2}                 & \multicolumn{1}{|c|}{3}                    & \multicolumn{1}{c|}{4} \\ \hline
+        Архитектура          & Компонентная            & Компонентная               & Модульная                   \\ \hline
+        Сложность            & Умеренная               & Умеренная                  & Высокая                     \\ \hline
+        Производительность   & Высокая                 & Высокая                    & Средняя на больших проектах \\ \hline
+        Размер сообщества    & Большой                 & Большой, но меньше Next.js & Большое                     \\ \hline
+        Скорость разработки  & Высокая                 & Высокая                    & Средняя                     \\ \hline
+        Гибкость             & Высокая                 & Высокая                    & Ограниченная                \\ \hline
+        Поддержка TypeScript & Отличная                & Хорошая                    & Нативная                    \\ \hline
+      \end{tabular}
+    \end{spacing}
+  \endgroup
+\end{table}
+\vspace{10pt}
+
+\section{Вывод}
+
+Выводы по главе

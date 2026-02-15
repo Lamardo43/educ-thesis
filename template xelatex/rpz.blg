@@ -1,0 +1,69 @@
+This is BibTeX, Version 0.99e
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: rpz.aux
+Reallocating 'name_of_file' (item size: 1) to 16 items.
+A level-1 auxiliary file: 00-abstract.aux
+Reallocating 'name_of_file' (item size: 1) to 13 items.
+A level-1 auxiliary file: 12-intro.aux
+Reallocating 'name_of_file' (item size: 1) to 16 items.
+A level-1 auxiliary file: 20-analysis.aux
+Reallocating 'name_of_file' (item size: 1) to 14 items.
+A level-1 auxiliary file: 30-design.aux
+Reallocating 'name_of_file' (item size: 1) to 12 items.
+A level-1 auxiliary file: 40-impl.aux
+Reallocating 'name_of_file' (item size: 1) to 18 items.
+A level-1 auxiliary file: 80-conclusion.aux
+Reallocating 'name_of_file' (item size: 1) to 14 items.
+A level-1 auxiliary file: 81-biblio.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+The style file: gost780u.bst
+Reallocating 'name_of_file' (item size: 1) to 4 items.
+Reallocating 'name_of_file' (item size: 1) to 17 items.
+A level-1 auxiliary file: 90-appendix1.aux
+Database file #1: rpz.bib
+Warning--entry type for "law125fz1" isn't style-file defined
+--line 1 of file rpz.bib
+Warning--entry type for "nestjs-docs1" isn't style-file defined
+--line 21 of file rpz.bib
+You've used 4 entries,
+            2591 wiz_defined-function locations,
+            658 strings with 5866 characters,
+and the built_in function-call counts, 814 in all, are:
+= -- 110
+> -- 10
+< -- 2
++ -- 6
+- -- 2
+* -- 23
+:= -- 92
+add.period$ -- 14
+call.type$ -- 4
+change.case$ -- 0
+chr.to.int$ -- 0
+cite$ -- 4
+duplicate$ -- 44
+empty$ -- 103
+format.name$ -- 4
+if$ -- 221
+int.to.chr$ -- 0
+int.to.str$ -- 4
+missing$ -- 0
+newline$ -- 33
+num.names$ -- 4
+pop$ -- 25
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 8
+stack$ -- 0
+substring$ -- 0
+swap$ -- 23
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 2
+width$ -- 5
+write$ -- 70
+(There were 2 warnings)

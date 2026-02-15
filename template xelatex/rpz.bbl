@@ -1,0 +1,39 @@
+\begin{thebibliography}{1}
+\def\selectlanguageifdefined#1{
+\expandafter\ifx\csname date#1\endcsname\relax
+\else\language\csname l@#1\endcsname\fi}
+\ifx\undefined\url\def\url#1{{\small #1}}\else\fi
+\ifx\undefined\BibUrl\def\BibUrl#1{\url{#1}}\else\fi
+\ifx\undefined\BibAnnote\long\def\BibAnnote#1{}\else\fi
+\ifx\undefined\BibEmph\def\BibEmph#1{\emph{#1}}\else\fi
+
+\bibitem{law125fz1}
+\selectlanguageifdefined{english}
+Российская Федерация. Законы. О донорстве
+  крови и её компонентов : Федеральный закон
+  от 20.07.2012 №125-ФЗ. --
+\newblock Собрание законодательства
+  Российской Федерации. 2012. № 30. Ст. 4176.
+
+\bibitem{who2025stats}
+\selectlanguageifdefined{english}
+{{World Health Organization}}. World Health Statistics 2025: Monitoring Health
+  for the SDGs~/ ~{World Health Organization}. --
+\newblock Geneva: World Health Organization, 2025. --
+\newblock 76 p.
+
+\bibitem{_laravel_2023}
+\selectlanguageifdefined{english}
+{Дронов,~В.~А.} Laravel 9. Быстрая разработка
+  веб-сайтов на РНР~/ В.~А.~Дронов. --
+\newblock Санкт-Петербург: БХВ-Петербург. --
+\newblock 768 c.
+
+\bibitem{nestjs-docs1}
+\selectlanguageifdefined{english}
+NestJS – A progressive Node.js framework. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  14.05.2025. \BibUrl{ https://docs.nestjs.com}.
+
+\end{thebibliography}
