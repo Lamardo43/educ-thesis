@@ -20,50 +20,47 @@ The style file: gost780u.bst
 Reallocating 'name_of_file' (item size: 1) to 4 items.
 Reallocating 'name_of_file' (item size: 1) to 17 items.
 A level-1 auxiliary file: 90-appendix1.aux
+I found no \citation commands---while reading file rpz.aux
 Database file #1: rpz.bib
-Warning--entry type for "law125fz1" isn't style-file defined
---line 1 of file rpz.bib
-Warning--entry type for "nestjs-docs1" isn't style-file defined
---line 21 of file rpz.bib
-You've used 4 entries,
+You've used 0 entries,
             2591 wiz_defined-function locations,
-            658 strings with 5866 characters,
-and the built_in function-call counts, 814 in all, are:
-= -- 110
-> -- 10
-< -- 2
-+ -- 6
-- -- 2
-* -- 23
-:= -- 92
-add.period$ -- 14
-call.type$ -- 4
+            636 strings with 5052 characters,
+and the built_in function-call counts, 36 in all, are:
+= -- 0
+> -- 0
+< -- 0
++ -- 0
+- -- 0
+* -- 2
+:= -- 11
+add.period$ -- 0
+call.type$ -- 0
 change.case$ -- 0
 chr.to.int$ -- 0
-cite$ -- 4
-duplicate$ -- 44
-empty$ -- 103
-format.name$ -- 4
-if$ -- 221
+cite$ -- 0
+duplicate$ -- 0
+empty$ -- 1
+format.name$ -- 0
+if$ -- 1
 int.to.chr$ -- 0
-int.to.str$ -- 4
+int.to.str$ -- 0
 missing$ -- 0
-newline$ -- 33
-num.names$ -- 4
-pop$ -- 25
+newline$ -- 10
+num.names$ -- 0
+pop$ -- 0
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 8
+skip$ -- 1
 stack$ -- 0
 substring$ -- 0
-swap$ -- 23
+swap$ -- 0
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 2
-width$ -- 5
-write$ -- 70
-(There were 2 warnings)
+while$ -- 0
+width$ -- 0
+write$ -- 9
+(There was 1 error message)
