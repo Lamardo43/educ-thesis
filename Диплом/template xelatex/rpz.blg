@@ -24,27 +24,27 @@ Database file #1: rpz.bib
 Warning--entry type for "wiremock" isn't style-file defined
 --line 1 of file rpz.bib
 Warning--entry type for "mockserver" isn't style-file defined
---line 9 of file rpz.bib
+--line 8 of file rpz.bib
 Warning--entry type for "mountebank" isn't style-file defined
---line 17 of file rpz.bib
+--line 15 of file rpz.bib
 Warning--entry type for "tomcat" isn't style-file defined
---line 25 of file rpz.bib
+--line 22 of file rpz.bib
 Warning--entry type for "tomcat-cluster" isn't style-file defined
---line 33 of file rpz.bib
+--line 29 of file rpz.bib
 Warning--entry type for "tomcat-ratelimit" isn't style-file defined
---line 41 of file rpz.bib
+--line 36 of file rpz.bib
 You've used 6 entries,
             2591 wiz_defined-function locations,
-            658 strings with 5635 characters,
-and the built_in function-call counts, 734 in all, are:
-= -- 90
+            656 strings with 5669 characters,
+and the built_in function-call counts, 878 in all, are:
+= -- 120
 > -- 6
 < -- 0
 + -- 6
 - -- 0
-* -- 20
-:= -- 67
-add.period$ -- 12
+* -- 32
+:= -- 85
+add.period$ -- 24
 call.type$ -- 6
 change.case$ -- 0
 chr.to.int$ -- 0
@@ -52,20 +52,20 @@ cite$ -- 6
 duplicate$ -- 42
 empty$ -- 97
 format.name$ -- 0
-if$ -- 193
+if$ -- 223
 int.to.chr$ -- 0
 int.to.str$ -- 6
 missing$ -- 0
-newline$ -- 34
+newline$ -- 46
 num.names$ -- 0
-pop$ -- 36
+pop$ -- 24
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 24
+skip$ -- 18
 stack$ -- 0
 substring$ -- 0
-swap$ -- 18
+swap$ -- 30
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
@@ -73,5 +73,5 @@ type$ -- 0
 warning$ -- 0
 while$ -- 0
 width$ -- 7
-write$ -- 63
+write$ -- 99
 (There were 6 warnings)

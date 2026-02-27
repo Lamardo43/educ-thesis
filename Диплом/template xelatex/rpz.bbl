@@ -9,29 +9,46 @@
 
 \bibitem{wiremock}
 \selectlanguageifdefined{english}
-WireMock Documentation. \BibUrl{ https://wiremock.org/docs/}.
+WireMock Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  09.01.2026. \BibUrl{ https://wiremock.org/docs/}.
 
 \bibitem{mockserver}
 \selectlanguageifdefined{english}
-MockServer Documentation. \BibUrl{ https://www.mock-server.com/}.
+MockServer Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  09.01.2026. \BibUrl{ https://www.mock-server.com/}.
 
 \bibitem{mountebank}
 \selectlanguageifdefined{english}
-Mountebank Documentation. \BibUrl{ http://www.mbtest.org/docs/}.
+Mountebank Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  09.01.2026. \BibUrl{ http://www.mbtest.org/docs/}.
 
 \bibitem{tomcat}
 \selectlanguageifdefined{english}
-Apache Tomcat 9 Documentation. \BibUrl{
-  https://tomcat.apache.org/tomcat-9.0-doc/index.html}.
+Apache Tomcat 9 Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  09.01.2026. \BibUrl{ https://tomcat.apache.org/tomcat-9.0-doc/index.html}.
 
 \bibitem{tomcat-cluster}
 \selectlanguageifdefined{english}
-Tomcat Clustering/Session Replication How-To. \BibUrl{
+Tomcat Clustering/Session Replication How-To. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  09.01.2026. \BibUrl{
   https://tomcat.apache.org/tomcat-9.0-doc/cluster-howto.html}.
 
 \bibitem{tomcat-ratelimit}
 \selectlanguageifdefined{english}
-Apache Tomcat Configuration Reference: The Rate Limit Filter. \BibUrl{
+Apache Tomcat Configuration Reference: The Rate Limit Filter. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  09.01.2026. \BibUrl{
   https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html\#Rate_Limit_Filter}.
 
 \end{thebibliography}
