@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}rate\PYGZus{}limit\PYGZus{}window\PYGZus{}size\PYGZdq{}}\PYG{p}{:}\PYG{+w}{  }\PYG{l+m+mi}{1}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}host\PYGZus{}check\PYGZus{}interval\PYGZus{}sec\PYGZdq{}}\PYG{p}{:}\PYG{+w}{ }\PYG{l+m+mi}{30}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}proxy\PYGZus{}timeout\PYGZus{}sec\PYGZdq{}}\PYG{p}{:}\PYG{+w}{       }\PYG{l+m+mi}{10}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}log\PYGZus{}retention\PYGZus{}lines\PYGZdq{}}\PYG{p}{:}\PYG{+w}{     }\PYG{l+m+mi}{1000}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

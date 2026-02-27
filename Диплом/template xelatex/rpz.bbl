@@ -1,4 +1,4 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
 \def\selectlanguageifdefined#1{
 \expandafter\ifx\csname date#1\endcsname\relax
 \else\language\csname l@#1\endcsname\fi}
@@ -6,5 +6,32 @@
 \ifx\undefined\BibUrl\def\BibUrl#1{\url{#1}}\else\fi
 \ifx\undefined\BibAnnote\long\def\BibAnnote#1{}\else\fi
 \ifx\undefined\BibEmph\def\BibEmph#1{\emph{#1}}\else\fi
+
+\bibitem{wiremock}
+\selectlanguageifdefined{english}
+WireMock Documentation. \BibUrl{ https://wiremock.org/docs/}.
+
+\bibitem{mockserver}
+\selectlanguageifdefined{english}
+MockServer Documentation. \BibUrl{ https://www.mock-server.com/}.
+
+\bibitem{mountebank}
+\selectlanguageifdefined{english}
+Mountebank Documentation. \BibUrl{ http://www.mbtest.org/docs/}.
+
+\bibitem{tomcat}
+\selectlanguageifdefined{english}
+Apache Tomcat 9 Documentation. \BibUrl{
+  https://tomcat.apache.org/tomcat-9.0-doc/index.html}.
+
+\bibitem{tomcat-cluster}
+\selectlanguageifdefined{english}
+Tomcat Clustering/Session Replication How-To. \BibUrl{
+  https://tomcat.apache.org/tomcat-9.0-doc/cluster-howto.html}.
+
+\bibitem{tomcat-ratelimit}
+\selectlanguageifdefined{english}
+Apache Tomcat Configuration Reference: The Rate Limit Filter. \BibUrl{
+  https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html\#Rate_Limit_Filter}.
 
 \end{thebibliography}

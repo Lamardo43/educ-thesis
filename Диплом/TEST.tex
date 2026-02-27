@@ -1,0 +1,3237 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\usepackage{svg}
+\ifLuaTeX
+  \usepackage{luacolor}
+  \usepackage[soul]{lua-ul}
+\else
+  \usepackage{soul}
+\fi
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\textbf{ВЫПУСКНАЯ КВАЛИФИКАЦИОННАЯ РАБОТА ПО ТЕМЕ\\
+«РАЗРАБОТКА СИСТЕМЫ ДЛЯ ПРОКСИРОВАНИЯ И МОНИТОРИНГА СЕРВИСОВ-ЗАГЛУШЕК В
+СРЕДЕ НАГРУЗОЧНОГО ТЕСТИРОВАНИЯ»}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5759}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4241}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedleft
+Выполнил:
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Медведев Клим Николаевич
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Группа: & 221-329 \\
+ТГ для связи: & @medvedevk \\
+\end{longtable}
+}
+
+\textbf{\hfill\break
+}
+
+\section{СОДЕРЖАНИЕ}\label{ux441ux43eux434ux435ux440ux436ux430ux43dux438ux435}
+
+\hyperref[ux43fux440ux435ux434ux43fux43eux43bux430ux433ux430ux435ux43cux430ux44f-ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux440ux430ux431ux43eux442ux44b]{1
+////// Предполагаемая структура работы //////
+\hyperref[ux43fux440ux435ux434ux43fux43eux43bux430ux433ux430ux435ux43cux430ux44f-ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux440ux430ux431ux43eux442ux44b]{4}}
+
+\hyperref[ux43fux440ux435ux434ux43fux43eux43bux430ux433ux430ux435ux43cux43eux435-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux43eux435-ux43eux43fux438ux441ux430ux43dux438ux435]{2
+////// Предполагаемое техническое описание //////
+\hyperref[ux43fux440ux435ux434ux43fux43eux43bux430ux433ux430ux435ux43cux43eux435-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux43eux435-ux43eux43fux438ux441ux430ux43dux438ux435]{6}}
+
+\hyperref[ux432ux432ux435ux434ux435ux43dux438ux435]{Введение
+\hyperref[ux432ux432ux435ux434ux435ux43dux438ux435]{9}}
+
+\hyperref[ux430ux43dux430ux43bux438ux437-ux43fux440ux435ux434ux43cux435ux442ux43dux43eux439-ux43eux431ux43bux430ux441ux442ux438-ux438-ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux432ux44bux431ux43eux440ux430-ux442ux435ux445ux43dux43eux43bux43eux433ux438ux439]{3
+АНАЛИЗ ПРЕДМЕТНОЙ ОБЛАСТИ И ОБОСНОВАНИЕ ВЫБОРА ТЕХНОЛОГИЙ
+\hyperref[ux430ux43dux430ux43bux438ux437-ux43fux440ux435ux434ux43cux435ux442ux43dux43eux439-ux43eux431ux43bux430ux441ux442ux438-ux438-ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux432ux44bux431ux43eux440ux430-ux442ux435ux445ux43dux43eux43bux43eux433ux438ux439]{12}}
+
+\hyperref[ux438ux441ux441ux43bux435ux434ux43eux432ux430ux43dux438ux435-ux438ux43dux444ux440ux430ux441ux442ux440ux443ux43aux442ux443ux440ux44b-ux43dux430ux433ux440ux443ux437ux43eux447ux43dux43eux433ux43e-ux442ux435ux441ux442ux438ux440ux43eux432ux430ux43dux438ux44f-ux438-ux440ux43eux43bux438-ux438ux43cux438ux442ux430ux446ux438ux43eux43dux43dux44bux445-ux441ux435ux440ux432ux438ux441ux43eux432]{3.1
+Исследование инфраструктуры нагрузочного тестирования и роли
+имитационных сервисов
+\hyperref[ux438ux441ux441ux43bux435ux434ux43eux432ux430ux43dux438ux435-ux438ux43dux444ux440ux430ux441ux442ux440ux443ux43aux442ux443ux440ux44b-ux43dux430ux433ux440ux443ux437ux43eux447ux43dux43eux433ux43e-ux442ux435ux441ux442ux438ux440ux43eux432ux430ux43dux438ux44f-ux438-ux440ux43eux43bux438-ux438ux43cux438ux442ux430ux446ux438ux43eux43dux43dux44bux445-ux441ux435ux440ux432ux438ux441ux43eux432]{12}}
+
+\hyperref[ux430ux43dux430ux43bux438ux437-ux441ux443ux449ux435ux441ux442ux432ux443ux44eux449ux438ux445-ux43fux43eux434ux445ux43eux434ux43eux432-ux43a-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44e-ux441ux435ux440ux432ux438ux441ux430ux43cux438-ux437ux430ux433ux43bux443ux448ux43aux430ux43cux438-ux438-ux43fux440ux43eux431ux43bux435ux43cux430-ux438ux43cux43fux43eux440ux442ux43eux437ux430ux43cux435ux449ux435ux43dux438ux44f]{3.2
+Анализ существующих подходов к управлению сервисами-заглушками и
+проблема импортозамещения
+\hyperref[ux430ux43dux430ux43bux438ux437-ux441ux443ux449ux435ux441ux442ux432ux443ux44eux449ux438ux445-ux43fux43eux434ux445ux43eux434ux43eux432-ux43a-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44e-ux441ux435ux440ux432ux438ux441ux430ux43cux438-ux437ux430ux433ux43bux443ux448ux43aux430ux43cux438-ux438-ux43fux440ux43eux431ux43bux435ux43cux430-ux438ux43cux43fux43eux440ux442ux43eux437ux430ux43cux435ux449ux435ux43dux438ux44f]{13}}
+
+\hyperref[ux441ux440ux430ux432ux43dux438ux442ux435ux43bux44cux43dux44bux439-ux430ux43dux430ux43bux438ux437-ux438ux43dux441ux442ux440ux443ux43cux435ux43dux442ux430ux43bux44cux43dux44bux445-ux441ux440ux435ux434ux441ux442ux432-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438-ux438-ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux442ux435ux445ux43dux43eux43bux43eux433ux438ux447ux435ux441ux43aux43eux433ux43e-ux441ux442ux435ux43aux430]{3.3
+Сравнительный анализ инструментальных средств разработки и обоснование
+технологического стека
+\hyperref[ux441ux440ux430ux432ux43dux438ux442ux435ux43bux44cux43dux44bux439-ux430ux43dux430ux43bux438ux437-ux438ux43dux441ux442ux440ux443ux43cux435ux43dux442ux430ux43bux44cux43dux44bux445-ux441ux440ux435ux434ux441ux442ux432-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438-ux438-ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux442ux435ux445ux43dux43eux43bux43eux433ux438ux447ux435ux441ux43aux43eux433ux43e-ux441ux442ux435ux43aux430]{15}}
+
+\hyperref[ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux432ux44bux431ux43eux440ux430-ux44fux437ux44bux43aux430-ux43fux440ux43eux433ux440ux430ux43cux43cux438ux440ux43eux432ux430ux43dux438ux44f-ux441ux435ux440ux432ux435ux440ux43dux43eux439-ux447ux430ux441ux442ux438]{3.3.1
+Обоснование выбора языка программирования серверной части
+\hyperref[ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux432ux44bux431ux43eux440ux430-ux44fux437ux44bux43aux430-ux43fux440ux43eux433ux440ux430ux43cux43cux438ux440ux43eux432ux430ux43dux438ux44f-ux441ux435ux440ux432ux435ux440ux43dux43eux439-ux447ux430ux441ux442ux438]{16}}
+
+\hyperref[ux441ux440ux430ux432ux43dux438ux442ux435ux43bux44cux43dux44bux439-ux430ux43dux430ux43bux438ux437-ux432ux435ux431-ux444ux440ux435ux439ux43cux432ux43eux440ux43aux43eux432]{3.3.2
+Сравнительный анализ веб-фреймворков
+\hyperref[ux441ux440ux430ux432ux43dux438ux442ux435ux43bux44cux43dux44bux439-ux430ux43dux430ux43bux438ux437-ux432ux435ux431-ux444ux440ux435ux439ux43cux432ux43eux440ux43aux43eux432]{18}}
+
+\hyperref[ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux432ux44bux431ux43eux440ux430-ux441ux438ux441ux442ux435ux43cux44b-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44f-ux434ux430ux43dux43dux44bux43cux438-ux441ux443ux431ux434]{3.3.3
+Обоснование выбора системы управления данными (СУБД)
+\hyperref[ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux432ux44bux431ux43eux440ux430-ux441ux438ux441ux442ux435ux43cux44b-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44f-ux434ux430ux43dux43dux44bux43cux438-ux441ux443ux431ux434]{20}}
+
+\hyperref[ux438ux442ux43eux433ux43eux432ux44bux439-ux432ux44bux431ux43eux440-ux441ux440ux435ux434ux441ux442ux432-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438]{3.3.4
+Итоговый выбор средств разработки
+\hyperref[ux438ux442ux43eux433ux43eux432ux44bux439-ux432ux44bux431ux43eux440-ux441ux440ux435ux434ux441ux442ux432-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438]{22}}
+
+\hyperref[ux43eux431ux437ux43eux440-ux430ux43dux430ux43bux43eux433ux438ux447ux43dux44bux445-ux440ux435ux448ux435ux43dux438ux439-ux438-ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438-ux441ux43eux431ux441ux442ux432ux435ux43dux43dux43eux433ux43e-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43eux433ux43e-ux43aux43eux43cux43fux43bux435ux43aux441ux430]{3.4
+Обзор аналогичных решений и обоснование разработки собственного
+программного комплекса
+\hyperref[ux43eux431ux437ux43eux440-ux430ux43dux430ux43bux43eux433ux438ux447ux43dux44bux445-ux440ux435ux448ux435ux43dux438ux439-ux438-ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438-ux441ux43eux431ux441ux442ux432ux435ux43dux43dux43eux433ux43e-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43eux433ux43e-ux43aux43eux43cux43fux43bux435ux43aux441ux430]{22}}
+
+\hyperref[ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-wiremock]{3.4.1
+Анализ решения WireMock
+\hyperref[ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-wiremock]{23}}
+
+\hyperref[ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-mockserver]{3.4.2
+Анализ решения MockServer
+\hyperref[ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-mockserver]{24}}
+
+\hyperref[ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-mountebank]{3.4.3
+Анализ решения Mountebank
+\hyperref[ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-mountebank]{25}}
+
+\hyperref[ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-apache-tomcat]{3.4.4
+Анализ решения Apache Tomcat
+\hyperref[ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-apache-tomcat]{26}}
+
+\hyperref[ux441ux440ux430ux432ux43dux438ux442ux435ux43bux44cux43dux430ux44f-ux445ux430ux440ux430ux43aux442ux435ux440ux438ux441ux442ux438ux43aux430]{3.4.5
+Сравнительная характеристика
+\hyperref[ux441ux440ux430ux432ux43dux438ux442ux435ux43bux44cux43dux430ux44f-ux445ux430ux440ux430ux43aux442ux435ux440ux438ux441ux442ux438ux43aux430]{27}}
+
+\hyperref[ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438-ux441ux43eux431ux441ux442ux432ux435ux43dux43dux43eux433ux43e-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43eux433ux43e-ux43aux43eux43cux43fux43bux435ux43aux441ux430]{3.4.6
+Обоснование разработки собственного программного комплекса
+\hyperref[ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438-ux441ux43eux431ux441ux442ux432ux435ux43dux43dux43eux433ux43e-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43eux433ux43e-ux43aux43eux43cux43fux43bux435ux43aux441ux430]{28}}
+
+\hyperref[ux432ux44bux432ux43eux434-ux43fux43e-ux43fux43eux434ux440ux430ux437ux434ux435ux43bux443]{3.4.7
+Вывод по подразделу
+\hyperref[ux432ux44bux432ux43eux434-ux43fux43e-ux43fux43eux434ux440ux430ux437ux434ux435ux43bux443]{29}}
+
+\hyperref[ux444ux43eux440ux43cux438ux440ux43eux432ux430ux43dux438ux435-ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44cux43dux44bux445-ux438-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux438ux445-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux439-ux43a-ux441ux438ux441ux442ux435ux43cux435]{3.5
+Формирование функциональных и технических требований к системе
+\hyperref[ux444ux43eux440ux43cux438ux440ux43eux432ux430ux43dux438ux435-ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44cux43dux44bux445-ux438-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux438ux445-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux439-ux43a-ux441ux438ux441ux442ux435ux43cux435]{30}}
+
+\hyperref[ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux440ux435ux436ux438ux43cux430ux43c-ux444ux443ux43dux43aux446ux438ux43eux43dux438ux440ux43eux432ux430ux43dux438ux44f]{3.5.1
+Требования к режимам функционирования
+\hyperref[ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux440ux435ux436ux438ux43cux430ux43c-ux444ux443ux43dux43aux446ux438ux43eux43dux438ux440ux43eux432ux430ux43dux438ux44f]{30}}
+
+\hyperref[ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44cux43dux44bux435-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f]{3.5.2
+Функциональные требования
+\hyperref[ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44cux43dux44bux435-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f]{31}}
+
+\hyperref[ux43dux435ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44cux43dux44bux435-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux438ux435-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f]{3.5.3
+Нефункциональные (технические) требования
+\hyperref[ux43dux435ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44cux43dux44bux435-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux438ux435-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f]{32}}
+
+\hyperref[ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43e-ux430ux43fux43fux430ux440ux430ux442ux43dux43eux43cux443-ux43eux431ux435ux441ux43fux435ux447ux435ux43dux438ux44e]{3.5.4
+Требования к программно-аппаратному обеспечению
+\hyperref[ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43e-ux430ux43fux43fux430ux440ux430ux442ux43dux43eux43cux443-ux43eux431ux435ux441ux43fux435ux447ux435ux43dux438ux44e]{33}}
+
+\hyperref[ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux438ux43dux444ux43eux440ux43cux430ux446ux438ux43eux43dux43dux43eux439-ux431ux435ux437ux43eux43fux430ux441ux43dux43eux441ux442ux438]{3.5.5
+Требования к информационной безопасности
+\hyperref[ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux438ux43dux444ux43eux440ux43cux430ux446ux438ux43eux43dux43dux43eux439-ux431ux435ux437ux43eux43fux430ux441ux43dux43eux441ux442ux438]{33}}
+
+\hyperref[ux432ux44bux432ux43eux434-ux43fux43e-ux440ux430ux437ux434ux435ux43bux443]{3.6
+Вывод по разделу
+\hyperref[ux432ux44bux432ux43eux434-ux43fux43e-ux440ux430ux437ux434ux435ux43bux443]{34}}
+
+\hyperref[ux43fux440ux43eux435ux43aux442ux438ux440ux43eux432ux430ux43dux438ux435-ux438-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux430ux44f-ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-ux441ux438ux441ux442ux435ux43cux44b-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44f]{4
+ПРОЕКТИРОВАНИЕ И ТЕХНИЧЕСКАЯ РЕАЛИЗАЦИЯ СИСТЕМЫ УПРАВЛЕНИЯ
+\hyperref[ux43fux440ux43eux435ux43aux442ux438ux440ux43eux432ux430ux43dux438ux435-ux438-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux430ux44f-ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-ux441ux438ux441ux442ux435ux43cux44b-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44f]{35}}
+
+\hyperref[ux440ux430ux437ux440ux430ux431ux43eux442ux43aux430-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux44b-ux440ux430ux441ux43fux440ux435ux434ux435ux43bux451ux43dux43dux43eux433ux43e-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43eux433ux43e-ux43aux43eux43cux43fux43bux435ux43aux441ux430]{4.1
+Разработка архитектуры распределённого программного комплекса
+\hyperref[ux440ux430ux437ux440ux430ux431ux43eux442ux43aux430-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux44b-ux440ux430ux441ux43fux440ux435ux434ux435ux43bux451ux43dux43dux43eux433ux43e-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43eux433ux43e-ux43aux43eux43cux43fux43bux435ux43aux441ux430]{35}}
+
+\hyperref[ux432ux44bux431ux43eux440-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux43dux43eux433ux43e-ux441ux442ux438ux43bux44f]{4.1.1
+Выбор архитектурного стиля
+\hyperref[ux432ux44bux431ux43eux440-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux43dux43eux433ux43e-ux441ux442ux438ux43bux44f]{35}}
+
+\hyperref[ux442ux43eux43fux43eux43bux43eux433ux438ux44f-ux440ux430ux437ux432ux451ux440ux442ux44bux432ux430ux43dux438ux44f-ux438-ux433ux438ux431ux43aux43eux441ux442ux44c-ux438ux43dux444ux440ux430ux441ux442ux440ux443ux43aux442ux443ux440ux44b]{4.1.2
+Топология развёртывания и гибкость инфраструктуры
+\hyperref[ux442ux43eux43fux43eux43bux43eux433ux438ux44f-ux440ux430ux437ux432ux451ux440ux442ux44bux432ux430ux43dux438ux44f-ux438-ux433ux438ux431ux43aux43eux441ux442ux44c-ux438ux43dux444ux440ux430ux441ux442ux440ux443ux43aux442ux443ux440ux44b]{38}}
+
+\hyperref[ux43aux43eux43dux442ux435ux43aux441ux442ux43dux430ux44f-ux434ux438ux430ux433ux440ux430ux43cux43cux430-ux441ux438ux441ux442ux435ux43cux44b]{4.1.3
+Контекстная диаграмма системы
+\hyperref[ux43aux43eux43dux442ux435ux43aux441ux442ux43dux430ux44f-ux434ux438ux430ux433ux440ux430ux43cux43cux430-ux441ux438ux441ux442ux435ux43cux44b]{39}}
+
+\hyperref[ux43aux43eux43dux442ux435ux439ux43dux435ux440ux43dux430ux44f-ux434ux438ux430ux433ux440ux430ux43cux43cux430]{4.1.4
+Контейнерная диаграмма
+\hyperref[ux43aux43eux43dux442ux435ux439ux43dux435ux440ux43dux430ux44f-ux434ux438ux430ux433ux440ux430ux43cux43cux430]{43}}
+
+\hyperref[ux43aux43eux43cux43fux43eux43dux435ux43dux442ux43dux430ux44f-ux434ux438ux430ux433ux440ux430ux43cux43cux430-rest-api]{4.1.5
+Компонентная диаграмма REST API
+\hyperref[ux43aux43eux43cux43fux43eux43dux435ux43dux442ux43dux430ux44f-ux434ux438ux430ux433ux440ux430ux43cux43cux430-rest-api]{45}}
+
+\hyperref[ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux430-ux43cux43eux434ux443ux43bux44f-ux43dux430ux441ux442ux440ux43eux435ux43a-ux441ux438ux441ux442ux435ux43cux44b]{4.1.6
+Архитектура модуля настроек системы
+\hyperref[ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux430-ux43cux43eux434ux443ux43bux44f-ux43dux430ux441ux442ux440ux43eux435ux43a-ux441ux438ux441ux442ux435ux43cux44b]{47}}
+
+\hyperref[ux434ux438ux430ux433ux440ux430ux43cux43cux430-ux440ux430ux437ux432ux451ux440ux442ux44bux432ux430ux43dux438ux44f]{4.1.7
+Диаграмма развёртывания
+\hyperref[ux434ux438ux430ux433ux440ux430ux43cux43cux430-ux440ux430ux437ux432ux451ux440ux442ux44bux432ux430ux43dux438ux44f]{51}}
+
+\hyperref[ux441ux446ux435ux43dux430ux440ux438ux439-ux432ux437ux430ux438ux43cux43eux434ux435ux439ux441ux442ux432ux438ux44f-ux43aux43eux43cux43fux43eux43dux435ux43dux442ux43eux432]{4.1.8
+Сценарий взаимодействия компонентов
+\hyperref[ux441ux446ux435ux43dux430ux440ux438ux439-ux432ux437ux430ux438ux43cux43eux434ux435ux439ux441ux442ux432ux438ux44f-ux43aux43eux43cux43fux43eux43dux435ux43dux442ux43eux432]{52}}
+
+\hyperref[ux43fux440ux43eux435ux43aux442ux438ux440ux43eux432ux430ux43dux438ux435-ux441ux442ux440ux443ux43aux442ux443ux440-ux434ux430ux43dux43dux44bux445-ux434ux43bux44f-ux445ux440ux430ux43dux435ux43dux438ux44f-ux43aux43eux43dux444ux438ux433ux443ux440ux430ux446ux438ux439-ux438-ux441ux43eux441ux442ux43eux44fux43dux438ux439-ux432-redis]{4.2
+Проектирование структур данных для хранения конфигураций и состояний в
+Redis
+\hyperref[ux43fux440ux43eux435ux43aux442ux438ux440ux43eux432ux430ux43dux438ux435-ux441ux442ux440ux443ux43aux442ux443ux440-ux434ux430ux43dux43dux44bux445-ux434ux43bux44f-ux445ux440ux430ux43dux435ux43dux438ux44f-ux43aux43eux43dux444ux438ux433ux443ux440ux430ux446ux438ux439-ux438-ux441ux43eux441ux442ux43eux44fux43dux438ux439-ux432-redis]{55}}
+
+\hyperref[ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux43cux43eux434ux435ux43bux438-ux434ux430ux43dux43dux44bux445]{4.2.1
+Обоснование модели данных
+\hyperref[ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux43cux43eux434ux435ux43bux438-ux434ux430ux43dux43dux44bux445]{55}}
+
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux437ux430ux433ux43bux443ux448ux43aux438]{4.2.2
+Структура данных заглушки
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux437ux430ux433ux43bux443ux448ux43aux438]{57}}
+
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux445ux43eux441ux442ux430]{4.2.3
+Структура данных хоста
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux445ux43eux441ux442ux430]{59}}
+
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux443ux447ux451ux442ux43dux43eux439-ux437ux430ux43fux438ux441ux438]{4.2.4
+Структура данных учётной записи
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux443ux447ux451ux442ux43dux43eux439-ux437ux430ux43fux438ux441ux438]{60}}
+
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux44b-ux434ux430ux43dux43dux44bux445-ux440ux435ux435ux441ux442ux440ux43eux432]{4.2.5
+Структуры данных реестров
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux44b-ux434ux430ux43dux43dux44bux445-ux440ux435ux435ux441ux442ux440ux43eux432]{61}}
+
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux441ux447ux451ux442ux447ux438ux43aux430-rate-limiter]{4.2.6
+Структура данных счётчика Rate Limiter
+\hyperref[ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux441ux447ux451ux442ux447ux438ux43aux430-rate-limiter]{63}}
+
+\hyperref[ux433ux43bux43eux431ux430ux43bux44cux43dux44bux435-ux43dux430ux441ux442ux440ux43eux439ux43aux438-ux441ux438ux441ux442ux435ux43cux44b]{4.2.7
+Глобальные настройки системы
+\hyperref[ux433ux43bux43eux431ux430ux43bux44cux43dux44bux435-ux43dux430ux441ux442ux440ux43eux439ux43aux438-ux441ux438ux441ux442ux435ux43cux44b]{64}}
+
+\hyperref[ux43fux435ux440ux441ux438ux441ux442ux435ux43dux442ux43dux43eux441ux442ux44c-ux434ux430ux43dux43dux44bux445-ux438-ux441ux442ux440ux430ux442ux435ux433ux438ux44f-ux432ux43eux441ux441ux442ux430ux43dux43eux432ux43bux435ux43dux438ux44f]{4.2.8
+Персистентность данных и стратегия восстановления
+\hyperref[ux43fux435ux440ux441ux438ux441ux442ux435ux43dux442ux43dux43eux441ux442ux44c-ux434ux430ux43dux43dux44bux445-ux438-ux441ux442ux440ux430ux442ux435ux433ux438ux44f-ux432ux43eux441ux441ux442ux430ux43dux43eux432ux43bux435ux43dux438ux44f]{65}}
+
+\textbf{\hfill\break
+}
+
+\section{////// Предполагаемая структура работы
+//////}\label{ux43fux440ux435ux434ux43fux43eux43bux430ux433ux430ux435ux43cux430ux44f-ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux440ux430ux431ux43eux442ux44b}
+
+\textbf{СОДЕРЖАНИЕ}
+
+\textbf{ПЕРЕЧЕНЬ СОКРАЩЕНИЙ И ОБОЗНАЧЕНИЙ} (добавить: ASGI, AOF, RPS,
+TTL)
+
+\textbf{ВВЕДЕНИЕ}
+
+\textbf{ГЛАВА 1. АНАЛИЗ ПРЕДМЕТНОЙ ОБЛАСТИ И ОБОСНОВАНИЕ ВЫБОРА
+ТЕХНОЛОГИЙ}
+
+1.1. Исследование инфраструктуры нагрузочного тестирования и роли
+имитационных сервисов.
+
+1.2. Анализ существующих подходов к управлению сервисами-заглушками и
+проблема импортозамещения.
+
+1.3. Сравнительный анализ и обоснование выбора технологического стека:
+язык программирования, веб-фреймворк и система хранения данных
+
+1.4. Обзор аналогичных решений и обоснование разработки собственного
+программного комплекса.
+
+1.5. Формирование функциональных и технических требований к системе.
+
+\textbf{Выводы по первой главе.}
+
+\textbf{ГЛАВА 2. ПРОЕКТИРОВАНИЕ И ТЕХНИЧЕСКАЯ РЕАЛИЗАЦИЯ СИСТЕМЫ
+УПРАВЛЕНИЯ}
+
+2.1. Разработка архитектуры распределенного программного комплекса.
+
+2.2. Проектирование структур данных (Key-Value) для хранения
+конфигураций и состояний процессов в In-Memory СУБД Redis.
+
+2.3. Реализация асинхронных механизмов управления процессами и ввода
+пользовательских параметров (JVM-аргументы).
+
+2.4. Разработка модуля динамического проксирования запросов на базе
+FastAPI и алгоритма Rate Limiting.
+
+2.5. Проектирование и программная реализация пользовательского
+интерфейса (Dashboard, управление кластером).
+
+2.6. Реализация механизма экспорта метрик мониторинга и интеграция с
+Prometheus.
+
+\textbf{Выводы по второй главе.}
+
+\textbf{\hl{ГЛАВА 3. ВНЕДРЕНИЕ, ТЕСТИРОВАНИЕ И}}
+\textbf{\hl{ЭКСПЛУАТАЦИЯ РАЗРАБОТАННОГО ПРОГРАММНОГО КОМПЛЕКСА}}
+
+3.1. Описание процесса развертывания системы в среде ОС Astra Linux
+(настройка Uvicorn/Gunicorn и службы Redis).
+
+3.2. Тестирование механизмов автоматического восстановления состояний
+(персистентность Redis AOF) и перезапуска сервисов.
+
+3.3. Экспериментальная оценка производительности прокси-модуля и
+эффективности алгоритма Rate Limiting под нагрузкой.
+
+3.4. Анализ работы системы в кластерном режиме и оценка алгоритмов
+распределения нагрузки между узлами.
+
+3.5. Рекомендации по дальнейшему развитию системы (шаблонизация
+конфигураций, Self-healing).
+
+\textbf{Выводы по третьей главе.}
+
+\textbf{ЗАКЛЮЧЕНИЕ}
+
+\textbf{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+
+\textbf{ПРИЛОЖЕНИЯ}
+
+\begin{itemize}
+\item
+  Приложение А. Техническое задание.
+\item
+  Приложение Б. Программа и методика испытаний.
+\item
+  Приложение В. Листинги программного кода (реализация асинхронных
+  эндпоинтов FastAPI, модуль работы с Redis).
+\item
+  Приложение Г. Протоколы тестирования и скриншоты интерфейса.
+\end{itemize}
+
+\section{////// Предполагаемое техническое описание
+//////}\label{ux43fux440ux435ux434ux43fux43eux43bux430ux433ux430ux435ux43cux43eux435-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux43eux435-ux43eux43fux438ux441ux430ux43dux438ux435}
+
+\textbf{Тема проекта:} Разработка автоматизированной информационной
+системы управления распределенной инфраструктурой имитационных сервисов
+для нагрузочного тестирования.
+
+\textbf{1. Назначение и концепция системы} Система предназначена для
+централизованного управления жизненным циклом имитационных сервисов
+(Java-приложений в форматах .jar и .war), используемых в качестве
+«заглушек» внешних интеграций при проведении нагрузочного тестирования.
+Программный комплекс позволяет автоматизировать процессы развертывания,
+контроля состояния и маршрутизации трафика, обеспечивая
+кросс-платформенную совместимость (в том числе с ОС Astra Linux) и
+импортозамещение зарубежных решений.
+
+\textbf{2. Гибкая архитектура и масштабируемость} Система поддерживает
+два режима функционирования:
+
+\begin{itemize}
+\item
+  \textbf{Локальный режим:} Все компоненты (управляющее приложение, СУБД
+  Redis, имитационные сервисы) работают на одном хосте.
+\item
+  \textbf{Распределённый режим}: Управляющий узел взаимодействует с
+  удалёнными хостами напрямую по протоколам SSH/SCP, без установки
+  каких-либо компонентов системы на целевые серверы. Запуск, остановка и
+  мониторинг процессов заглушек осуществляются через SSH-команды.
+\end{itemize}
+
+\textbf{3. Функциональные механизмы и алгоритмы} Реализация системы
+предполагает использование следующих ключевых механизмов:
+
+\begin{itemize}
+\item
+  \textbf{Управление процессами и транспорт артефактов:} Запуск
+  имитационных сервисов на удалённых хостах инициируется напрямую через
+  SSH-команды посредством библиотеки paramiko. Доставка исполняемых
+  файлов (.jar) с Master-узла на Slave-узлы осуществляется по
+  защищенному протоколу SSH (SCP), что гарантирует безопасность передачи
+  данных.
+\item
+  \textbf{Динамическое управление портами:} При запуске нового сервиса
+  система автоматически определяет свободный сетевой порт на целевом
+  хосте. Информация о запущенном \hl{экземпляре приложения}
+  (соответствие mock\_name -\textgreater{} ip:port) мгновенно
+  регистрируется в Redis для настройки маршрутизации.
+\item
+  \textbf{Динамическая маршрутизация (Reverse Proxy):} Master-узел
+  перенаправляет входящие запросы по URL-префиксу
+  /\textless mock\_name\textgreater/ на соответствующий IP и порт
+  сервиса, используя данные из Redis. Асинхронная модель ввода-вывода
+  (Async I/O) FastAPI позволяет обрабатывать тысячи одновременных
+  соединений с минимальными задержками.
+\item
+  \textbf{Алгоритм Rate Limiting (Fixed Window):} Для ограничения
+  интенсивности запросов используется алгоритм «Счетчик с фиксированным
+  окном» (Fixed Window Counter). При активации функции система
+  инкрементирует атомарные счетчики в Redis с заданным временем жизни
+  (TTL). При превышении порога (RPS) запросы блокируются с кодом 429 Too
+  Many Requests.
+\end{itemize}
+
+\textbf{4. Работа с данными и сохранение состояний} Информационное
+обеспечение системы базируется на высокопроизводительной In-Memory СУБД
+\textbf{Redis}:
+
+\begin{itemize}
+\item
+  \textbf{Хранение конфигураций:} Идентификаторы процессов (PID),
+  параметры запуска, маппинг портов и метаданные сервисов хранятся в
+  оперативной памяти (Key-Value), обеспечивая доступ менее чем за 1 мс.
+\item
+  \textbf{Персистентность состояний:} Для предотвращения потери данных
+  используется механизм \textbf{AOF (Append Only File)}. Система
+  фиксирует изменения на диске, что позволяет при перезагрузке
+  управляющего приложения автоматически восстановить конфигурацию
+  кластера.
+\end{itemize}
+
+\textbf{5. Мониторинг и метрики} Система реализует экспорт телеметрии
+для сбора внешними средствами (Prometheus):
+
+\begin{itemize}
+\item
+  \textbf{Эндпоинт:} /metrics.
+\item
+  \textbf{Метрики:} Текущий RPS по каждой заглушке, количество
+  срабатываний Rate Limiter, статус доступности сервисов (UP/DOWN) и
+  статус доступности целевых хостов.
+\end{itemize}
+
+\textbf{6. Пользовательский интерфейс} Интерфейс реализован с
+использованием технологии \textbf{Server-Side Rendering (SSR)} на базе
+шаблонизатора \textbf{Jinja2}. Это обеспечивает высокую скорость
+отрисовки страниц, минимальные требования к клиенту и упрощает
+архитектуру приложения (отсутствие отдельного SPA-фронтенда).
+
+\begin{itemize}
+\item
+  \textbf{Главная панель (Dashboard):} Таблица со списком заглушек, их
+  статусами, адресами и элементами управления.
+\item
+  \textbf{Управление кластером:} Форма добавления Slave-узлов и
+  мониторинга их доступности.
+\item
+  \textbf{Редактор:} Интерфейс для загрузки .jar файлов, настройки
+  шаблонов запуска (JVM-аргументы) и просмотра логов.
+\end{itemize}
+
+\section{Введение}\label{ux432ux432ux435ux434ux435ux43dux438ux435}
+
+\textbf{Актуальность темы.} В современной практике обеспечения качества
+сложных программных комплексов проведение нагрузочного тестирования
+требует создания стабильной и управляемой среды. Одной из ключевых
+проблем является необходимость имитации внешних систем, с которыми
+взаимодействует объект тестирования. Использование имитационных сервисов
+(«заглушек») позволяет изолировать тестируемую систему, однако
+управление большим количеством таких сервисов, их развертывание на
+удаленных серверах и контроль их состояния в ручном режиме существенно
+замедляют процесс подготовки испытаний.
+
+В условиях реализации политики импортозамещения в Российской Федерации
+актуальность приобретает разработка отечественных инструментов
+управления инфраструктурой, способных заменить зарубежные программные
+продукты и обеспечить полноценное функционирование стендов нагрузочного
+тестирования в среде защищенных операционных систем, таких как ОС Astra
+Linux. Таким образом, создание системы, автоматизирующей жизненный цикл
+имитационных сервисов и предоставляющей механизмы контроля трафика,
+является своевременной и практически значимой задачей.
+
+\hl{\textbf{Цель работы} -- проектирование и разработка
+автоматизированной информационной системы для централизованного
+управления и мониторинга состояния распределенной инфраструктуры
+имитационных сервисов.}
+
+\textbf{Задачи исследования:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Провести анализ предметной области и существующих подходов к
+  управлению имитационными средами в процессах обеспечения качества ПО.
+\item
+  Спроектировать архитектуру программного комплекса, обеспечивающую
+  гибкое масштабирование и работу в различных режимах.
+\item
+  Обосновать выбор технологического стека и программных средств
+  реализации системы.
+\item
+  Разработать алгоритмы динамического проксирования трафика, механизмы
+  контроля интенсивности запросов и программные интерфейсы для
+  автоматизации управления.
+\item
+  Реализовать систему хранения конфигураций и контроля состояний
+  исполняемых файлов.
+\item
+  Провести тестирование разработанного комплекса в среде ОС Astra Linux
+  и оценить эффективность реализованных механизмов мониторинга и
+  управления.
+\end{enumerate}
+
+\hl{\textbf{Объект исследования} -- инфраструктура запуска и
+эксплуатации имитационных сервисов (заглушек) в среде нагрузочного
+тестирования.}
+
+\hl{\textbf{Предмет исследования} --} \hl{механизмы и алгоритмы
+автоматизированного управления и контроля состояния имитационных
+сервисов в среде нагрузочного тестирования.}
+
+\textbf{Научная новизна} работы заключается в разработке \hl{алгоритма
+централизованного управления} распределенной средой, поддерживающего
+индивидуальную настройку ограничений интенсивности запросов (Rate
+Limiting) для каждого сервиса, а также в реализации программного
+интерфейса \hl{(Application Programming Interface,} \hl{API)} для
+автоматического контроля состояния заглушек непосредственно из скриптов
+нагрузочного тестирования.
+
+\textbf{Практическая значимость} работы состоит в создании программного
+инструмента, позволяющего отказаться от использования зарубежных систем
+управления, упростить эксплуатацию инфраструктуры имитационных сервисов
+и повысить уровень автоматизации процесса нагрузочного тестирования.
+
+\textbf{Положения, выносимые на защиту:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Архитектура программного комплекса, поддерживающая гибкое
+  масштабирование системы от локального запуска на одном хосте до
+  формирования распределенного кластера.
+\item
+  Механизм динамического проксирования запросов, реализующий прозрачную
+  маршрутизацию входящего трафика к целевым имитационным сервисам.
+\item
+  Алгоритм контроля интенсивности запросов (Rate Limiting),
+  обеспечивающий стабильность работы имитационной среды при пиковых
+  нагрузках.
+\item
+  Методика формирования и экспорта метрик производительности для
+  непрерывного мониторинга состояния инфраструктуры заглушек.
+\end{enumerate}
+
+Структура работы. Выпускная квалификационная работа включает введение,
+три главы основного текста, заключение, список использованных источников
+и приложения.
+
+Во введении обоснована актуальность исследования, поставлены цель и
+задачи, определены объект и предмет работы, указаны научная новизна и
+практическая значимость полученных результатов.
+
+В первой главе проводится анализ предметной области, исследуются
+существующие аналоги и методы управления имитационными средами. На
+основе сравнительного анализа обосновывается выбор технологий и
+формируются требования к системе.
+
+Во второй главе описывается проектирование архитектуры системы,
+структуры хранения данных и логики работы основных модулей. Приводятся
+схемы взаимодействия компонентов и алгоритмы реализации функций
+проксирования и управления кластером.
+
+В третьей главе рассматриваются вопросы практической реализации,
+настройки и эксплуатации системы в среде ОС Astra Linux. Приводятся
+результаты тестирования, подтверждающие корректность работы
+разработанных механизмов управления и мониторинга.
+
+В заключении сформулированы основные выводы, подтверждающие решение
+поставленных задач и достижение цели работы.
+
+\section{АНАЛИЗ ПРЕДМЕТНОЙ ОБЛАСТИ И ОБОСНОВАНИЕ ВЫБОРА
+ТЕХНОЛОГИЙ}\label{ux430ux43dux430ux43bux438ux437-ux43fux440ux435ux434ux43cux435ux442ux43dux43eux439-ux43eux431ux43bux430ux441ux442ux438-ux438-ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux432ux44bux431ux43eux440ux430-ux442ux435ux445ux43dux43eux43bux43eux433ux438ux439}
+
+\subsection{Исследование инфраструктуры нагрузочного тестирования и роли
+имитационных
+сервисов}\label{ux438ux441ux441ux43bux435ux434ux43eux432ux430ux43dux438ux435-ux438ux43dux444ux440ux430ux441ux442ux440ux443ux43aux442ux443ux440ux44b-ux43dux430ux433ux440ux443ux437ux43eux447ux43dux43eux433ux43e-ux442ux435ux441ux442ux438ux440ux43eux432ux430ux43dux438ux44f-ux438-ux440ux43eux43bux438-ux438ux43cux438ux442ux430ux446ux438ux43eux43dux43dux44bux445-ux441ux435ux440ux432ux438ux441ux43eux432}
+
+В современной практике обеспечения качества сложных программных
+комплексов нагрузочное тестирование занимает критически важное место.
+Оно позволяет гарантировать стабильность и управляемость информационной
+системы при высоких эксплуатационных нагрузках. Одной из ключевых
+проблем при организации таких испытаний является необходимость
+взаимодействия объекта тестирования с множеством внешних систем и
+сервисов.
+
+Использование реальных внешних интеграций в среде тестирования часто
+оказывается невозможным или нецелесообразным по ряду причин:
+
+\begin{itemize}
+\item
+  \textbf{Ограниченность ресурсов}: внешние системы могут иметь жесткие
+  лимиты на количество запросов или требовать значительных финансовых
+  затрат на эксплуатацию.
+\item
+  \textbf{Изоляция среды}: для получения достоверных результатов
+  необходимо исключить влияние задержек и сбоев сторонних систем на
+  показатели исследуемого объекта.
+\item
+  \textbf{Риски изменения данных}: проведение тестов на реальных
+  интеграциях может привести к нежелательному изменению или повреждению
+  информации в продуктовых базах данных.
+\end{itemize}
+
+Для решения этих проблем применяются \textbf{имитационные сервисы
+(«заглушки»)} -- специализированное программное обеспечение, которое
+воспроизводит поведение реальных компонентов, отвечая на запросы
+тестируемой системы заранее определенным образом. \hl{В контексте данной
+работы в качестве имитационных сервисов рассматриваются Java-приложения
+в форматах \textbf{.jar} и \textbf{.war}.}
+
+Роль имитационных сервисов в инфраструктуре нагрузочного тестирования
+заключается в следующем:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Обеспечение автономности стенда}: заглушки позволяют полностью
+  изолировать тестируемую систему от внешнего окружения, создавая
+  предсказуемую среду.
+\item
+  \textbf{Эмуляция различных сценариев}: имитационные сервисы могут
+  воспроизводить не только корректные ответы, но и ошибки (HTTP 5xx,
+  тайм-ауты), что необходимо для проверки механизмов отказоустойчивости.
+\item
+  \textbf{Контроль интенсивности трафика}: использование механизмов
+  ограничения запросов (Rate Limiting) позволяет моделировать поведение
+  внешних систем при достижении ими предельных порогов
+  производительности.
+\end{enumerate}
+
+Однако при увеличении масштаба информационной системы количество
+необходимых заглушек возрастает, что порождает проблему управления
+распределенной инфраструктурой. Процессы развертывания, контроля
+состояния (активна/остановлена) и маршрутизации трафика к десяткам
+имитационных сервисов на различных серверах в ручном режиме существенно
+замедляют подготовку к испытаниям.
+
+Таким образом, для эффективного функционирования стендов нагрузочного
+тестирования необходима специализированная система. Она должна
+централизованно управлять жизненным циклом заглушек, обеспечивать их
+мониторинг и динамическое проксирование запросов, что особенно актуально
+в условиях перехода на отечественные операционные системы, такие как
+\textbf{ОС Astra Linux}.
+
+\subsection{Анализ существующих подходов к управлению
+сервисами-заглушками и проблема
+импортозамещения}\label{ux430ux43dux430ux43bux438ux437-ux441ux443ux449ux435ux441ux442ux432ux443ux44eux449ux438ux445-ux43fux43eux434ux445ux43eux434ux43eux432-ux43a-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44e-ux441ux435ux440ux432ux438ux441ux430ux43cux438-ux437ux430ux433ux43bux443ux448ux43aux430ux43cux438-ux438-ux43fux440ux43eux431ux43bux435ux43cux430-ux438ux43cux43fux43eux440ux442ux43eux437ux430ux43cux435ux449ux435ux43dux438ux44f}
+
+Традиционным подходом к управлению имитационными сервисами (заглушками),
+разработанными на языке Java, является их развертывание в
+специализированных контейнерах серверов приложений. В современной
+практике разработки и тестирования сложился ряд стандартных решений,
+среди которых наиболее распространенными являются:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Apache Tomcat} -- наиболее легкий и популярный
+  сервлет-контейнер, используемый для запуска веб-приложений. Он
+  обеспечивает базовую поддержку спецификаций Java Servlet и JavaServer
+  Pages.
+\item
+  \textbf{WildFly (ранее JBoss Application Server)} -- более мощная и
+  полнофункциональная платформа, поддерживающая широкий спектр
+  стандартов Java EE (Jakarta EE). Данное решение предоставляет
+  расширенные возможности управления ресурсами и кластеризации.
+\item
+  \textbf{Eclipse GlassFish} -- эталонная реализация платформы Java EE,
+  предлагающая развитые инструменты администрирования через графическую
+  консоль и командную строку.
+\end{enumerate}
+
+Анализ данных решений позволяет выделить общие тенденции и
+характеристики классических серверов приложений:
+
+\begin{itemize}
+\item
+  \textbf{Универсальность и полнофункциональность}: все перечисленные
+  платформы спроектированы для запуска сложных корпоративных
+  информационных систем. Однако для узкоспециализированной задачи --
+  работы легковесных имитационных заглушек -- их функциональность
+  является избыточной.
+\item
+  \textbf{Значительные накладные расходы}: общим недостатком является
+  высокое потребление оперативной памяти и ресурсов центрального
+  процессора самой платформой. При необходимости запуска десятков или
+  сотен заглушек на одном или нескольких хостах суммарные затраты
+  ресурсов на поддержание среды выполнения становятся критическими.
+\item
+  \textbf{Сложность автоматизации и оркестрации}: управление большим
+  парком разрозненных экземпляров серверов приложений требует внедрения
+  дополнительных тяжеловесных систем автоматизации. Штатные средства
+  управления (консоли администрирования) ориентированы на ручное
+  конфигурирование, что затрудняет их использование в динамических
+  сценариях нагрузочного тестирования.
+\item
+  \textbf{Монолитная архитектура управления}: классические подходы
+  подразумевают жесткую привязку приложения к конкретной конфигурации
+  сервера, что снижает гибкость при необходимости быстрого изменения
+  параметров запуска (например, JVM-аргументов) для отдельных сервисов.
+\end{itemize}
+
+На текущий момент в российской ИТ-индустрии наблюдается отчетливая
+тенденция к отказу от использования зарубежных проприетарных и открытых
+решений в пользу отечественного программного обеспечения или собственных
+разработок. Это обусловлено политикой импортозамещения и необходимостью
+обеспечения технологического суверенитета.
+
+Большинство западных систем управления инфраструктурой и серверов
+приложений (таких как продукты Oracle или Red Hat) сталкиваются с
+проблемами поддержки, обновления и совместимости с российскими
+операционными системами. В частности, эксплуатация имитационных стендов
+в защищенной среде ОС Astra Linux требует инструментов, которые нативно
+поддерживают механизмы управления этой операционной системы и не зависят
+от зарубежных репозиториев и лицензий.
+
+Таким образом, анализ существующих подходов показывает, что
+использование традиционных серверов приложений типа Tomcat или WildFly
+для управления распределенной сетью заглушек становится неэффективным.
+Современные требования диктуют необходимость перехода к более легким,
+гибким и отечественным решениям, способным обеспечить централизованное
+управление жизненным циклом сервисов в рамках распределенных кластеров.
+
+\subsection{Сравнительный анализ инструментальных средств разработки и
+обоснование технологического
+стека}\label{ux441ux440ux430ux432ux43dux438ux442ux435ux43bux44cux43dux44bux439-ux430ux43dux430ux43bux438ux437-ux438ux43dux441ux442ux440ux443ux43cux435ux43dux442ux430ux43bux44cux43dux44bux445-ux441ux440ux435ux434ux441ux442ux432-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438-ux438-ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux442ux435ux445ux43dux43eux43bux43eux433ux438ux447ux435ux441ux43aux43eux433ux43e-ux441ux442ux435ux43aux430}
+
+Выбор программных средств для реализации системы управления
+имитационными сервисами является фундаментальным этапом проектирования.
+От корректности этого выбора зависят эксплуатационные характеристики
+будущей системы: предельная пропускная способность, латентность (время
+отклика), масштабируемость и устойчивость к пиковым нагрузкам.
+
+В ходе анализа предметной области и целей исследования было определено,
+что разрабатываемая система должна обеспечивать бесперебойную
+оркестрацию интенсивного потока запросов от нагрузочных станций. Это
+накладывает жесткие ограничения на архитектуру: управляющий контур не
+должен становиться «узким местом» (bottleneck) при маршрутизации
+трафика. Требование минимизации накладных расходов исключает
+использование технологий, склонных к блокировке вычислительных ресурсов
+при ожидании ответа от внешних систем.
+
+Для обоснования выбора проводится многокритериальный анализ по трем
+направлениям: язык программирования, веб-фреймворк и система управления
+базами данных.
+
+\subsubsection{Обоснование выбора языка программирования серверной
+части}\label{ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux432ux44bux431ux43eux440ux430-ux44fux437ux44bux43aux430-ux43fux440ux43eux433ux440ux430ux43cux43cux438ux440ux43eux432ux430ux43dux438ux44f-ux441ux435ux440ux432ux435ux440ux43dux43eux439-ux447ux430ux441ux442ux438}
+
+Для разработки backend-составляющей системы рассматривались три языка
+программирования, наиболее востребованных в сфере высоконагруженных
+систем (HighLoad) и системной автоматизации.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Java} -- объектно-ориентированный язык программирования.
+  Является отраслевым стандартом для корпоративных систем и «родной»
+  средой для запуска самих имитационных сервисов (.jar).
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Строгая статическая типизация, снижающая количество ошибок на этапе
+    компиляции.
+  \item
+    Развитая экосистема библиотек и инструментов профилирования.
+  \item
+    Поддержка полноценной многопоточности (multithreading).
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Высокая ресурсоемкость виртуальной машины (JVM), требующая
+    значительного объема оперативной памяти.
+  \item
+    Длительное время «холодного старта», что критично для динамических
+    сред тестирования.
+  \item
+    Громоздкий синтаксис для простых задач взаимодействия с процессами
+    операционной системы.
+  \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  \textbf{Go (Golang) --} компилируемый многопоточный язык
+  программирования, разработанный Google, ориентированный на создание
+  эффективных сетевых сервисов.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Высочайшая производительность, сопоставимая с C++, благодаря
+    компиляции в нативный код.
+  \item
+    Эффективная модель конкурентности (goroutines), позволяющая
+    обрабатывать тысячи соединений с минимальными накладными расходами.
+  \item
+    Отсутствие внешних зависимостей (компиляция в единый бинарный файл).
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Отсутствие гибкости при работе с динамическими структурами данных
+    (JSON произвольной структуры) из-за строгой типизации.
+  \item
+    Специфическая обработка ошибок и отсутствие исключений, что
+    увеличивает объем шаблонного кода (boilerplate).
+  \item
+    Более высокий порог входа по сравнению с интерпретируемыми языками.
+  \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  \textbf{Python --} высокоуровневый интерпретируемый язык
+  программирования общего назначения с динамической строгой типизацией.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Наличие мощных инструментов асинхронного программирования
+    (библиотека asyncio), позволяющих эффективно обрабатывать задачи,
+    ограниченные скоростью \hl{ввода-вывода (I/O-bound),} такие как
+    сетевые запросы или ожидание ответа от базы данных.
+  \item
+    Глубокая интеграция с Linux: модуль subprocess предоставляет удобный
+    интерфейс для управления процессами, сигналами и потоками
+    ввода-вывода.
+  \item
+    Высокая скорость разработки благодаря лаконичному синтаксису.
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Производительность интерпретатора ниже, чем у компилируемых языков.
+  \item
+    Наличие Global Interpreter Lock (GIL), ограничивающего выполнение
+    потоков на одном ядре CPU (нивелируется использованием асинхронного
+    подхода).
+  \end{itemize}
+\end{itemize}
+
+\textbf{Вывод:} В качестве основного языка выбран \textbf{Python}.
+Возможность использования асинхронного программирования в сочетании с
+нативными средствами управления процессами Linux позволяет обеспечить
+необходимую производительность, сохраняя гибкость и скорость разработки.
+
+\subsubsection{Сравнительный анализ
+веб-фреймворков}\label{ux441ux440ux430ux432ux43dux438ux442ux435ux43bux44cux43dux44bux439-ux430ux43dux430ux43bux438ux437-ux432ux435ux431-ux444ux440ux435ux439ux43cux432ux43eux440ux43aux43eux432}
+
+Учитывая необходимость обеспечения высокой пропускной способности
+системы, выбор архитектуры веб-фреймворка является критическим.
+Рассматривались три кандидата: Django, Flask и FastAPI.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Django --} полнофункциональный синхронный фреймворк уровня
+  Enterprise, следующий принципу «Batteries included» (все включено).
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Наличие встроенной панели администрирования, ORM (Object-Relational
+    Mapping) и системы аутентификации «из коробки».
+  \item
+    Развитая экосистема плагинов и высокий уровень безопасности.
+  \item
+    Строгая структура проекта, облегчающая поддержку крупных монолитных
+    приложений.
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Монолитная архитектура и избыточный функционал создают значительные
+    накладные расходы (overhead) на каждый запрос.
+  \item
+    Синхронная модель обработки запросов плохо подходит для
+    высоконагруженных микросервисов, так как блокирует потоки при
+    ожидании ввода-вывода.
+  \item
+    Сложность отключения неиспользуемых компонентов для облегчения
+    системы.
+  \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  \textbf{Flask --} легковесный микрофреймворк. Классическое решение,
+  основанное на спецификации \hl{WSGI (Web Server Gateway Interface).}
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Минимализм и модульность: разработчик подключает только необходимые
+    библиотеки.
+  \item
+    Низкий порог входа и простота создания простых сервисов.
+  \item
+    Гибкость в выборе архитектурных паттернов.
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Использование синхронной (блокирующей) модели ввода-вывода. При
+    высокой нагрузке это приводит к исчерпанию пула потоков сервера и
+    росту задержек.
+  \item
+    Отсутствие встроенных механизмов валидации данных (требует
+    подключения сторонних расширений).
+  \item
+    Снижение производительности при большом количестве одновременных
+    соединений (проблема C10k).
+  \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  \textbf{FastAPI} -- современный асинхронный фреймворк. Инструмент,
+  построенный на спецификации ASGI (Asynchronous Server Gateway
+  Interface).
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Полная поддержка асинхронности (async/await) и событийного цикла,
+    что позволяет обрабатывать тысячи запросов в секунду на одном
+    процессе.
+  \item
+    Высокая производительность благодаря использованию Starlette и
+    uvloop, сопоставимая с Go и Node.js.
+  \item
+    Встроенная быстрая валидация данных и сериализация на базе Pydantic.
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Относительно молодая экосистема по сравнению с Django и Flask.
+  \item
+    Требует понимания принципов асинхронного программирования.
+  \end{itemize}
+\end{itemize}
+
+\textbf{Вывод:} Выбран фреймворк \textbf{FastAPI}. Это единственное
+решение в экосистеме Python, способное обеспечить стабильную обработку
+интенсивного трафика с минимальными задержками благодаря асинхронной
+неблокирующей архитектуре.
+
+\subsubsection{Обоснование выбора системы управления данными
+(СУБД)}\label{ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux432ux44bux431ux43eux440ux430-ux441ux438ux441ux442ux435ux43cux44b-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44f-ux434ux430ux43dux43dux44bux43cux438-ux441ux443ux431ux434}
+
+Для обеспечения высокой отзывчивости системы подсистема хранения данных
+должна обладать минимальным временем отклика на чтение конфигураций и
+запись статусов. Сравнивались конкретные распространенные решения.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{PostgreSQL -- объектно-реляционная СУБД.} Мощная система баз
+  данных с открытым исходным кодом.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Гарантия целостности данных (ACID) и надежность хранения.
+  \item
+    Мощный язык запросов SQL и поддержка сложных выборок (JOIN).
+  \item
+    Широкие возможности расширяемости (типы данных, индексы).
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Накладные расходы на дисковые операции ввода-вывода и журналирование
+    (WAL) замедляют отклик.
+  \item
+    Избыточность функционала для хранения простых пар «ключ-значение»
+    (конфигурации заглушек).
+  \item
+    Потребность в строгом проектировании схемы данных (Schema
+    migrations).
+  \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  \textbf{MySQL -- реляционная СУБД.} Популярная база данных, часто
+  используемая в веб-приложениях.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Высокая скорость операций чтения в простых сценариях.
+  \item
+    Широкая распространенность и простота администрирования.
+  \item
+    Поддержка различных движков хранения (Storage Engines).
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Как и любая реляционная СУБД, зависит от скорости дисковой
+    подсистемы.
+  \item
+    Блокировки таблиц или строк могут снижать конкурентность записи при
+    высокой нагрузке.
+  \item
+    Жесткость схемы данных.
+  \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  \textbf{MongoDB -- документоориентированная NoSQL СУБД}. Система,
+  хранящая данные в формате BSON (бинарный JSON).
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Гибкая схема данных (Schemaless), идеально подходящая для хранения
+    JSON-конфигураций.
+  \item
+    Горизонтальная масштабируемость (шардинг) из коробки.
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Потребляет значительно больше памяти и дискового пространства по
+    сравнению с аналогами.
+  \item
+    В стандартной конфигурации уступает In-Memory решениям по скорости
+    отклика.
+  \item
+    Слабые гарантии транзакционности в старых версиях.
+  \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\item
+  \textbf{Redis -- In-Memory хранилище структур данных}.
+  Высокопроизводительная СУБД, работающая полностью в оперативной
+  памяти.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{Преимущества:}
+
+  \begin{itemize}
+  \item
+    Экстремально низкая латентность (время доступа менее 1 мс) благодаря
+    отсутствию обращений к диску при чтении.
+  \item
+    Простая модель данных «Ключ-Значение», полностью соответствующая
+    задаче хранения состояний процессов.
+  \item
+    Нативная поддержка механизма Time-To-Live (TTL) для временных
+    данных.
+  \end{itemize}
+\item
+  \textbf{Недостатки:}
+
+  \begin{itemize}
+  \item
+    Зависимость объема хранимых данных от объема оперативной памяти.
+  \item
+    Риск потери данных при аварийном отключении питания (решается
+    настройкой персистентности).
+  \end{itemize}
+\end{itemize}
+
+\textbf{Вывод:} Выбрана СУБД \textbf{Redis}. Использование In-Memory
+архитектуры обеспечивает максимальное быстродействие. Проблема
+сохранности данных решается включением режима \textbf{AOF (Append Only
+File)}, который асинхронно сохраняет операции на диск, гарантируя
+восстановление конфигураций после перезагрузки без ущерба для
+производительности.
+
+\subsubsection{Итоговый выбор средств
+разработки}\label{ux438ux442ux43eux433ux43eux432ux44bux439-ux432ux44bux431ux43eux440-ux441ux440ux435ux434ux441ux442ux432-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438}
+
+На основании проведенного анализа и выявленных требований к
+быстродействию и надежности, утвержден следующий стек технологий для
+реализации выпускной квалификационной работы:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Язык программирования:} Python (с использованием asyncio).
+\item
+  \textbf{Веб-фреймворк:} FastAPI (сервер приложений Uvicorn).
+\item
+  \textbf{СУБД:} Redis (режим персистентности AOF).
+\item
+  \textbf{Целевая платформа:} ОС Astra Linux Special Edition.
+\end{enumerate}
+
+Данный выбор обеспечивает оптимальный баланс между производительностью,
+скоростью разработки и надежностью функционирования системы в условиях
+высокой нагрузки.
+
+\subsection{Обзор аналогичных решений и обоснование разработки
+собственного программного
+комплекса}\label{ux43eux431ux437ux43eux440-ux430ux43dux430ux43bux43eux433ux438ux447ux43dux44bux445-ux440ux435ux448ux435ux43dux438ux439-ux438-ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438-ux441ux43eux431ux441ux442ux432ux435ux43dux43dux43eux433ux43e-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43eux433ux43e-ux43aux43eux43cux43fux43bux435ux43aux441ux430}
+
+В рамках анализа предметной области необходимо рассмотреть существующие
+на рынке инструменты, применяемые для создания, эксплуатации и
+управления имитационными сервисами (заглушками). Поскольку
+разрабатываемая система предназначена для управления инфраструктурой
+заглушек в процессе нагрузочного тестирования, к аналогам следует
+отнести программные продукты, обеспечивающие виртуализацию сервисов
+(Service Virtualization), мокирование (Mocking), а также серверы
+приложений, традиционно используемые для хостинга Java-артефактов.
+
+Сравнительный анализ проводится по критериям, критически важным для
+обеспечения стабильности нагрузочного стенда и автоматизации процессов
+тестирования:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Архитектура и потребление ресурсов:} способность работать в
+  условиях ограниченных аппаратных мощностей при запуске десятков
+  экземпляров заглушек.
+\item
+  \textbf{Возможности управления процессами (Orchestration):} наличие
+  инструментов для удаленного запуска, остановки и обновления версий
+  приложений-заглушек.
+\item
+  \textbf{Функциональность управления трафиком:} наличие встроенных
+  механизмов ограничения нагрузки (Rate Limiting) и эмуляции сетевых
+  задержек.
+\item
+  \textbf{Совместимость и импортозамещение:} возможность автономной
+  работы в среде ОС Astra Linux без зависимости от зарубежных облачных
+  сервисов и проприетарных лицензий.
+\end{enumerate}
+
+\subsubsection{Анализ решения
+WireMock}\label{ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-wiremock}
+
+\textbf{WireMock} -- один из наиболее распространенных инструментов с
+открытым исходным кодом для виртуализации HTTP-сервисов. Продукт
+позволяет создавать заглушки, настраивать правила сопоставления запросов
+(request matching) и формировать динамические ответы.
+
+\textbf{Функциональные возможности:}
+
+Согласно официальной документации {[}1{]}, WireMock поддерживает гибкую
+настройку ответов через JSON API, имитацию задержек (network latency) и
+ошибок (fault injection). Он может работать в двух режимах: как
+библиотека, встраиваемая в код автотестов, или как отдельный процесс
+(Standalone).
+
+\textbf{Недостатки в контексте поставленной задачи:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Ресурсоемкость: WireMock разработан на Java и выполняется в
+  виртуальной машине JVM. Запуск отдельного экземпляра WireMock для
+  каждого имитируемого микросервиса создает значительные накладные
+  расходы на оперативную память (RAM) и процессорное время (CPU). В
+  условиях нагрузочного тестирования, когда требуется поднять 50--100
+  заглушек, суммарные затраты ресурсов на поддержание работы самих
+  заглушек становятся неприемлемыми.
+\item
+  Отсутствие встроенной оркестрации: В бесплатной версии (Open Source)
+  WireMock отсутствует централизованная панель управления распределенным
+  кластером. Инструмент фокусируется на логике ответа, а не на
+  эксплуатации сервера.
+\item
+  Ограничения Rate Limiting: Базовый функционал позволяет имитировать
+  задержки, однако полноценный алгоритм ограничения количества запросов
+  в секунду (RPS) с отбрасыванием лишнего трафика требует написания
+  кастомных расширений (extensions) на Java {[}1{]}.
+\end{enumerate}
+
+\subsubsection{Анализ решения
+MockServer}\label{ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-mockserver}
+
+\textbf{MockServer} -- популярное решение для мокирования систем,
+взаимодействующих по протоколам HTTP или HTTPS. Продукт часто
+используется в контейнеризированных средах (Docker, Kubernetes) для
+интеграционного тестирования.
+
+\textbf{Функциональные возможности:}
+
+MockServer предоставляет мощный API для создания «ожиданий»
+(Expectations) и верификации запросов. Согласно документации {[}2{]}, он
+поддерживает проксирование трафика (Port Forwarding), запись проходящих
+запросов для последующего анализа и генерацию ответов на основе шаблонов
+(Mustache, Velocity).
+
+\textbf{Недостатки в контексте поставленной задачи:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Монолитная архитектура управления: MockServer хранит состояния
+  «ожиданий» в памяти конкретного экземпляра приложения. Для создания
+  распределенной системы требуется сложная настройка кластеризации, что
+  утяжеляет инфраструктуру тестового стенда.
+\item
+  Сложность динамического управления: MockServer ориентирован на
+  программное управление через API во время прогона тестов.
+  Использование его как постоянно действующего инфраструктурного
+  компонента требует разработки дополнительной обвязки для мониторинга
+  его состояния и автоматического перезапуска (Self-healing) {[}2{]}.
+\item
+  Зависимость от Java: Аналогично WireMock, продукт написан на Java, что
+  влечет проблемы с «холодным стартом» и высоким потреблением памяти
+  (Heap Size), что снижает плотность размещения заглушек на сервере.
+\end{enumerate}
+
+\subsubsection{Анализ решения
+Mountebank}\label{ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-mountebank}
+
+\textbf{Mountebank} -- инструмент с открытым исходным кодом,
+разработанный на платформе Node.js. Его ключевой особенностью является
+мультипротокольность: помимо HTTP/HTTPS, он поддерживает TCP, SMTP и
+другие протоколы через систему плагинов.
+
+\textbf{Функциональные возможности:}
+
+Mountebank использует концепцию «самозванцев» (imposters) -- легковесных
+сервисов, слушающих определенные порты. Документация {[}3{]} указывает
+на возможность использования JavaScript-инъекций для реализации сложной
+логики обработки ответов.
+
+\textbf{Недостатки в контексте поставленной задачи:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Проблемы безопасности: Возможность исполнения произвольного JS-кода
+  (injection) в теле запроса создает уязвимости в контуре нагрузочного
+  тестирования.
+\item
+  Отсутствие управления артефактами: Mountebank позволяет создать логику
+  ответа (скрипт), но он не предназначен для запуска и управления
+  бинарными файлами (заглушками в виде .jar), предоставленными
+  разработчиками.
+\item
+  Производительность в однопоточном режиме: В стандартной конфигурации
+  Mountebank работает в одном потоке (Event Loop). При высокой нагрузке
+  (тысячи RPS), характерной для нагрузочного тестирования, сложные
+  вычисления внутри одной заглушки могут заблокировать обработку
+  запросов других заглушек, работающих в том же экземпляре Mountebank
+  {[}3{]}.
+\end{enumerate}
+
+\subsubsection{Анализ решения Apache
+Tomcat}\label{ux430ux43dux430ux43bux438ux437-ux440ux435ux448ux435ux43dux438ux44f-apache-tomcat}
+
+\textbf{Apache Tomcat} -- свободно распространяемый контейнер сервлетов,
+реализующий спецификации Jakarta Servlet и Jakarta Pages. Это
+классическое решение для хостинга Java-приложений, широко применяемое в
+промышленной эксплуатации.
+
+\textbf{Функциональные возможности:}
+
+Согласно официальной документации {[}4{]}, Tomcat предоставляет развитые
+средства управления жизненным циклом веб-приложений. Компонент Manager
+App позволяет развертывать (deploy), останавливать и перезапускать
+приложения без остановки сервера. Поддерживается кластеризация для
+репликации сессий {[}5{]}. Для защиты от перегрузок предусмотрен фильтр
+RateLimitFilter, позволяющий ограничивать количество запросов с одного
+IP-адреса {[}6{]}.
+
+\textbf{Недостатки в контексте поставленной задачи:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Избыточность архитектуры (Overhead): Tomcat является полноценным
+  сервлет-контейнером. Использование его для запуска примитивных
+  заглушек нерационально с точки зрения потребления ресурсов. Запуск
+  отдельного экземпляра Tomcat для каждой заглушки потребляет сотни
+  мегабайт оперативной памяти только на нужды самого сервера, что
+  критично при дефиците ресурсов.
+\item
+  Требования к формату артефактов: Tomcat работает с WAR-архивами.
+  Однако современные микросервисы (и заглушки для них) чаще всего
+  поставляются в виде Fat JAR (со встроенным сервером, например, Netty
+  или Undertow). Для запуска таких заглушек в Tomcat требуется их
+  пересборка и модификация кода, что усложняет процесс.
+\item
+  Статичность конфигурации ограничений: Механизмы Rate Limiting в Tomcat
+  конфигурируются декларативно через XML-файлы при старте. В задачах
+  нагрузочного тестирования требуется \emph{динамическое} изменение
+  параметров дросселирования трафика «на лету» (runtime) без
+  перезагрузки сервера, что в Tomcat не реализовано «из коробки».
+\end{enumerate}
+
+\subsubsection{Сравнительная
+характеристика}\label{ux441ux440ux430ux432ux43dux438ux442ux435ux43bux44cux43dux430ux44f-ux445ux430ux440ux430ux43aux442ux435ux440ux438ux441ux442ux438ux43aux430}
+
+Для наглядного сравнения рассмотренных решений с проектируемой системой
+составлена таблица 1.
+
+Таблица 1 -- Сравнительный анализ средств управления имитационными
+сервисами
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2094}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1509}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1509}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1485}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1296}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2107}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\textbf{Критерий сравнения}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{WireMock}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{MockServer}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Mountebank}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Apache Tomcat}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Разрабатываемая система}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Технологическая платформа & Java (JVM) & Java (JVM) & Node.js & Java
+(JVM) & Python (FastAPI) + Redis \\
+Тип архитектуры & Монолитный процесс & Монолитный процесс & Процесс
+Node.js & Сервлет-контейнер & Агент управления процессами
+(Master-Agent) \\
+Потребление ресурсов (RAM/CPU) & Высокое & Высокое & Среднее & Очень
+высокое & Низкое (асинхронная модель) \\
+Управление запуском .jar файлов & Нет & Нет & Нет & Нет (только .war) &
+Да (прямая поддержка) \\
+Динамический Rate Limiting & Требует расширений & Ограничено &
+Скриптовой (JS) & Статичный (XML) & Да (Управляемый через API) \\
+Централизованное управление & Нет (в OSS версии) & Сложное (Docker/K8s)
+& Нет & Сложное (Cluster) & Встроено (Dashboard) \\
+\end{longtable}
+}
+
+\emph{Источники данных для таблицы:} \emph{\hl{{[}1{]}, {[}2{]},
+{[}3{]}, {[}4{]}.}}
+
+\subsubsection{Обоснование разработки собственного программного
+комплекса}\label{ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438-ux441ux43eux431ux441ux442ux432ux435ux43dux43dux43eux433ux43e-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43eux433ux43e-ux43aux43eux43cux43fux43bux435ux43aux441ux430}
+
+Проведенный анализ показывает, что существующие на рынке решения делятся
+на две категории:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Инструменты логической виртуализации} (WireMock, MockServer,
+  Mountebank) -- отлично справляются с задачей «что ответить на запрос»,
+  но не решают задачу управления инфраструктурой (запуск, перезапуск,
+  обновление версий приложений).
+\item
+  \textbf{Серверы приложений} (Apache Tomcat) -- умеют управлять
+  жизненным циклом, но слишком тяжеловесны, требуют специфического
+  формата упаковки (WAR) и сложны в динамической настройке сетевых
+  параметров.
+\end{enumerate}
+
+Ни одно из рассмотренных решений не предоставляет функционала
+«легковесного агента» для управления сторонними Java-процессами «как
+есть» (без перепаковки).
+
+Разработка собственной автоматизированной информационной системы
+обоснована следующими факторами:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Специфика задачи (Lifecycle Management):} Разрабатываемая
+  система решает задачу оркестрации \emph{процессов} операционной
+  системы. Она позволяет загружать бинарный файл заглушки (JAR),
+  полученный от разработчиков, и управлять его исполнением на удаленном
+  сервере. Это исключает трудозатраты на пересборку заглушек под
+  WireMock или Tomcat.
+\item
+  \textbf{Эффективность использования ресурсов:} Перенос логики
+  управления на \textbf{Python} и использование асинхронного фреймворка
+  \textbf{FastAPI} позволяет минимизировать накладные расходы самого
+  управляющего контура. Система работает поверх заглушек, не внедряясь в
+  их память, в отличие от тяжелых Java-контейнеров.
+\item
+  \textbf{Централизация и удобство эксплуатации:} Реализация архитектуры
+  «Master-Agent» объединяет разрозненные серверы в единый кластер.
+  Единая панель управления (Dashboard) позволяет инженеру тестирования
+  массово обновлять версии заглушек и менять настройки лимитов (RPS) в
+  реальном времени, что невозможно при использовании Standalone-решений.
+\item
+  \textbf{Технологическая независимость и импортозамещение:} Система
+  разрабатывается на базе открытых технологий, адаптирована для работы в
+  \textbf{ОС Astra Linux} и не зависит от внешних репозиториев (Maven
+  Central, Docker Hub) или лицензионных ключей, что гарантирует
+  стабильность работы в закрытых корпоративных контурах РФ.
+\end{enumerate}
+
+\subsubsection{Вывод по
+подразделу}\label{ux432ux44bux432ux43eux434-ux43fux43e-ux43fux43eux434ux440ux430ux437ux434ux435ux43bux443}
+
+Разработка собственного программного комплекса является единственным
+целесообразным решением, закрывающим пробел между инструментами
+логического мокирования и средствами управления инфраструктурой,
+обеспечивая высокую производительность и гибкость конфигурации тестовых
+сред.
+
+\textbf{Список источников (для данного подраздела):}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{WireMock Documentation.} -- Текст: электронный //
+  WireMock.org: официальный сайт. -- URL:
+  \url{https://wiremock.org/docs/} (дата обращения: 09.01.2025).
+\item
+  \textbf{MockServer Documentation.} -- Текст: электронный //
+  Mock-server.com: официальный сайт. -- URL:
+  \url{https://www.mock-server.com/} (дата обращения: 09.01.2025).
+\item
+  \textbf{Mountebank Documentation.} -- Текст: электронный //
+  Mbtest.org: официальный сайт. -- URL:
+  \href{https://www.google.com/search?q=http://www.mbtest.org/docs/&authuser=1}{http://www.mbtest.org/docs/}
+  (дата обращения: 09.01.2025).
+\item
+  \textbf{Apache Tomcat 9 Documentation.} -- Текст: электронный //
+  Apache.org: официальный сайт. -- URL:
+  \url{https://tomcat.apache.org/tomcat-9.0-doc/index.html} (дата
+  обращения: 09.01.2025).
+\item
+  \textbf{Tomcat Clustering/Session Replication How-To.} -- Текст:
+  электронный // Apache.org. -- URL:
+  \url{https://tomcat.apache.org/tomcat-9.0-doc/cluster-howto.html}
+  (дата обращения: 09.01.2025).
+\item
+  \textbf{Apache Tomcat Configuration Reference: The Rate Limit Filter.}
+  -- Текст: электронный // Apache.org. -- URL:
+  \href{https://www.google.com/search?q=https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html\%23Rate_Limit_Filter&authuser=1}{https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html\#Rate\_Limit\_Filter}
+  (дата обращения: 09.01.2025).
+\end{enumerate}
+
+\subsection{Формирование функциональных и технических требований к
+системе}\label{ux444ux43eux440ux43cux438ux440ux43eux432ux430ux43dux438ux435-ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44cux43dux44bux445-ux438-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux438ux445-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux439-ux43a-ux441ux438ux441ux442ux435ux43cux435}
+
+На основании проведенного анализа предметной области и специфики задач
+нагрузочного тестирования сформированы требования к разрабатываемому
+программному комплексу. Система классифицируется как инструмент
+автоматизации инфраструктуры нагрузочного тестирования. Архитектура
+решения должна быть гибкой, допускающей работу как в распределенном
+контуре, так и в рамках одного физического или виртуального сервера.
+
+\subsubsection{Требования к режимам
+функционирования}\label{ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux440ux435ux436ux438ux43cux430ux43c-ux444ux443ux43dux43aux446ux438ux43eux43dux438ux440ux43eux432ux430ux43dux438ux44f}
+
+Система должна поддерживать два сценария развертывания без изменения
+кодовой базы:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Распределенный режим (Cluster Mode):} Классическая
+  клиент-серверная архитектура, где управляющий узел (Master)
+  администрирует множество удаленных узлов (Agents), на которых
+  выполняются заглушки. Взаимодействие осуществляется по сети.
+\item
+  \textbf{Автономный режим (Standalone Mode):} Консолидированный запуск
+  всех компонентов системы на одном сервере. В этом режиме управляющий
+  модуль и модуль исполнения заглушек функционируют в пределах одной
+  операционной системы, обеспечивая изоляцию контура тестирования без
+  необходимости сетевого взаимодействия между узлами инфраструктуры.
+\end{enumerate}
+
+\subsubsection{Функциональные
+требования}\label{ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44cux43dux44bux435-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f}
+
+Функциональные требования определяют перечень задач, которые система
+должна выполнять для обеспечения процессов эмуляции сервисов.
+
+\paragraph{Требования к подсистеме управления жизненным циклом
+(Runtime):}\label{ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux43fux43eux434ux441ux438ux441ux442ux435ux43cux435-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44f-ux436ux438ux437ux43dux435ux43dux43dux44bux43c-ux446ux438ux43aux43bux43eux43c-runtime}
+
+\begin{itemize}
+\item
+  \textbf{Поддержка форматов артефактов:} Система должна обеспечивать
+  запуск Java-приложений, поставляемых в форматах исполняемых файлов
+  .jar и веб-архивов .war.
+\item
+  \textbf{Управление процессами:} Обеспечение запуска, корректной
+  остановки и принудительного завершения процессов заглушек.
+\item
+  \textbf{Конфигурация запуска:} Возможность задания аргументов
+  виртуальной машины (JVM Options), включая параметры памяти (-Xms,
+  -Xmx) и системные свойства, через графический интерфейс управляющего
+  узла (Master) перед стартом заглушки.
+\item
+  \textbf{Мониторинг:} Отслеживание статуса процесса (PID) и доступности
+  его сетевого порта.
+\item
+  \textbf{Работа с логами:} Сбор стандартных потоков вывода (stdout,
+  stderr) запущенных процессов и их трансляция в интерфейс системы для
+  отладки.
+\end{itemize}
+
+\paragraph{Требования к подсистеме проксирования запросов (Proxy
+Engine):}\label{ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux43fux43eux434ux441ux438ux441ux442ux435ux43cux435-ux43fux440ux43eux43aux441ux438ux440ux43eux432ux430ux43dux438ux44f-ux437ux430ux43fux440ux43eux441ux43eux432-proxy-engine}
+
+\begin{itemize}
+\item
+  \textbf{Логика обработки запросов:} Система должна работать как
+  прозрачный прокси-сервер (Transparent Proxy) на прикладном уровне,
+  реализуя следующий алгоритм:
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \item
+    Прием входящего HTTP-запроса от внешней системы.
+  \item
+    Извлечение метаданных: HTTP-метод, заголовки, тело запроса и целевой
+    путь (URI).
+  \item
+    Выполнение нового запроса к целевой заглушке (на её локальный порт)
+    с использованием извлеченного метода, заголовков и тела.
+  \item
+    Получение ответа от заглушки.
+  \item
+    Возврат полученного ответа инициатору запроса в неизменном виде.
+  \end{enumerate}
+\item
+  \textbf{Управление нагрузкой (Rate Limiting):}
+
+  \begin{itemize}
+  \item
+    Наличие механизма ограничения количества запросов в секунду (RPS)
+    для конкретной заглушки.
+  \item
+    Активация лимита производится через вызов конфигурационного
+    эндпоинта системы (API). Динамическое изменение алгоритма
+    ограничения в процессе теста не требуется.
+  \item
+    При превышении лимита система должна возвращать HTTP-код 429 (Too
+    Many Requests), не передавая запрос заглушке.
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Требования к управляющему модулю
+(Master/Dashboard):}\label{ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux443ux43fux440ux430ux432ux43bux44fux44eux449ux435ux43cux443-ux43cux43eux434ux443ux43bux44e-masterdashboard}
+
+\begin{itemize}
+\item
+  \textbf{Управление артефактами:} Загрузка бинарных файлов (.jar, .war)
+  в хранилище системы через веб-интерфейс.
+\item
+  \textbf{Реестр сервисов:} Отображение списка всех загруженных
+  заглушек, их текущего статуса («Запущен», «Остановлен», «Ошибка») и
+  адресов.
+\item
+  \textbf{Интерфейс конфигурации:} Предоставление полей ввода для
+  настройки параметров запуска (JVM args) для каждого сервиса.
+\end{itemize}
+
+\subsubsection{Нефункциональные (технические)
+требования}\label{ux43dux435ux444ux443ux43dux43aux446ux438ux43eux43dux430ux43bux44cux43dux44bux435-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux438ux435-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f}
+
+\paragraph{Требования к
+производительности}\label{ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux43fux440ux43eux438ux437ux432ux43eux434ux438ux442ux435ux43bux44cux43dux43eux441ux442ux438}
+
+\begin{itemize}
+\item
+  \textbf{Вносимая задержка (Overhead):} Накладные расходы на
+  проксирование (время обработки запроса внутри системы без учета
+  времени работы самой заглушки) не должны превышать 20 мс.
+\item
+  \textbf{Пропускная способность:} Система должна обеспечивать высокую
+  производительность проксирующего слоя. Снижение максимальной
+  пропускной способности (RPS) заглушки при работе через систему не
+  должно превышать 10\% относительно прямого обращения к заглушке.
+\end{itemize}
+
+\paragraph{Требования к
+надежности}\label{ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux43dux430ux434ux435ux436ux43dux43eux441ux442ux438}
+
+\begin{itemize}
+\item
+  \textbf{Сохранение конфигурации:} При перезапуске системы (или
+  сервера) должны сохраняться настройки запуска заглушек и ссылки на
+  загруженные артефакты (Persistence).
+\item
+  \textbf{Изоляция сбоев:} Ошибка в одной заглушке не должна влиять на
+  работоспособность остальных запущенных сервисов и самой управляющей
+  системы.
+\end{itemize}
+
+\subsubsection{Требования к программно-аппаратному
+обеспечению}\label{ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43e-ux430ux43fux43fux430ux440ux430ux442ux43dux43eux43cux443-ux43eux431ux435ux441ux43fux435ux447ux435ux43dux438ux44e}
+
+\paragraph{Системные
+требования}\label{ux441ux438ux441ux442ux435ux43cux43dux44bux435-ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f}
+
+\begin{itemize}
+\item
+  \textbf{Операционная система:} Серверная часть должна функционировать
+  под управлением \textbf{ОС Astra Linux Special Edition} (версия 1.7 и
+  выше) или аналогичных Linux-дистрибутивов.
+\item
+  \textbf{Среда исполнения Java:} Поддержка \textbf{OpenJDK 17} для
+  запуска пользовательских артефактов.
+\end{itemize}
+
+\paragraph{Стек
+разработки}\label{ux441ux442ux435ux43a-ux440ux430ux437ux440ux430ux431ux43eux442ux43aux438}
+
+\begin{itemize}
+\item
+  \textbf{Язык программирования:} Python (версия 3.10+) с использованием
+  асинхронного подхода.
+\item
+  \textbf{Веб-фреймворк:} FastAPI (для реализации
+  высокопроизводительного ввода-вывода).
+\item
+  \textbf{СУБД:} Redis (для хранения конфигураций и реализации счетчиков
+  Rate Limiter).
+\end{itemize}
+
+\subsubsection{Требования к информационной
+безопасности}\label{ux442ux440ux435ux431ux43eux432ux430ux43dux438ux44f-ux43a-ux438ux43dux444ux43eux440ux43cux430ux446ux438ux43eux43dux43dux43eux439-ux431ux435ux437ux43eux43fux430ux441ux43dux43eux441ux442ux438}
+
+\begin{itemize}
+\item
+  \textbf{Контроль доступа:} Доступ к административному интерфейсу и API
+  управления должен быть ограничен.
+\item
+  \textbf{Безопасность данных:} Загружаемые исполняемые файлы должны
+  храниться в изолированных директориях с правами доступа, исключающими
+  их несанкционированную модификацию третьими лицами.
+\end{itemize}
+
+\subsection{}\label{section}
+
+\subsection{Вывод по
+разделу}\label{ux432ux44bux432ux43eux434-ux43fux43e-ux440ux430ux437ux434ux435ux43bux443}
+
+В первой главе выпускной квалификационной работы был проведен
+комплексный анализ предметной области и обоснована необходимость
+создания специализированного инструментария для автоматизации
+нагрузочного тестирования.
+
+В ходе исследования выявлено, что использование традиционных серверов
+приложений и существующих аналогов (WireMock, MockServer, Mountebank)
+для управления распределенной сетью заглушек сопряжено с избыточным
+потреблением ресурсов и сложностями в эксплуатации, а также не
+удовлетворяет требованиям по импортозамещению.
+
+На основании сравнительного анализа обоснован выбор технологического
+стека: язык программирования \textbf{Python} с использованием
+асинхронного подхода, веб-фреймворк \textbf{FastAPI} для обеспечения
+высокой пропускной способности и In-Memory СУБД \textbf{Redis} для
+хранения состояний с минимальной задержкой.
+
+Определена монолитная архитектура будущего решения с управлением
+удалёнными хостами через SSH/SCP и сформированы функциональные и
+технические требования к системе, включая поддержку форматов .jar и
+.war, механизмы ограничения нагрузки (Rate Limiting) и совместимость с
+ОС Astra Linux. Полученные результаты служат базисом для проектирования
+и технической реализации системы во второй главе.
+
+\section{ПРОЕКТИРОВАНИЕ И ТЕХНИЧЕСКАЯ РЕАЛИЗАЦИЯ СИСТЕМЫ
+УПРАВЛЕНИЯ}\label{ux43fux440ux43eux435ux43aux442ux438ux440ux43eux432ux430ux43dux438ux435-ux438-ux442ux435ux445ux43dux438ux447ux435ux441ux43aux430ux44f-ux440ux435ux430ux43bux438ux437ux430ux446ux438ux44f-ux441ux438ux441ux442ux435ux43cux44b-ux443ux43fux440ux430ux432ux43bux435ux43dux438ux44f}
+
+\subsection{Разработка архитектуры распределённого программного
+комплекса}\label{ux440ux430ux437ux440ux430ux431ux43eux442ux43aux430-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux44b-ux440ux430ux441ux43fux440ux435ux434ux435ux43bux451ux43dux43dux43eux433ux43e-ux43fux440ux43eux433ux440ux430ux43cux43cux43dux43eux433ux43e-ux43aux43eux43cux43fux43bux435ux43aux441ux430}
+
+\subsubsection{Выбор архитектурного
+стиля}\label{ux432ux44bux431ux43eux440-ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux43dux43eux433ux43e-ux441ux442ux438ux43bux44f}
+
+Проектирование архитектуры является фундаментальным этапом разработки
+программного комплекса: именно на данной стадии закладываются
+структурные свойства системы, определяющие её масштабируемость,
+надёжность, сопровождаемость и производительность в долгосрочной
+перспективе. В рамках настоящего раздела проводится анализ применимых
+архитектурных подходов, обосновывается выбор итогового архитектурного
+решения и формализуется структура разработанного программного комплекса.
+
+В современной инженерии программного обеспечения наибольшее
+распространение получили два конкурирующих архитектурных стиля:
+монолитная и микросервисная архитектуры. Для обоснованного выбора
+необходимо рассмотреть их характеристики в контексте требований,
+сформулированных в первой главе настоящей работы.
+
+\textbf{Микросервисная архитектура} предполагает декомпозицию системы на
+множество независимо разворачиваемых сервисов, каждый из которых
+реализует конкретную бизнес-функцию и взаимодействует с остальными
+посредством сетевых протоколов -- как правило, HTTP REST или gRPC.
+Данный подход демонстрирует преимущества в условиях работы крупных
+распределённых команд разработчиков, при необходимости независимого
+масштабирования отдельных компонентов и при высокой частоте выпуска
+обновлений изолированных частей системы. К характерным достоинствам
+микросервисной архитектуры относятся: независимость технологического
+стека отдельных сервисов, устойчивость к отказам на уровне изолированных
+процессов, а также возможность горизонтального масштабирования
+конкретных узлов без перезапуска всей системы.
+
+Вместе с тем микросервисный подход сопряжён с существенными
+эксплуатационными издержками, принципиально важными в контексте
+настоящего проекта. Во-первых, каждый сервис требует собственной
+инфраструктуры развёртывания: отдельный сетевой порт, конфигурационный
+файл, процесс инициализации и мониторинга. Во-вторых, взаимодействие
+сервисов по сети порождает дополнительные задержки и накладные расходы
+на сериализацию и десериализацию данных при каждом межсервисном вызове.
+В-третьих, полноценная реализация микросервисной архитектуры требует
+развёртывания дополнительных инфраструктурных компонентов: системы
+оркестрации контейнеров, сервисного реестра и системы трассировки
+запросов. Перечисленные компоненты существенно увеличивают сложность
+системы и создают зависимости от зарубежного программного обеспечения,
+что противоречит требованию технологической независимости,
+сформулированному в первой главе.
+
+\textbf{Монолитная архитектура} объединяет все компоненты системы в
+рамках единого процесса операционной системы, разделяя общее адресное
+пространство памяти, единую точку входа и общую конфигурацию
+развёртывания. Несмотря на устойчивое представление о монолите как об
+устаревшем архитектурном решении, данный подход демонстрирует высокую
+эффективность в условиях, характерных для разрабатываемого комплекса:
+команда разработки состоит из одного специалиста, функциональные
+требования чётко определены и стабильны, а потребности в раздельном
+масштабировании отдельных внутренних компонентов отсутствуют.
+
+Ключевым аргументом в пользу монолитного подхода является специфика
+решаемой задачи: разрабатываемая система является «тонким»
+координирующим слоем над управляемыми имитационными сервисами. Её
+основная функция -- оркестрация процессов операционной системы на
+целевых хостах, маршрутизация входящего трафика и хранение
+конфигурационных данных. Введение внутрисистемных сетевых вызовов в
+рамках гипотетической микросервисной декомпозиции создало бы накладные
+расходы, несоразмерные выигрышу от разделения компонентов.
+
+Распределённость системы, заявленная в названии раздела, реализуется не
+на уровне внутреннего устройства приложения, а на уровне топологии
+развёртывания: единый управляющий процесс координирует целевые хосты
+посредством защищённых сетевых протоколов. Таким образом,
+распределённость является внешней характеристикой инфраструктуры, а не
+принципом внутренней декомпозиции.
+
+На основании проведённого анализа для реализации программного комплекса
+выбрана монолитная архитектура с явно выраженной внутренней модульной
+структурой. Данное решение обеспечивает минимальные накладные расходы на
+взаимодействие компонентов, простоту развёртывания и эксплуатации в
+закрытом корпоративном контуре, технологическую независимость от внешних
+оркестраторов, а также высокую сопровождаемость и читаемость единой
+кодовой базы.
+
+В таблице 2 приведён сравнительный анализ двух рассмотренных
+архитектурных подходов по критериям, наиболее значимым для данного
+проекта.
+
+\emph{Таблица 2 -- Сравнение архитектурных подходов}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2979}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3511}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3511}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\textbf{Критерий}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Микросервисная архитектура}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Монолитная архитектура (выбрано)}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Сложность развёртывания & Высокая (оркестратор, реестр, трассировка) &
+Низкая (один процесс, один конфиг) \\
+Накладные расходы на вызовы & Сетевые задержки между сервисами &
+Отсутствуют (in-process вызовы) \\
+Изоляция отказов & На уровне процессов ОС & На уровне модулей
+(программная) \\
+Потребность в доп. инфраструктуре & Docker/K8s, Consul, Jaeger & Только
+Python + Redis \\
+Подходит команде из 1 человека & Нет (высокий DevOps-оверхед) & Да
+(минимальные операционные издержки) \\
+Соответствие требованиям импортозамещения & Частичное (зависимость от
+K8s) & Полное (открытые технологии) \\
+\end{longtable}
+}
+
+\subsubsection{Топология развёртывания и гибкость
+инфраструктуры}\label{ux442ux43eux43fux43eux43bux43eux433ux438ux44f-ux440ux430ux437ux432ux451ux440ux442ux44bux432ux430ux43dux438ux44f-ux438-ux433ux438ux431ux43aux43eux441ux442ux44c-ux438ux43dux444ux440ux430ux441ux442ux440ux443ux43aux442ux443ux440ux44b}
+
+Одним из ключевых проектных решений, определивших структуру системы,
+является принцип гибкого размещения имитационных сервисов. В отличие от
+систем, жёстко делящихся на «локальный» и «кластерный» режимы,
+разработанный программный комплекс предоставляет оператору возможность
+назначать произвольный целевой хост для каждой заглушки независимо.
+
+Распределённость системы реализуется посредством реестра хостов: каждый
+зарегистрированный хост описывается своим сетевым адресом, учётной
+записью для подключения и рабочей директорией. При развёртывании
+конкретной заглушки оператор выбирает один из хостов реестра в качестве
+целевого. Это позволяет в рамках единого экземпляра управляющего
+приложения одновременно:
+
+\begin{itemize}
+\item
+  размещать часть заглушек непосредственно на сервере, где работает
+  управляющее приложение (адрес 127.0.0.1 или hostname сервера), -- что
+  соответствует традиционному «локальному» сценарию;
+\item
+  размещать другие заглушки на удалённых серверах через SSH/SCP -- что
+  соответствует «кластерному» сценарию;
+\item
+  совмещать оба варианта в рамках одной инфраструктуры без каких-либо
+  изменений в конфигурации приложения.
+\end{itemize}
+
+Таким образом, граница между «локальным» и «распределённым» режимами
+определяется не конфигурацией запуска приложения, а составом реестра
+хостов и выбором оператора при регистрации каждой заглушки. Такой подход
+значительно увеличивает гибкость эксплуатации системы и позволяет плавно
+наращивать инфраструктуру без вмешательства в работу уже запущенных
+сервисов.
+
+С точки зрения внутренней архитектуры это означает, что модуль
+управления жизненным циклом всегда работает по единому алгоритму,
+независимо от того, является ли целевой хост локальным или удалённым.
+При работе с localhost SSH-соединение устанавливается к локальному
+SSH-серверу по стандартному порту 22, что унифицирует код и устраняет
+необходимость в двух ветках логики для локального и удалённого
+сценариев.
+
+\subsubsection{Контекстная диаграмма
+системы}\label{ux43aux43eux43dux442ux435ux43aux441ux442ux43dux430ux44f-ux434ux438ux430ux433ux440ux430ux43cux43cux430-ux441ux438ux441ux442ux435ux43cux44b}
+
+Для формализованного описания архитектуры программного комплекса
+применяется нотация C4 Model, предусматривающая четыре уровня
+детализации: контекстный (Level 1), контейнерный (Level 2), компонентный
+(Level 3) и кодовый (Level 4). Нотация обеспечивает однозначность
+интерпретации архитектурных решений и соответствует требованиям
+методических указаний по применению стандартизованных схем для
+представления структуры системы.
+
+Контекстная диаграмма (рисунок 1) отображает систему как единый «чёрный
+ящик» в окружении внешних акторов и смежных систем. На данном уровне
+абстракции детали внутреннего устройства системы не раскрываются;
+основное внимание уделяется определению границ системы и характеру её
+взаимодействия с внешним окружением.
+
+\includesvg[width=6.49653in,height=4.27778in]{media/image2.svg}\\
+Рисунок 1 -- контекстная диаграмма системы
+
+Внешними акторами системы являются:
+
+\begin{itemize}
+\item
+  инженер тестирования -- специалист, осуществляющий управление
+  инфраструктурой имитационных сервисов через веб-интерфейс системы;
+  выполняет операции регистрации артефактов, запуска и остановки
+  заглушек, настройки параметров и просмотра метрик;
+\item
+  потребитель -- любой HTTP-клиент, направляющий запросы к имитационным
+  сервисам через прокси-движок системы: это может быть инструмент
+  нагрузочного тестирования (Apache JMeter, Gatling и др.), тестируемая
+  система (System Under Test) или иной HTTP-клиент;
+\item
+  Prometheus -- внешняя система сбора и хранения метрик, периодически
+  опрашивающая специализированный эндпоинт системы для получения
+  телеметрических данных;
+\item
+  целевой хост -- сервер под управлением ОС Astra Linux, на котором
+  непосредственно выполняются Java-процессы имитационных сервисов; может
+  совпадать с сервером управляющего приложения.
+\end{itemize}
+
+workspace \{
+
+model \{
+
+engineer = person "Инженер тестирования" \{
+
+description "Управляет инфраструктурой заглушек через веб-интерфейс"
+
+\}
+
+consumer = person "Потребитель" \{
+
+description "Любой клиент, направляющий HTTP-запросы к заглушкам:
+нагрузочный инструмент, тестируемая система или иной HTTP-клиент"
+
+\}
+
+prometheus = softwareSystem "Prometheus" \{
+
+description "Внешняя система сбора и хранения метрик"
+
+\}
+
+mockSystem = softwareSystem "Программный комплекс управления заглушками"
+\{
+
+description "Монолитное Python/FastAPI-приложение"
+
+webUI = container "Веб-интерфейс (Jinja2 SSR)" \{
+
+description "HTML-страницы, формируемые на стороне сервера: Dashboard,
+Настройки, Логи"
+
+technology "FastAPI / Jinja2 / HTML"
+
+\}
+
+apiLayer = container "REST API" \{
+
+description "Бизнес-логика: управление заглушками, проксирование,
+настройки"
+
+technology "Python 3.10+ / FastAPI / Uvicorn (ASGI)"
+
+lifecycleMgr = component "Lifecycle Manager" \{
+
+description "Регистрация (загрузка + SCP на хост), запуск, остановка,
+удаление Java-процессов"
+
+technology "Python asyncio / paramiko (SSH/SCP)"
+
+\}
+
+proxyEngine = component "Proxy Engine" \{
+
+description "Прозрачная маршрутизация HTTP-запросов от потребителей к
+целевым заглушкам"
+
+technology "Python httpx (async)"
+
+\}
+
+rateLimiter = component "Rate Limiter" \{
+
+description "Алгоритм Fixed Window Counter: ограничение RPS на уровне
+каждой заглушки"
+
+technology "Redis INCR + EXPIRE"
+
+\}
+
+settingsModule = component "Settings Module" \{
+
+description "Управление учётными записями SSH и реестром хостов
+развёртывания"
+
+technology "Python / Redis"
+
+\}
+
+cryptoService = component "Crypto Service" \{
+
+description "Шифрование/дешифрование паролей SSH перед сохранением в
+Redis"
+
+technology "Python cryptography (Fernet)"
+
+\}
+
+metricsExporter = component "Metrics Exporter" \{
+
+description "Эндпоинт /metrics в формате Prometheus exposition format"
+
+technology "Python"
+
+\}
+
+\}
+
+redis = container "Redis" \{
+
+description "In-Memory хранилище конфигураций и состояний"
+
+technology "Redis 7.x (AOF persistence)"
+
+\}
+
+\}
+
+targetHost = softwareSystem "Целевой хост" \{
+
+description "Сервер ОС Astra Linux с запущенными заглушками. Может
+совпадать с сервером управляющего приложения."
+
+\}
+
+engineer -\textgreater{} webUI "Управляет через браузер (HTTP)"
+
+consumer -\textgreater{} proxyEngine "HTTP-запросы к заглушкам"
+
+prometheus -\textgreater{} apiLayer "Scrape /metrics (HTTP GET)"
+
+webUI -\textgreater{} apiLayer "Вызовы REST API (HTTP)"
+
+apiLayer -\textgreater{} redis "Чтение/запись конфигураций и состояний"
+
+lifecycleMgr -\textgreater{} targetHost "SCP артефакта при регистрации;
+SSH: запуск/остановка/удаление процесса и файла"
+
+proxyEngine -\textgreater{} targetHost "Перенаправление HTTP-запросов к
+работающей заглушке"
+
+settingsModule -\textgreater{} cryptoService "Шифрование пароля перед
+сохранением; дешифрование перед использованием"
+
+rateLimiter -\textgreater{} redis "Инкремент счётчика и проверка лимита"
+
+\}
+
+views \{
+
+systemContext mockSystem "SystemContext" \{
+
+include *
+
+autolayout lr
+
+title "Рисунок 2.1 -- Контекстная диаграмма системы (C4 Level 1)"
+
+\}
+
+container mockSystem "Containers" \{
+
+include *
+
+autolayout lr
+
+title "Рисунок 2.2 -- Контейнерная диаграмма (C4 Level 2)"
+
+\}
+
+component apiLayer "Components" \{
+
+include *
+
+autolayout tb
+
+title "Рисунок 2.3 -- Компонентная диаграмма REST API (C4 Level 3)"
+
+\}
+
+styles \{
+
+element "Person" \{
+
+shape Person
+
+background \#08427B
+
+color \#ffffff
+
+\}
+
+element "Software System" \{
+
+background \#1168BD
+
+color \#ffffff
+
+\}
+
+element "Container" \{
+
+background \#438DD5
+
+color \#ffffff
+
+\}
+
+element "Component" \{
+
+background \#85BBF0
+
+color \#000000
+
+\}
+
+\}
+
+\}
+
+\}
+
+\subsubsection{Контейнерная
+диаграмма}\label{ux43aux43eux43dux442ux435ux439ux43dux435ux440ux43dux430ux44f-ux434ux438ux430ux433ux440ux430ux43cux43cux430}
+
+Контейнерная диаграмма (рисунок 2) раскрывает внутреннее устройство
+программного комплекса на уровне самостоятельно исполняемых программных
+единиц -- контейнеров. В терминологии C4 Model «контейнер» обозначает
+логически обособленную программную единицу, а не технологию
+Docker-контейнеризации. Для каждого контейнера указывается его
+технологический стек и зона ответственности.
+
+\includesvg[width=6.49653in,height=4.15625in]{media/image4.svg}\\
+Рисунок 2 -- контейнерная диаграмма системы
+
+В составе программного комплекса выделяются следующие контейнеры.
+
+\textbf{Веб-интерфейс (Jinja2 SSR).} Реализует пользовательский
+интерфейс на основе технологии Server-Side Rendering с использованием
+шаблонизатора Jinja2, встроенного в экосистему FastAPI. HTML-страницы
+формируются на стороне сервера и передаются браузеру в готовом виде.
+Данный подход минимизирует объём JavaScript-кода на стороне клиента и
+обеспечивает полную функциональность интерфейса без зависимости от
+внешних CDN. Веб-интерфейс включает: главную панель (Dashboard) со
+списком заглушек, страницу управления хостами и настроек системы,
+страницу просмотра журналов процессов.
+
+\textbf{REST API (FastAPI).} Центральный контейнер системы, реализующий
+всю бизнес-логику. Запускается под управлением ASGI-сервера Uvicorn.
+REST API предоставляет конечные точки для взаимодействия с
+веб-интерфейсом, а также программный интерфейс для возможной интеграции
+со сторонними системами автоматизации. Внутренняя структура контейнера
+детализируется на компонентном уровне в разделе 2.1.5.
+
+\textbf{Redis.} In-Memory хранилище структур данных, выполняющее функции
+постоянного хранилища конфигурационных данных системы и оперативного
+хранилища счётчиков алгоритма ограничения запросов. Redis функционирует
+в режиме персистентности AOF (Append Only File), что обеспечивает
+сохранность данных при аварийном перезапуске управляющей системы.
+Детальное описание структур данных Redis приводится в разделе 2.2.
+
+Система намеренно не содержит выделенного контейнера хранилища
+артефактов. Архитектурное решение «1 заглушка -- 1 хост» исключает
+необходимость повторного развёртывания одного артефакта на несколько
+хостов, а значит, постоянное хранение загруженного файла на сервере
+управляющего приложения избыточно. При регистрации заглушки её бинарный
+файл принимается из браузера во временный каталог, немедленно копируется
+на целевой хост посредством SCP и удаляется с сервера управляющего
+приложения. Единственной постоянной копией артефакта остаётся файл на
+целевом хосте в рабочей директории, указанной в реестре хостов.
+
+\subsubsection{Компонентная диаграмма REST
+API}\label{ux43aux43eux43cux43fux43eux43dux435ux43dux442ux43dux430ux44f-ux434ux438ux430ux433ux440ux430ux43cux43cux430-rest-api}
+
+Компонентная диаграмма (рисунок 3) детализирует внутреннее устройство
+контейнера REST API, раскрывая составляющие его программные модули --
+компоненты.
+
+\includesvg[width=6.49653in,height=3.9875in]{media/image6.svg}\\
+Рисунок 3 -- компонентная диаграмма системы
+
+\textbf{Lifecycle Manager.} Реализует операции управления жизненным
+циклом имитационных сервисов. При регистрации новой заглушки модуль
+принимает загруженный бинарный файл во временный каталог на сервере
+управляющего приложения, копирует его на целевой хост посредством SCP в
+рабочую директорию, указанную в записи хоста, и немедленно удаляет
+временный файл. Путь к файлу на целевом хосте не сохраняется в Redis --
+он вычисляется при необходимости как конкатенация поля working\_dir из
+записи hosts:\{hostname\} и имени файла заглушки. При запуске модуль
+устанавливает SSH-соединение с целевым хостом, определяет свободный порт
+в заданном диапазоне и инициирует Java-процесс с указанными
+JVM-аргументами в фоновом режиме (nohup). При остановке выполняется
+корректное завершение процесса через SSH. При удалении заглушки
+производятся: остановка процесса (если запущен), удаление бинарного
+файла с целевого хоста командой SSH rm и удаление записи из Redis.
+
+\textbf{Proxy Engine.} Реализует функциональность прозрачного обратного
+прокси-сервера на прикладном уровне. При поступлении HTTP-запроса движок
+извлекает адрес и порт целевой заглушки из Redis, формирует новый
+HTTP-запрос с сохранением метода, заголовков и тела оригинального
+запроса, а затем возвращает ответ заглушки инициатору в неизменном виде.
+Для асинхронного выполнения исходящих запросов используется библиотека
+httpx.
+
+\textbf{Rate Limiter.} Реализует алгоритм «Счётчик с фиксированным
+временным окном» (Fixed Window Counter). Компонент функционирует на
+уровне каждой заглушки независимо и управляется флагом
+rate\_limit\_enabled, переключаемым оператором через Dashboard без
+остановки заглушки. Детальное описание алгоритма приводится в разделе
+2.4.
+
+\textbf{Settings Module.} Обеспечивает управление конфигурационными
+параметрами системы -- учётными записями ОС Linux и реестром хостов
+развёртывания. Подробное описание приведено в разделе 2.1.6.
+
+\textbf{Crypto Service.} Выполняет шифрование паролей SSH перед записью
+в Redis и дешифрование перед использованием для установки соединения.
+Применяется алгоритм AES-128 (Fernet). Ключ шифрования хранится на
+файловой системе сервера в файле с правами 600.
+
+\textbf{Metrics Exporter.} Реализует эндпоинт /metrics в формате
+Prometheus exposition format. Агрегирует данные о RPS, срабатываниях
+Rate Limiter, статусах процессов и доступности хостов. Детальное
+описание приведено в разделе 2.6.
+
+\subsubsection{Архитектура модуля настроек
+системы}\label{ux430ux440ux445ux438ux442ux435ux43aux442ux443ux440ux430-ux43cux43eux434ux443ux43bux44f-ux43dux430ux441ux442ux440ux43eux435ux43a-ux441ux438ux441ux442ux435ux43cux44b}
+
+Модуль настроек (Settings Module) предоставляет администратору системы
+веб-интерфейс для конфигурирования двух категорий параметров: учётных
+записей операционной системы Linux, применяемых для SSH/SCP-операций, и
+реестра хостов, доступных для развёртывания имитационных сервисов.
+
+\textbf{Управление учётными записями ОС Linux.} Данная категория
+позволяет зарегистрировать именованные учётные записи пользователей
+операционной системы Linux. Каждая учётная запись используется для
+аутентификации при установке SSH-соединения с целевым хостом и включает
+имя пользователя (login) и пароль. Применение отдельных учётных записей
+с ограниченными правами доступа обусловлено требованиями информационной
+безопасности: рабочая директория заглушек должна быть доступна только
+указанному пользователю, что минимизирует риски при нештатном поведении
+Java-процессов.
+
+\textbf{Механизм защищённого хранения паролей.} Поскольку пароли учётных
+записей SSH хранятся в Redis, необходимо обеспечить их
+конфиденциальность в случае несанкционированного доступа к базе данных.
+Для этого применяется симметричное шифрование на основе алгоритма
+AES-128 в режиме CBC, реализованного в библиотеке cryptography пакетом
+Fernet. Схема работы следующая:
+
+\begin{itemize}
+\item
+  при первом запуске приложения генерируется или загружается из
+  защищённого конфигурационного файла ключ шифрования (Fernet key),
+  который хранится вне Redis -- в файле с правами доступа 600, доступном
+  только пользователю, от имени которого запущено приложение;
+\item
+  перед сохранением пароля в Redis компонент Crypto Service шифрует его
+  с использованием Fernet-ключа и сохраняет в виде строки
+  Base64-кодированного зашифрованного блока;
+\item
+  перед использованием пароля для установки SSH-соединения Crypto
+  Service выполняет дешифрование, получая исходный пароль в открытом
+  виде только в оперативной памяти процесса на время установки
+  соединения.
+\end{itemize}
+
+Такой подход гарантирует, что даже при получении злоумышленником дампа
+Redis пароли останутся недоступными без Fernet-ключа, хранящегося на
+файловой системе сервера.
+
+\textbf{Реестр хостов развёртывания.} Данная категория настроек
+представляет собой список серверов, доступных для развёртывания
+имитационных сервисов. Каждая запись реестра описывает конкретный
+целевой хост и содержит параметры, перечисленные в таблице 2.2.
+
+В таблице 3 приведено описание параметров модуля настроек с указанием
+типов данных и ограничений.
+
+\emph{Таблица 3 -- Параметры модуля настроек системы}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1940}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1381}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1145}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1958}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3576}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\textbf{Параметр}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Раздел}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Тип}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Обязательный}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Описание}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+username & Учётная запись & String & Да & Имя пользователя ОС Linux для
+SSH-аутентификации \\
+password & Учётная запись & String & Да & Пароль (хранится в
+зашифрованном виде через Fernet) \\
+ssh\_port & Хост & Integer & Нет & Порт SSH (по умолчанию: 22) \\
+account\_id & Хост & UUID & Да & Идентификатор привязанной учётной
+записи \\
+working\_dir & Хост & String (path) & Да & Рабочая директория на хосте
+для хранения файлов заглушек \\
+java\_path & Хост & String (path) & Да & Абсолютный путь до исполняемого
+файла java \\
+mock\_port\_min & Хост & Integer & Нет & Нижняя граница диапазона портов
+для заглушек (по умолч.: 8100) \\
+mock\_port\_max & Хост & Integer & Нет & Верхняя граница диапазона
+портов для заглушек (по умолч.: 8200) \\
+description & Хост & String & Нет & Произвольный комментарий к хосту
+(назначение, окружение) \\
+\end{longtable}
+}
+
+Параметр java\_path введён в реестр хостов по причине неоднородности
+целевой инфраструктуры: в корпоративных средах переменная окружения
+JAVA\_HOME нередко не определена или указывает на версию JRE, не
+совместимую с требованиями конкретной заглушки. Указание явного пути к
+исполняемому файлу Java устраняет неоднозначность и гарантирует запуск
+процесса с нужной версией JDK вне зависимости от конфигурации окружения
+на хосте.
+
+Параметры mock\_port\_min и mock\_port\_max задают диапазон TCP-портов,
+в пределах которого система будет динамически выбирать свободный порт
+при запуске каждой новой заглушки на данном хосте. Ограничение диапазона
+необходимо для совместимости с политиками межсетевого экрана, которые в
+закрытых корпоративных сетях, как правило, разрешают входящий трафик
+только на заранее согласованные порты.
+
+Поле description позволяет операторам документировать назначение каждого
+хоста непосредственно в интерфейсе системы, что упрощает эксплуатацию
+при работе с несколькими окружениями.
+
+Хранение информации о заглушках в Redis организовано в формате
+JSON-строки, где ключом служит имя файла заглушки (без пути, например
+payment-service-stub.jar). Имя файла является уникальным идентификатором
+заглушки в системе: при попытке зарегистрировать файл с именем, уже
+присутствующим в Redis, система возвращает ошибку и предлагает оператору
+переименовать загружаемый артефакт или удалить существующую запись.
+Такой подход упрощает поиск конфигурации по известному имени файла --
+операция сводится к одному прямому обращению GET к Redis без
+дополнительного индекса. Структура значения имеет следующий вид:
+
+\emph{Пример структуры записи о заглушке в Redis}
+
+"payment-service-stub.jar": \{
+
+"hostname": "test-server-01",
+
+"port": 8105,
+
+"pid": 24731,
+
+"status": "RUNNING",
+
+"jvm\_args": "-Xms128m -Xmx256m",
+
+"rate\_limit": 500,
+
+"rate\_limit\_enabled": false
+
+\}
+
+Путь к бинарному файлу в записи не хранится: он вычисляется при
+необходимости как \{working\_dir\}/\{filename\}, где working\_dir
+берётся из записи хоста, а filename -- из ключа Redis.
+
+Поле rate\_limit\_enabled является булевым флагом, управляющим
+активностью механизма ограничения запросов для конкретной заглушки.
+Значение по умолчанию при регистрации новой заглушки -- false (Rate
+Limiter отключён). Оператор может изменить значение флага в любой момент
+через переключатель на Dashboard без остановки заглушки: изменение
+немедленно записывается в Redis и применяется Proxy Engine при обработке
+следующего входящего запроса.
+
+Аналогичная JSON-структура применяется для хранения записей о хостах и
+учётных записях. Подробное описание всех ключей и структур данных Redis
+приводится в разделе 2.2 настоящей главы.
+
+\subsubsection{Диаграмма
+развёртывания}\label{ux434ux438ux430ux433ux440ux430ux43cux43cux430-ux440ux430ux437ux432ux451ux440ux442ux44bux432ux430ux43dux438ux44f}
+
+Диаграмма развёртывания (рисунок 4) описывает физическое размещение
+компонентов системы на серверной инфраструктуре. Сервер управляющего
+приложения содержит два постоянных компонента: FastAPI-процесс под
+управлением Uvicorn и экземпляр Redis. Бинарные файлы заглушек постоянно
+хранятся исключительно на целевых хостах в рабочих директориях.
+Временный каталог на сервере управляющего приложения используется лишь
+на время передачи файла (в течение одной SCP-операции) и очищается
+немедленно после её завершения.
+
+\includesvg[width=6.49653in,height=1.4125in]{media/image8.svg}\\
+Рисунок 4 -- Диаграмма развёртывания
+
+@startuml deployment\_diagram
+
+skinparam backgroundColor \#FFFFFF
+
+skinparam defaultFontName Arial
+
+skinparam defaultFontSize 12
+
+skinparam node \{
+
+BackgroundColor \#D6E4F0
+
+BorderColor \#1A6FA8
+
+BorderThickness 2
+
+\}
+
+skinparam rectangle \{
+
+BackgroundColor \#FAFAFA
+
+BorderColor \#5D6D7E
+
+\}
+
+node "**Сервер управляющего приложения**\textbackslash n//Astra Linux SE
+1.7 · Python 3.10 · Uvicorn · Redis 7.x//" as Master \{
+
+rectangle "**«FastAPI-процесс (Uvicorn)»**\textbackslash nREST API +
+Веб-интерфейс\textbackslash n+ все модули системы" as FastAPI
+
+rectangle "**«Redis»**\textbackslash nIn-Memory
+СУБД\textbackslash nAOF-персистентность" as Redis
+
+FastAPI -\/-\textgreater{} Redis :
+Чтение/запись\textbackslash nсостояний (TCP 6379)
+
+\}
+
+node "**«localhost»**\textbackslash n//Тот же физический сервер ·
+OpenJDK 17//" as LocalHost \#D5F5E3 \{
+
+rectangle "**«Java-процессы заглушек»**\textbackslash nОдин или
+несколько\textbackslash n.jar/.war процессов" as LocalMocks \#FAFAFA
+
+\}
+
+node "**«Удалённый хост 1»**\textbackslash n//Astra Linux SE 1.7 · SSH ·
+OpenJDK 17//" as Remote1 \#FEF9E7 \{
+
+rectangle "**«Java-процессы заглушек»**\textbackslash nОдин или
+несколько\textbackslash n.jar/.war процессов" as RemoteMocks1 \#FAFAFA
+
+\}
+
+node "**«Удалённый хост 2»**\textbackslash n//Astra Linux SE 1.7 · SSH ·
+OpenJDK 17//" as Remote2 \#FEF9E7 \{
+
+rectangle "**«Java-процессы заглушек»**\textbackslash nОдин или
+несколько\textbackslash n.jar/.war процессов" as RemoteMocks2 \#FAFAFA
+
+\}
+
+FastAPI -\/-\textgreater{} LocalMocks : Управление процессами
+(localhost)
+
+FastAPI -\/-\textgreater{} RemoteMocks1 : SSH/SCP при
+регистрации;\textbackslash nHTTP-проксирование запросов
+
+FastAPI -\/-\textgreater{} RemoteMocks2 : SSH/SCP при
+регистрации;\textbackslash nHTTP-проксирование запросов
+
+@enduml
+
+На целевых хостах не требуется установки каких-либо компонентов
+разрабатываемой системы. Обязательные условия для включения хоста в
+реестр: работающий SSH-сервер, настроенная учётная запись пользователя с
+правами на запись в рабочую директорию и наличие исполняемого файла Java
+по пути, указанному в параметре java\_path. Бинарные файлы заглушек
+хранятся в рабочей директории хоста на протяжении всего времени
+существования записи о заглушке в системе и удаляются только при явном
+удалении заглушки оператором.
+
+\subsubsection{Сценарий взаимодействия
+компонентов}\label{ux441ux446ux435ux43dux430ux440ux438ux439-ux432ux437ux430ux438ux43cux43eux434ux435ux439ux441ux442ux432ux438ux44f-ux43aux43eux43cux43fux43eux43dux435ux43dux442ux43eux432}
+
+Для иллюстрации сквозного взаимодействия компонентов рассмотрим пять
+типовых сценариев. Принципиальное архитектурное решение: копирование
+бинарного артефакта на целевой хост выполняется однократно при
+регистрации заглушки; все последующие операции (запуск, остановка,
+переключение Rate Limiter) работают с файлом, уже находящимся на целевом
+хосте.
+
+\textbf{Сценарий 1. Регистрация новой заглушки.}
+
+Шаг 1. Инженер тестирования загружает .jar- или .war-файл через
+веб-интерфейс и задаёт параметры: JVM-аргументы, целевой хост из
+реестра, пороговое значение Rate Limiter. Флаг rate\_limit\_enabled
+устанавливается в false по умолчанию.
+
+Шаг 2. REST API сохраняет файл во временный каталог на сервере
+управляющего приложения.
+
+Шаг 3. Lifecycle Manager получает параметры целевого хоста из Redis
+(адрес, учётная запись, рабочая директория). Crypto Service дешифрует
+пароль учётной записи.
+
+Шаг 4. Lifecycle Manager копирует файл с сервера управляющего приложения
+на целевой хост посредством SCP в рабочую директорию.
+
+Шаг 5. После успешного завершения SCP временный файл удаляется с сервера
+управляющего приложения.
+
+Шаг 6. В Redis создаётся JSON-запись заглушки с ключом
+mocks:\{filename\}. Имя файла добавляется в реестр mocks:registry.
+Статус устанавливается в REGISTERED.
+
+Шаг 7. Веб-интерфейс отображает новую заглушку на Dashboard со статусом
+«Зарегистрирована» и переключателем Rate Limiter в положении «Выкл.».
+
+\textbf{Сценарий 2. Запуск зарегистрированной заглушки.}
+
+Шаг 1. Инженер тестирования нажимает кнопку «Запустить» для выбранной
+заглушки на Dashboard.
+
+Шаг 2. Браузер отправляет POST-запрос к эндпоинту
+/api/v1/mocks/\{mock\_name\}/start.
+
+Шаг 3. Lifecycle Manager считывает из Redis конфигурацию заглушки
+(JVM-аргументы) и параметры хоста (адрес, java\_path, учётная запись).
+Crypto Service дешифрует пароль.
+
+Шаг 4. Lifecycle Manager определяет свободный TCP-порт в диапазоне
+mock\_port\_min / mock\_port\_max через SSH-команду на целевом хосте.
+
+Шаг 5. Lifecycle Manager выполняет SSH-команду: \{java\_path\}
+\{jvm\_args\} -jar \{artifact\_path\} -\/-server.port=\{port\}. Процесс
+запускается в фоновом режиме (nohup).
+
+Шаг 6. PID процесса, назначенный порт и статус RUNNING сохраняются в
+запись заглушки в Redis.
+
+Шаг 7. Proxy Engine начинает маршрутизировать входящие запросы на
+зафиксированный порт заглушки.
+
+\textbf{Сценарий 3. Обработка входящего запроса через прокси.}
+
+Шаг 1. Потребитель направляет HTTP-запрос на адрес вида
+/\{mock\_name\}/\{path\}.
+
+Шаг 2. Proxy Engine извлекает из Redis запись заглушки по mock\_name:
+адрес, порт, статус, флаг rate\_limit\_enabled.
+
+Шаг 3. Если статус отличен от RUNNING -- возвращается HTTP 503 (Service
+Unavailable).
+
+Шаг 4а. Если rate\_limit\_enabled = false -- запрос немедленно
+передаётся целевой заглушке, счётчики не обновляются.
+
+Шаг 4б. Если rate\_limit\_enabled = true -- Rate Limiter инкрементирует
+счётчик rate:\{mock\_name\}:\{window\} и сравнивает с порогом
+rate\_limit. При превышении -- возвращается HTTP 429 (Too Many
+Requests).
+
+Шаг 5. Proxy Engine асинхронно передаёт запрос целевой заглушке через
+httpx и возвращает ответ потребителю в неизменном виде.
+
+\textbf{Сценарий 4. Переключение Rate Limiter на Dashboard.}
+
+Шаг 1. Оператор переключает тумблер Rate Limiter для выбранной заглушки
+на Dashboard.
+
+Шаг 2. Браузер отправляет PATCH-запрос к
+/api/v1/mocks/\{mock\_name\}/rate-limit с телом \{ "enabled": true/false
+\}.
+
+Шаг 3. Settings Module обновляет поле rate\_limit\_enabled в JSON-записи
+заглушки в Redis последовательностью операций GET → modify → SET. Для
+предотвращения состояния гонки при конкурентных изменениях операция
+выполняется с использованием механизма оптимистичной блокировки Redis
+(WATCH/MULTI/EXEC).
+
+Шаг 4. Начиная со следующего запроса к данной заглушке, Proxy Engine
+применяет обновлённое значение флага без перезапуска.
+
+\textbf{Сценарий 5. Удаление заглушки.}
+
+Шаг 1. Инженер тестирования инициирует удаление заглушки через
+веб-интерфейс.
+
+Шаг 2. Если заглушка в состоянии RUNNING -- Lifecycle Manager выполняет
+остановку процесса через SSH (SIGTERM, при необходимости SIGKILL).
+
+Шаг 3. Lifecycle Manager удаляет бинарный файл заглушки с целевого хоста
+командой SSH rm \{artifact\_path\}.
+
+Шаг 4. Запись о заглушке и все связанные ключи (счётчики Rate Limiter)
+удаляются из Redis командами DEL и SREM.
+
+Шаг 5. Запись исчезает из Dashboard.
+
+\subsection{Проектирование структур данных для хранения конфигураций и
+состояний в
+Redis}\label{ux43fux440ux43eux435ux43aux442ux438ux440ux43eux432ux430ux43dux438ux435-ux441ux442ux440ux443ux43aux442ux443ux440-ux434ux430ux43dux43dux44bux445-ux434ux43bux44f-ux445ux440ux430ux43dux435ux43dux438ux44f-ux43aux43eux43dux444ux438ux433ux443ux440ux430ux446ux438ux439-ux438-ux441ux43eux441ux442ux43eux44fux43dux438ux439-ux432-redis}
+
+\subsubsection{Обоснование модели
+данных}\label{ux43eux431ux43eux441ux43dux43eux432ux430ux43dux438ux435-ux43cux43eux434ux435ux43bux438-ux434ux430ux43dux43dux44bux445}
+
+Проектирование структур данных является фундаментальным этапом,
+определяющим производительность, корректность и сопровождаемость системы
+в целом. В разрабатываемом программном комплексе Redis выполняет роль
+единственного хранилища всех оперативных данных: конфигураций заглушек,
+параметров хостов и учётных записей, состояний запущенных процессов,
+счётчиков алгоритма Rate Limiter и вспомогательных индексов. Бинарные
+файлы артефактов в Redis не хранятся и не кэшируются -- единственной
+постоянной копией каждого артефакта является файл на целевом хосте.
+
+Выбор Redis в качестве хранилища обусловлен его архитектурными
+характеристиками, подробно рассмотренными в разделе 1.3: время доступа к
+любому ключу составляет менее 1 мс, что критически важно для алгоритма
+Rate Limiter, выполняемого при обработке каждого входящего запроса.
+
+Redis предоставляет несколько базовых типов данных: строки (String),
+хеши (Hash), списки (List), множества (Set) и сортированные множества
+(Sorted Set). Для хранения конфигурационных объектов -- заглушек,
+хостов, учётных записей -- выбран тип String в сочетании с
+JSON-сериализацией. Такой подход позволяет атомарно читать и записывать
+всю конфигурацию объекта одной операцией GET/SET, избегая частичных
+обновлений и связанных с ними состояний гонки (race conditions). Для
+хранения реестров (множеств идентификаторов) используется тип Set,
+гарантирующий уникальность элементов. Для счётчиков Rate Limiter
+применяется тип String со встроенными атомарными командами INCR и
+EXPIRE.
+
+В таблице 2.3 приведена сводная схема всех пространств имён ключей
+Redis, используемых в системе.
+
+\emph{Таблица 2.3 -- Пространства имён ключей Redis и используемые типы
+данных}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2986}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1689}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2893}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2432}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\textbf{Пространство имён}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Тип Redis}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Назначение}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Пример ключа}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mocks:\{filename\} & String (JSON) & Конфигурация и состояние заглушки &
+mocks:payment-stub.jar \\
+mocks:registry & Set & Реестр имён всех зарегистрированных заглушек &
+mocks:registry \\
+hosts:\{hostname\} & String (JSON) & Конфигурация целевого хоста &
+hosts:a1b2c3d4-... \\
+hosts:registry & Set & Реестр UUID всех зарегистрированных хостов &
+hosts:registry \\
+accounts:\{uuid\} & String (JSON) & Учётная запись SSH &
+accounts:e5f6a7b8-... \\
+accounts:registry & Set & Реестр UUID учётных записей &
+accounts:registry \\
+rate:\{filename\}:\{window\} & String (Integer) & Счётчик Rate Limiter
+для временного окна & rate:payment-stub.jar:1700000060 \\
+settings:global & String (JSON) & Глобальные параметры приложения &
+settings:global \\
+\end{longtable}
+}
+
+\subsubsection{Структура данных
+заглушки}\label{ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux437ux430ux433ux43bux443ux448ux43aux438}
+
+Центральным объектом системы является запись о заглушке -- имитационном
+Java-сервисе, управляемом программным комплексом. Запись хранится по
+ключу вида mocks:\{filename\}, где \{filename\} -- имя загруженного
+файла артефакта (например, payment-service-stub.jar). Имя файла является
+уникальным идентификатором заглушки в системе: при попытке
+зарегистрировать файл с именем, уже присутствующим в реестре
+mocks:registry, система возвращает ошибку и предлагает оператору
+переименовать загружаемый артефакт или удалить существующую запись.
+
+Запись заглушки не хранит путь к бинарному файлу явно. Поскольку файл
+всегда располагается в рабочей директории хоста, путь вычисляется
+детерминировано при необходимости как \{working\_dir\}/\{filename\}, где
+working\_dir берётся из записи хоста, а filename -- из ключа Redis. Это
+исключает дублирование данных и единственную точку рассогласования.
+
+Структура JSON-записи заглушки описана в листинге 2.3.
+
+\emph{Листинг 2.3 -- Структура JSON-записи заглушки в Redis}
+
+Ключ: mocks:\{filename\}
+
+Тип: String (JSON)
+
+"payment-service-stub.jar": \{
+
+"hostname": "test-server-01",
+
+"port": 8105,
+
+"pid": 24731,
+
+"status": "RUNNING",
+
+"jvm\_args": "-Xms128m -Xmx256m",
+
+"rate\_limit": 500,
+
+"rate\_limit\_enabled": false,
+
+"registered\_at": "2024-11-01T10:30:00Z",
+
+"started\_at": "2024-11-01T10:35:00Z"
+
+\}
+
+Описание полей записи заглушки приведено в таблице 2.4.
+
+\emph{Таблица 2.4 -- Поля JSON-записи заглушки}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2182}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1156}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4337}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2325}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\textbf{Поле}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Тип}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Описание}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Значение при регистрации}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+hostname & String & Hostname целевого хоста; ключ для получения полной
+конфигурации хоста из Redis & Выбирается оператором \\
+port & Integer & TCP-порт, на котором запущена заглушка на целевом хосте
+& null \\
+pid & Integer & PID процесса заглушки на целевом хосте & null \\
+status & Enum & Текущее состояние: REGISTERED, RUNNING, STOPPED, ERROR &
+REGISTERED \\
+jvm\_args & String & Аргументы JVM (параметры памяти, системные
+свойства) & "" \\
+rate\_limit & Integer & Максимально допустимое число запросов в секунду
+(RPS) & 0 \\
+rate\_limit\_enabled & Boolean & Флаг активности механизма Rate Limiter
+& false \\
+registered\_at & ISO 8601 & Дата и время регистрации заглушки & Текущее
+время UTC \\
+started\_at & ISO 8601 & Дата и время последнего запуска процесса &
+null \\
+\end{longtable}
+}
+
+Поля port, pid и started\_at заполняются только после успешного запуска
+процесса и сбрасываются в null при его остановке или удалении. Для
+получения полного пути к файлу при выполнении SSH-команд Lifecycle
+Manager читает поле working\_dir из записи hosts:\{hostname\} и
+конкатенирует его с именем файла.
+
+\subsubsection{Структура данных
+хоста}\label{ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux445ux43eux441ux442ux430}
+
+Запись о целевом хосте хранится по ключу вида hosts:\{hostname\}, где
+hostname -- сетевое имя или IP-адрес хоста. Hostname одновременно
+выполняет роль уникального идентификатора записи и адреса для
+SSH/SCP-подключения, что исключает необходимость в отдельном поле
+адреса. Прямой доступ к конфигурации хоста по известному hostname
+осуществляется за одну операцию чтения без дополнительного индекса.
+
+Структура JSON-записи хоста описана в листинге 2.4.
+
+\emph{Листинг 2.4 -- Структура JSON-записи хоста в Redis}
+
+Ключ: hosts:\{hostname\}
+
+Тип: String (JSON)
+
+"hosts:test-server-01": \{
+
+"ssh\_port": 22,
+
+"account\_uuid": "e5f6a7b8-c9d0-1234-efab-567890abcdef",
+
+"working\_dir": "/opt/mock-services",
+
+"java\_path": "/usr/lib/jvm/java-17-openjdk-amd64/bin/java",
+
+"mock\_port\_min": 8100,
+
+"mock\_port\_max": 8200,
+
+"description": "Стенд нагрузочного тестирования -- контур препром.",
+
+"status": "AVAILABLE",
+
+"last\_checked\_at":"2024-11-01T10:29:55Z"
+
+\}
+
+Поле status отражает результат последней проверки доступности
+SSH-соединения, выполняемой фоновой задачей с настраиваемым интервалом.
+Допустимые значения: AVAILABLE (соединение успешно установлено),
+UNAVAILABLE (попытка соединения завершилась ошибкой) и UNKNOWN (проверка
+ещё не выполнялась). Поле last\_checked\_at фиксирует время последней
+проверки для отображения актуальности статуса в веб-интерфейсе.
+
+Поле account\_uuid содержит UUID учётной записи SSH из реестра accounts,
+используемой для подключения к данному хосту. Lifecycle Manager читает
+это поле при каждой SSH/SCP-операции для получения соответствующей
+записи accounts:\{uuid\} с зашифрованным паролем.
+
+\subsubsection{Структура данных учётной
+записи}\label{ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux443ux447ux451ux442ux43dux43eux439-ux437ux430ux43fux438ux441ux438}
+
+Запись об учётной записи ОС Linux хранится по ключу вида
+accounts:\{uuid\}. Учётная запись содержит данные, необходимые для
+аутентификации при SSH/SCP-операциях на целевых хостах. Пароль хранится
+в зашифрованном виде -- компонент Crypto Service шифрует его алгоритмом
+AES-128 (Fernet) перед записью в Redis. Ключ шифрования хранится на
+файловой системе сервера в файле с правами 600.
+
+Структура JSON-записи учётной записи описана в листинге 2.5.
+
+\emph{Листинг 2.5 -- Структура JSON-записи учётной записи в Redis}
+
+Ключ: accounts:\{uuid\}
+
+Тип: String (JSON)
+
+"accounts:e5f6a7b8-c9d0-1234-efab-567890abcdef": \{
+
+"username": "mock-runner",
+
+"password\_enc": "gAAAAABl...base64-encoded-ciphertext...",
+
+"description": "Сервисный пользователь для запуска заглушек",
+
+"created\_at": "2024-10-15T09:00:00Z"
+
+\}
+
+Поле password\_enc содержит Base64-кодированный зашифрованный блок,
+полученный библиотекой cryptography (Fernet). При необходимости
+установить SSH-соединение Crypto Service читает это поле и выполняет
+дешифрование в оперативной памяти процесса; расшифрованный пароль
+никогда не записывается на диск и не сохраняется в Redis. Такой подход
+обеспечивает защиту паролей в случае несанкционированного получения
+дампа данных Redis.
+
+\subsubsection{Структуры данных
+реестров}\label{ux441ux442ux440ux443ux43aux442ux443ux440ux44b-ux434ux430ux43dux43dux44bux445-ux440ux435ux435ux441ux442ux440ux43eux432}
+
+Для хранения множеств идентификаторов всех зарегистрированных объектов
+используется тип Set. Каждый реестр хранится под фиксированным ключом и
+содержит строковые идентификаторы соответствующих объектов.
+
+\textbf{Реестр заглушек (mocks:registry)} -- множество имён файлов всех
+зарегистрированных заглушек. При регистрации новой заглушки её имя
+добавляется командой SADD, при удалении -- удаляется командой SREM.
+Команда SMEMBERS возвращает полный список для формирования Dashboard.
+
+\textbf{Реестр хостов (hosts:registry)} -- множество
+hostname-идентификаторов зарегистрированных целевых хостов (сетевое имя
+или IP-адрес). При регистрации нового хоста его hostname добавляется
+командой SADD, при удалении -- командой SREM. Команда SMEMBERS
+возвращает полный список для отображения в интерфейсе настроек.
+
+\textbf{Реестр учётных записей (accounts:registry)} -- множество UUID
+зарегистрированных учётных записей SSH.
+
+Применение типа Set гарантирует уникальность идентификаторов: повторное
+добавление уже существующего элемента командой SADD не создаёт дубликата
+и возвращает 0, что используется системой для обнаружения попытки
+регистрации заглушки с дублирующим именем файла.
+
+Схема взаимосвязей между реестрами и конфигурационными записями
+приведена на рисунке 2.6.
+
+\includesvg[width=6.01042in,height=5.26042in]{media/image10.svg}Рисунок
+2.6 -- Схема взаимосвязей объектов в Redis
+
+@startuml redis\_relations
+
+skinparam defaultFontName Arial
+
+skinparam backgroundColor \#FFFFFF
+
+package "Redis" \{
+
+rectangle "mocks:registry\textbackslash n(Set)" as MR \#D5E8D4
+
+rectangle "mocks:\{filename\}\textbackslash n(String/JSON)" as M
+\#DAE8FC
+
+rectangle "hosts:registry\textbackslash n(Set)" as HR \#D5E8D4
+
+rectangle "hosts:\{uuid\}\textbackslash n(String/JSON)" as H \#DAE8FC
+
+rectangle "accounts:registry\textbackslash n(Set)" as AR \#D5E8D4
+
+rectangle "accounts:\{uuid\}\textbackslash n(String/JSON)" as A \#DAE8FC
+
+rectangle "rate:\{filename\}:\{window\}\textbackslash n(String/Integer)"
+as RL \#FFF2CC
+
+rectangle "settings:global\textbackslash n(String/JSON)" as SG \#F8CECC
+
+MR -\/-\textgreater{} M : SMEMBERS → GET
+
+M -\/-\textgreater{} H : host\_id → GET
+
+H -\/-\textgreater{} A : account\_id → GET
+
+HR -\/-\textgreater{} H : SMEMBERS → GET
+
+AR -\/-\textgreater{} A : SMEMBERS → GET
+
+M -\/-\textgreater{} RL : filename → INCR/GET
+
+\}
+
+@enduml
+
+\subsubsection{Структура данных счётчика Rate
+Limiter}\label{ux441ux442ux440ux443ux43aux442ux443ux440ux430-ux434ux430ux43dux43dux44bux445-ux441ux447ux451ux442ux447ux438ux43aux430-rate-limiter}
+
+Алгоритм Rate Limiter реализован на основе паттерна «Счётчик с
+фиксированным временным окном» (Fixed Window Counter). Для каждой
+заглушки и каждого временного окна в Redis хранится отдельный
+ключ-счётчик. Структура ключа: rate:\{filename\}:\{window\}, где
+\{window\} -- метка временного окна, вычисляемая как целочисленное
+деление текущего Unix-timestamp на длину окна в секундах.
+
+Например, при длине окна 1 секунда и текущем времени 1700000060.7 метка
+окна равна 1700000060, а ключ для заглушки payment-service-stub.jar
+примет вид rate:payment-service-stub.jar:1700000060. Все запросы,
+поступившие в течение одной секунды, инкрементируют один и тот же
+счётчик.
+
+Алгоритм обработки каждого запроса через Rate Limiter описан в листинге
+2.7.
+
+\emph{Листинг 2.7 -- Псевдокод алгоритма Fixed Window Counter}
+
+function check\_rate\_limit(filename: str, limit: int, window\_size: int
+= 1) -\textgreater{} bool:
+
+\# Шаг 1: вычислить метку текущего окна
+
+window = floor(current\_unix\_timestamp() / window\_size)
+
+key = f"rate:\{filename\}:\{window\}"
+
+\# Шаг 2: атомарный инкремент счётчика
+
+count = INCR(key)
+
+\# Шаг 3: установить TTL при создании нового окна
+
+if count == 1:
+
+EXPIRE(key, window\_size * 2) \# TTL = 2 окна (запас на сдвиг времени)
+
+\# Шаг 4: проверить лимит
+
+if count \textgreater{} limit:
+
+return False \# запрос отклонён → HTTP 429
+
+return True \# запрос разрешён
+
+Установка TTL через команду EXPIRE выполняется только при создании
+нового счётчика (когда INCR возвращает 1), то есть при первом запросе в
+новом временном окне. TTL устанавливается равным удвоенному размеру окна
+для гарантированного самоочищения устаревших счётчиков даже при
+незначительных расхождениях системного времени между клиентом и
+сервером. Это исключает накопление «мёртвых» ключей в Redis и
+предотвращает утечку памяти при длительной эксплуатации системы.
+
+Атомарность операции INCR является ключевым свойством данного подхода:
+Redis выполняет её как единую неделимую операцию, что гарантирует
+корректный подсчёт при конкурентном поступлении тысяч запросов в рамках
+одного временного окна без использования транзакций или блокировок.
+
+\subsubsection{Глобальные настройки
+системы}\label{ux433ux43bux43eux431ux430ux43bux44cux43dux44bux435-ux43dux430ux441ux442ux440ux43eux439ux43aux438-ux441ux438ux441ux442ux435ux43cux44b}
+
+Глобальные конфигурационные параметры приложения, не привязанные к
+конкретному хосту или заглушке, хранятся под ключом settings:global.
+Запись содержит параметры, задаваемые при первоначальной настройке
+системы и редко изменяемые в процессе эксплуатации.
+
+Структура JSON-записи глобальных настроек описана в листинге 2.8.
+
+\emph{Листинг 2.8 -- Структура глобальных настроек в Redis}
+
+Ключ: settings:global
+
+Тип: String (JSON)
+
+"settings:global": \{
+
+"rate\_limit\_window\_size": 1,
+
+"host\_check\_interval\_sec": 30,
+
+"proxy\_timeout\_sec": 10,
+
+"log\_retention\_lines": 1000
+
+\}
+
+Описание полей глобальных настроек приведено в таблице 2.5.
+
+\emph{Таблица 2.5 -- Поля глобальных настроек системы}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2781}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.0984}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1653}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4582}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+Параметр
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Тип
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+По умолчанию
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Описание
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+rate\_limit\_window\_size & Integer & 1 & Длина временного окна
+алгоритма Rate Limiter в секундах \\
+host\_check\_interval\_sec & Integer & 30 & Интервал фоновой проверки
+доступности хостов (SSH-пинг) в секундах \\
+proxy\_timeout\_sec & Integer & 10 & Тайм-аут ожидания ответа от целевой
+заглушки при проксировании (секунды) \\
+log\_retention\_lines & Integer & 1000 & Максимальное число строк лога
+процесса, хранимых в памяти системы \\
+\end{longtable}
+}
+
+\subsubsection{Персистентность данных и стратегия
+восстановления}\label{ux43fux435ux440ux441ux438ux441ux442ux435ux43dux442ux43dux43eux441ux442ux44c-ux434ux430ux43dux43dux44bux445-ux438-ux441ux442ux440ux430ux442ux435ux433ux438ux44f-ux432ux43eux441ux441ux442ux430ux43dux43eux432ux43bux435ux43dux438ux44f}
+
+Redis настроен в режиме AOF (Append Only File) с параметром appendfsync
+everysec: каждая операция записи фиксируется в журнале, синхронизируемом
+с диском раз в секунду. Максимальная потеря данных при аварии составляет
+не более одной секунды.
+
+Стратегия восстановления после перезапуска: управляющее приложение
+читает реестры из Redis и для каждой заглушки со статусом RUNNING
+проверяет фактическое наличие процесса на целевом хосте через SSH. Если
+процесс обнаружен -- статус подтверждается. Если нет -- статус
+обновляется до STOPPED, поля port, pid и started\_at сбрасываются.
+Бинарный файл на целевом хосте не затрагивается и остаётся в рабочей
+директории, готовый к повторному запуску.
+
+В таблице 2.6 представлена сводная матрица операций чтения и записи
+Redis по компонентам системы.
+
+\emph{Таблица 2.6 -- Матрица операций Redis по компонентам системы}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1653}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3189}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3162}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1996}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\centering
+\textbf{Компонент}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Операция}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Ключ / пространство имён}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Redis-команды}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Proxy Engine & Чтение конфигурации заглушки & mocks:\{filename\} &
+GET \\
+Rate Limiter & Инкремент и проверка счётчика &
+rate:\{filename\}:\{window\} & INCR, EXPIRE \\
+Lifecycle Manager & Регистрация заглушки (после SCP) &
+mocks:\{filename\}, mocks:registry & SET, SADD \\
+Lifecycle Manager & Обновление статуса/порта/PID & mocks:\{filename\} &
+GET → modify → SET \\
+Lifecycle Manager & Удаление заглушки (после SSH rm) &
+mocks:\{filename\}, mocks:registry & DEL, SREM \\
+Lifecycle Manager & Получение параметров хоста & hosts:\{hostname\} &
+GET \\
+Lifecycle Manager & Получение учётной записи &
+accounts:\{account\_name\} & GET \\
+Settings Module & Сохранение/обновление хоста & hosts:\{hostname\},
+hosts:registry & SET, SADD \\
+Settings Module & Сохранение/обновление УЗ & accounts:\{name\},
+accounts:registry & SET, SADD \\
+Settings Module & Переключение rate\_limit\_enabled & mocks:\{filename\}
+& GET → modify → SET \\
+Metrics Exporter & Чтение всех заглушек для метрик & mocks:registry +
+mocks:\{filename\} & SMEMBERS, GET (pipeline) \\
+Background Task & Обновление статуса доступности хоста &
+hosts:\{hostname\} & GET → modify → SET \\
+\end{longtable}
+}
+
+Для операции Metrics Exporter применяется механизм конвейеризации команд
+Redis (Pipeline): сначала читается полный список ключей из реестра,
+затем все операции чтения конфигураций отправляются единым пакетом. Это
+снижает суммарные сетевые задержки при агрегации данных о большом числе
+заглушек с O(n) до фактически O(1) по числу сетевых round-trip.
+
+\end{document}

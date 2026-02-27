@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}username\PYGZdq{}}\PYG{p}{:}\PYG{+w}{     }\PYG{l+s+s2}{\PYGZdq{}mock\PYGZhy{}runner\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}password\PYGZus{}enc\PYGZdq{}}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}gAAAAABl...base64\PYGZhy{}encoded\PYGZhy{}ciphertext...\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}description\PYGZdq{}}\PYG{p}{:}\PYG{+w}{  }\PYG{l+s+s2}{\PYGZdq{}Сервисный пользователь для запуска заглушек\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}created\PYGZus{}at\PYGZdq{}}\PYG{p}{:}\PYG{+w}{   }\PYG{l+s+s2}{\PYGZdq{}2024\PYGZhy{}10\PYGZhy{}15T09:00:00Z\PYGZdq{}}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

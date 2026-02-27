@@ -1,0 +1,13 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}hostname\PYGZdq{}}\PYG{p}{:}\PYG{+w}{           }\PYG{l+s+s2}{\PYGZdq{}test\PYGZhy{}server\PYGZhy{}01\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}port\PYGZdq{}}\PYG{p}{:}\PYG{+w}{               }\PYG{l+m+mi}{8105}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}pid\PYGZdq{}}\PYG{p}{:}\PYG{+w}{                }\PYG{l+m+mi}{24731}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}status\PYGZdq{}}\PYG{p}{:}\PYG{+w}{             }\PYG{l+s+s2}{\PYGZdq{}RUNNING\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}jvm\PYGZus{}args\PYGZdq{}}\PYG{p}{:}\PYG{+w}{           }\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}Xms128m \PYGZhy{}Xmx256m\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}rate\PYGZus{}limit\PYGZdq{}}\PYG{p}{:}\PYG{+w}{         }\PYG{l+m+mi}{500}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}rate\PYGZus{}limit\PYGZus{}enabled\PYGZdq{}}\PYG{p}{:}\PYG{+w}{ }\PYG{k+kc}{false}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}registered\PYGZus{}at\PYGZdq{}}\PYG{p}{:}\PYG{+w}{      }\PYG{l+s+s2}{\PYGZdq{}2024\PYGZhy{}11\PYGZhy{}01T10:30:00Z\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{    }\PYG{n+nt}{\PYGZdq{}started\PYGZus{}at\PYGZdq{}}\PYG{p}{:}\PYG{+w}{         }\PYG{l+s+s2}{\PYGZdq{}2024\PYGZhy{}11\PYGZhy{}01T10:35:00Z\PYGZdq{}}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}
