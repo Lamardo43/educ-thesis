@@ -43,24 +43,40 @@
 % Независимое масштабирование компонентов & Не поддерживается & Поддерживается \\
 % \end{longtblr}
 
-\begin{longtblr}[
-  caption = {Сравнение архитектурных подходов},
-  label   = {tab:arch-compare},
-]{
-  colspec  = {|X[1.1,l]|X[0.9,l]|X[1.0,l]|},
-  hlines,
-  width    = \linewidth,
-  rowhead  = 1,
-  row{1}   = {font=\bfseries\small},
-  row{2-Z} = {font=\small},
-}
-Критерий & Монолитная архитектура & Микросервисная архитектура \\
-Накладные расходы на взаимодействие компонентов & Минимальные (вызовы функций) & Высокие (сетевые вызовы, сериализация) \\
-Сложность развёртывания & Низкая (один процесс) & Высокая (множество сервисов, оркестратор) \\
-Зависимость от внешних систем & Отсутствует & Требует оркестратора (Kubernetes и др.) \\
-Сопровождаемость при одном разработчике & Высокая & Низкая \\
-Независимое масштабирование компонентов & Не поддерживается & Поддерживается \\
-\end{longtblr}
+% \begin{longtblr}[
+%   caption = {Сравнение архитектурных подходов},
+%   label   = {tab:arch-compare},
+% ]{
+%   colspec  = {|X[1.1,l]|X[0.9,l]|X[1.0,l]|},
+%   hlines,
+%   width    = \linewidth,
+%   rowhead  = 1,
+%   row{1}   = {font=\bfseries\small},
+%   row{2-Z} = {font=\small},
+% }
+% Критерий & Монолитная архитектура & Микросервисная архитектура \\
+% Накладные расходы на взаимодействие компонентов & Минимальные (вызовы функций) & Высокие (сетевые вызовы, сериализация) \\
+% Сложность развёртывания & Низкая (один процесс) & Высокая (множество сервисов, оркестратор) \\
+% Зависимость от внешних систем & Отсутствует & Требует оркестратора (Kubernetes и др.) \\
+% Сопровождаемость при одном разработчике & Высокая & Низкая \\
+% Независимое масштабирование компонентов & Не поддерживается & Поддерживается \\
+% \end{longtblr}
+
+\begin{xltabular}{\textwidth}{|X|X|X|}
+\caption{Сравнение архитектурных подходов} \label{tab:arch-compare} \\
+\hline
+\textbf{Критерий} & \textbf{Монолитная архитектура} & \textbf{Микросервисная архитектура} \\ \hline
+\endfirsthead
+\hline
+\textbf{Критерий} & \textbf{Монолитная архитектура} & \textbf{Микросервисная архитектура} \\ \hline
+\endhead
+
+Накладные расходы & Минимальные & Высокие \\ \hline
+Сложность развёртывания & Низкая & Высокая \\ \hline
+Зависимость от внешних систем & Отсутствует & Требуется оркестратор \\ \hline
+Сопровождаемость & Высокая & Низкая \\ \hline
+Масштабирование компонентов & Не поддерживается & Поддерживается \\ \hline
+\end{xltabular}
 
 \subsection{Топология развёртывания и гибкость инфраструктуры}
 
@@ -319,27 +335,46 @@ Redis. In-Memory хранилище структур данных, выполн�
 % \end{tabular}
 % \end{table}
 
-\begin{longtblr}[
-  caption = {Параметры модуля настроек системы},
-  label   = {tab:host-params},
-]{
-  colspec  = {|X[1.2,l]|X[0.7,l]|X[2.1,l]|},
-  hlines,
-  width    = \linewidth,
-  rowhead  = 1,
-  row{1}   = {font=\bfseries\small},
-  row{2-Z} = {font=\small},
-}
-Параметр & Тип & Описание \\
-\texttt{hostname} & String & Сетевое имя или IP-адрес целевого хоста; является уникальным идентификатором записи \\
-\texttt{ssh\_port} & Integer & Порт SSH-сервера на целевом хосте (по умолчанию 22) \\
-\texttt{account\_uuid} & UUID & Идентификатор учётной записи SSH из реестра \texttt{accounts} \\
-\texttt{working\_dir} & String & Абсолютный путь к рабочей директории на целевом хосте для хранения файлов заглушек \\
-\texttt{java\_path} & String & Абсолютный путь к исполняемому файлу Java на целевом хосте \\
-\texttt{mock\_port\_min} & Integer & Нижняя граница диапазона TCP-портов для динамического назначения заглушкам \\
-\texttt{mock\_port\_max} & Integer & Верхняя граница диапазона TCP-портов для динамического назначения заглушкам \\
-\texttt{description} & String & Произвольное текстовое описание хоста для документирования в интерфейсе \\
-\end{longtblr}
+% \begin{longtblr}[
+%   caption = {Параметры модуля настроек системы},
+%   label   = {tab:host-params},
+% ]{
+%   colspec  = {|X[1.2,l]|X[0.7,l]|X[2.1,l]|},
+%   hlines,
+%   width    = \linewidth,
+%   rowhead  = 1,
+%   row{1}   = {font=\bfseries\small},
+%   row{2-Z} = {font=\small},
+% }
+% Параметр & Тип & Описание \\
+% \texttt{hostname} & String & Сетевое имя или IP-адрес целевого хоста; является уникальным идентификатором записи \\
+% \texttt{ssh\_port} & Integer & Порт SSH-сервера на целевом хосте (по умолчанию 22) \\
+% \texttt{account\_uuid} & UUID & Идентификатор учётной записи SSH из реестра \texttt{accounts} \\
+% \texttt{working\_dir} & String & Абсолютный путь к рабочей директории на целевом хосте для хранения файлов заглушек \\
+% \texttt{java\_path} & String & Абсолютный путь к исполняемому файлу Java на целевом хосте \\
+% \texttt{mock\_port\_min} & Integer & Нижняя граница диапазона TCP-портов для динамического назначения заглушкам \\
+% \texttt{mock\_port\_max} & Integer & Верхняя граница диапазона TCP-портов для динамического назначения заглушкам \\
+% \texttt{description} & String & Произвольное текстовое описание хоста для документирования в интерфейсе \\
+% \end{longtblr}
+
+\begin{xltabular}{\textwidth}{|l|l|X|}
+\caption{Параметры модуля настроек системы} \label{tab:host-params} \\
+\hline
+\textbf{Параметр} & \textbf{Тип} & \textbf{Описание} \\ \hline
+\endfirsthead
+\hline
+\textbf{Параметр} & \textbf{Тип} & \textbf{Описание} \\ \hline
+\endhead
+
+\texttt{hostname} & String & IP-адрес или имя хоста \\ \hline
+\texttt{ssh\_port} & Integer & Порт SSH (по умолч. 22) \\ \hline
+\texttt{account\_uuid} & UUID & ID учётной записи SSH \\ \hline
+\texttt{working\_dir} & String & Рабочая директория на хосте \\ \hline
+\texttt{java\_path} & String & Путь к Java на хосте \\ \hline
+\texttt{mock\_port\_min} & Integer & Мин. порт для заглушек \\ \hline
+\texttt{mock\_port\_max} & Integer & Макс. порт для заглушек \\ \hline
+\texttt{description} & String & Описание хоста \\ \hline
+\end{xltabular}
 
 Параметр \texttt{java\_path} введён в реестр хостов по причине неоднородности целевой инфраструктуры: в корпоративных средах переменная окружения \texttt{JAVA\_HOME} нередко не определена или указывает на версию JRE, не совместимую с требованиями конкретной заглушки. Указание явного пути к исполняемому файлу Java устраняет неоднозначность и гарантирует запуск процесса с нужной версией JDK вне зависимости от конфигурации окружения на хосте.
 
@@ -469,7 +504,7 @@ Redis. In-Memory хранилище структур данных, выполн�
 
 Redis предоставляет несколько базовых типов данных: строки (String), хеши (Hash), списки (List), множества (Set) и сортированные множества (Sorted Set). Для хранения конфигурационных объектов -- заглушек, хостов, учётных записей -- выбран тип String в сочетании с JSON-сериализацией. Такой подход позволяет атомарно читать и записывать всю конфигурацию объекта одной операцией GET/SET, избегая частичных обновлений и связанных с ними состояний гонки (race conditions). Для хранения реестров (множеств идентификаторов) используется тип Set, гарантирующий уникальность элементов. Для счётчиков Rate Limiter применяется тип String со встроенными атомарными командами INCR и EXPIRE.
 
-В таблице~\ref{tab:redis-namespaces} приведена сводная схема всех пространств имён ключей Redis, используемых в системе.
+% В таблице~\ref{tab:redis-namespaces} приведена сводная схема всех пространств имён ключей Redis, используемых в системе.
 
 
 
@@ -554,28 +589,48 @@ Redis предоставляет несколько базовых типов д
 % \end{tblr}
 % \end{table}
 
-\begin{longtblr}[
-  caption = {Поля JSON-записи заглушки},
-  label   = {tab:mock-fields},
-]{
-  colspec  = {|X[1.0,l]|X[0.8,l]|X[2.2,l]|},
-  hlines,
-  width    = \linewidth,
-  rowhead  = 1,
-  row{1}   = {font=\bfseries\small},
-  row{2-Z} = {font=\small},
-}
-Поле & Тип & Описание \\
-\texttt{hostname} & String & Hostname целевого хоста, на котором запущена заглушка \\
-\texttt{port} & Integer / null & TCP-порт, на котором слушает процесс заглушки \\
-\texttt{pid} & Integer / null & Идентификатор процесса на целевом хосте \\
-\texttt{status} & String & Текущий статус: \texttt{REGISTERED}, \texttt{RUNNING}, \texttt{STOPPED}, \texttt{ERROR} \\
-\texttt{jvm\_args} & String & Аргументы JVM, заданные оператором при регистрации \\
-\texttt{rate\_limit} & Integer & Максимальное количество запросов в секунду \\
-\texttt{rate\_limit\_enabled} & Boolean & Флаг активности механизма Rate Limiter \\
-\texttt{registered\_at} & ISO~8601 & Дата и время регистрации заглушки \\
-\texttt{started\_at} & ISO~8601 / null & Дата и время последнего успешного запуска \\
-\end{longtblr}
+% \begin{longtblr}[
+%   caption = {Поля JSON-записи заглушки},
+%   label   = {tab:mock-fields},
+% ]{
+%   colspec  = {|X[1.0,l]|X[0.8,l]|X[2.2,l]|},
+%   hlines,
+%   width    = \linewidth,
+%   rowhead  = 1,
+%   row{1}   = {font=\bfseries\small},
+%   row{2-Z} = {font=\small},
+% }
+% Поле & Тип & Описание \\
+% \texttt{hostname} & String & Hostname целевого хоста, на котором запущена заглушка \\
+% \texttt{port} & Integer / null & TCP-порт, на котором слушает процесс заглушки \\
+% \texttt{pid} & Integer / null & Идентификатор процесса на целевом хосте \\
+% \texttt{status} & String & Текущий статус: \texttt{REGISTERED}, \texttt{RUNNING}, \texttt{STOPPED}, \texttt{ERROR} \\
+% \texttt{jvm\_args} & String & Аргументы JVM, заданные оператором при регистрации \\
+% \texttt{rate\_limit} & Integer & Максимальное количество запросов в секунду \\
+% \texttt{rate\_limit\_enabled} & Boolean & Флаг активности механизма Rate Limiter \\
+% \texttt{registered\_at} & ISO~8601 & Дата и время регистрации заглушки \\
+% \texttt{started\_at} & ISO~8601 / null & Дата и время последнего успешного запуска \\
+% \end{longtblr}
+
+\begin{xltabular}{\textwidth}{|l|l|X|}
+\caption{Поля JSON-записи заглушки} \label{tab:mock-fields} \\
+\hline
+\textbf{Поле} & \textbf{Тип} & \textbf{Описание} \\ \hline
+\endfirsthead
+\hline
+\textbf{Поле} & \textbf{Тип} & \textbf{Описание} \\ \hline
+\endhead
+
+\texttt{hostname} & String & Хост, где запущена заглушка \\ \hline
+\texttt{port} & Integer/null & TCP-порт процесса \\ \hline
+\texttt{pid} & Integer/null & ID процесса на хосте \\ \hline
+\texttt{status} & String & REGISTERED~/~RUNNING / STOPPED~/~ERROR \\ \hline
+\texttt{jvm\_args} & String & Аргументы JVM \\ \hline
+\texttt{rate\_limit} & Integer & Макс. запросов в секунду \\ \hline
+\texttt{rate\_limit\_enabled} & Boolean & Флаг активности Rate Limiter \\ \hline
+\texttt{registered\_at} & ISO 8601 & Дата регистрации \\ \hline
+\texttt{started\_at} & ISO 8601/null & Дата последнего запуска \\ \hline
+\end{xltabular}
 
 Поля \texttt{port}, \texttt{pid} и \texttt{started\_at} заполняются только после успешного запуска процесса и сбрасываются в \texttt{null} при его остановке или удалении. Для получения полного пути к файлу при выполнении SSH-команд Lifecycle Manager читает поле \texttt{working\_dir} из записи \texttt{hosts:\{hostname\}} и конкатенирует его с именем файла.
 
@@ -728,23 +783,38 @@ def check_rate_limit(filename: str, limit: int, window_size: int = 1) -> bool:
 % \end{tblr}
 % \end{table}
 
-\begin{longtblr}[
-  caption = {Поля глобальных настроек системы},
-  label   = {tab:global-settings},
-]{
-  colspec  = {|X[1.2,l]|X[0.6,l]|X[2.2,l]|},
-  hlines,
-  width    = \linewidth,
-  rowhead  = 1,
-  row{1}   = {font=\bfseries\small},
-  row{2-Z} = {font=\small},
-}
-Поле & Тип & Описание \\
-\texttt{rate\_limit\_window\_size} & Integer & Размер временного окна алгоритма Rate Limiter в секундах \\
-\texttt{host\_check\_interval\_sec} & Integer & Интервал фоновой проверки доступности хостов в секундах \\
-\texttt{proxy\_timeout\_sec} & Integer & Таймаут ожидания ответа от целевой заглушки при проксировании в секундах \\
-\texttt{log\_retention\_lines} & Integer & Максимальное количество строк журнала процесса, хранимых в памяти \\
-\end{longtblr}
+% \begin{longtblr}[
+%   caption = {Поля глобальных настроек системы},
+%   label   = {tab:global-settings},
+% ]{
+%   colspec  = {|X[1.2,l]|X[0.6,l]|X[2.2,l]|},
+%   hlines,
+%   width    = \linewidth,
+%   rowhead  = 1,
+%   row{1}   = {font=\bfseries\small},
+%   row{2-Z} = {font=\small},
+% }
+% Поле & Тип & Описание \\
+% \texttt{rate\_limit\_window\_size} & Integer & Размер временного окна алгоритма Rate Limiter в секундах \\
+% \texttt{host\_check\_interval\_sec} & Integer & Интервал фоновой проверки доступности хостов в секундах \\
+% \texttt{proxy\_timeout\_sec} & Integer & Таймаут ожидания ответа от целевой заглушки при проксировании в секундах \\
+% \texttt{log\_retention\_lines} & Integer & Максимальное количество строк журнала процесса, хранимых в памяти \\
+% \end{longtblr}
+
+\begin{xltabular}{\textwidth}{|l|l|X|}
+\caption{Поля глобальных настроек системы} \label{tab:global-settings} \\
+\hline
+\textbf{Поле} & \textbf{Тип} & \textbf{Описание} \\ \hline
+\endfirsthead
+\hline
+\textbf{Поле} & \textbf{Тип} & \textbf{Описание} \\ \hline
+\endhead
+
+\texttt{rate\_limit\_window\_size} & Integer & Размер окна Rate Limiter (сек) \\ \hline
+\texttt{host\_check\_interval\_sec} & Integer & Интервал проверки хостов (сек) \\ \hline
+\texttt{proxy\_timeout\_sec} & Integer & Таймаут проксирования (сек) \\ \hline
+\texttt{log\_retention\_lines} & Integer & Макс. строк лога в буфере \\ \hline
+\end{xltabular}
 
 \subsection{Персистентность данных и стратегия восстановления}
 
@@ -775,24 +845,40 @@ Redis настроен в режиме AOF (Append Only File) с парамет�
 % \end{tabular}
 % \end{table}
 
-\begin{longtblr}[
-  caption = {Матрица операций Redis по компонентам системы},
-  label   = {tab:redis-ops},
-]{
-  colspec  = {|X[1.1,l]|X[1.1,l]|X[1.8,l]|},
-  hlines,
-  width    = \linewidth,
-  rowhead  = 1,
-  row{1}   = {font=\bfseries\small},
-  row{2-Z} = {font=\small},
-}
-Компонент & Операции Redis & Назначение \\
-Lifecycle Manager & GET, SET, SADD, SREM, DEL & Чтение конфигураций хостов/заглушек, обновление статусов и PID \\
-Proxy Engine & GET & Чтение адреса, порта и флага \texttt{rate\_limit\_enabled} заглушки \\
-Rate Limiter & INCR, EXPIRE, GET & Инкремент и проверка счётчика запросов \\
-Settings Module & GET, SET, SADD, SREM, WATCH, MULTI, EXEC & Управление конфигурациями хостов и учётных записей \\
-Metrics Exporter & SMEMBERS, GET (Pipeline) & Агрегация метрик по всем заглушкам и хостам \\
-\end{longtblr}
+% \begin{longtblr}[
+%   caption = {Матрица операций Redis по компонентам системы},
+%   label   = {tab:redis-ops},
+% ]{
+%   colspec  = {|X[1.1,l]|X[1.1,l]|X[1.8,l]|},
+%   hlines,
+%   width    = \linewidth,
+%   rowhead  = 1,
+%   row{1}   = {font=\bfseries\small},
+%   row{2-Z} = {font=\small},
+% }
+% Компонент & Операции Redis & Назначение \\
+% Lifecycle Manager & GET, SET, SADD, SREM, DEL & Чтение конфигураций хостов/заглушек, обновление статусов и PID \\
+% Proxy Engine & GET & Чтение адреса, порта и флага \texttt{rate\_limit\_enabled} заглушки \\
+% Rate Limiter & INCR, EXPIRE, GET & Инкремент и проверка счётчика запросов \\
+% Settings Module & GET, SET, SADD, SREM, WATCH, MULTI, EXEC & Управление конфигурациями хостов и учётных записей \\
+% Metrics Exporter & SMEMBERS, GET (Pipeline) & Агрегация метрик по всем заглушкам и хостам \\
+% \end{longtblr}
+
+\begin{xltabular}{\textwidth}{|l|X|l|}
+\caption{Матрица операций Redis по компонентам системы} \label{tab:redis-ops} \\
+\hline
+\textbf{Компонент} & \textbf{Операции Redis} & \textbf{Назначение} \\ \hline
+\endfirsthead
+\hline
+\textbf{Компонент} & \textbf{Операции Redis} & \textbf{Назначение} \\ \hline
+\endhead
+
+Lifecycle Manager & GET, SET, SADD, SREM, DEL & Управление процессами \\ \hline
+Proxy Engine & GET & Чтение данных заглушки \\ \hline
+Rate Limiter & INCR, EXPIRE, GET & Счётчик запросов \\ \hline
+Settings Module & GET, SET, SADD, SREM & Управление конфигами \\ \hline
+Metrics Exporter & SMEMBERS, GET & Сбор метрик \\ \hline
+\end{xltabular}
 
 Для операции Metrics Exporter применяется механизм конвейеризации команд Redis (Pipeline): сначала читается полный список ключей из реестра, затем все операции чтения конфигураций отправляются единым пакетом. Это снижает суммарные сетевые задержки при агрегации данных о большом числе заглушек с~$O(n)$ до фактически~$O(1)$ по числу сетевых round-trip.
 
@@ -828,29 +914,50 @@ Metrics Exporter & SMEMBERS, GET (Pipeline) & Агрегация метрик п
 
 Компоновка страниц построена на двухколоночной сетке: постоянная боковая панель навигации шириной 220~px и основная рабочая область, занимающая оставшееся пространство. Такая компоновка является стандартной для административных веб-панелей и обеспечивает предсказуемость навигации при переключении между разделами системы. Сводная характеристика визуальной системы интерфейса приведена в таблице~\ref{tab:ui-colors}.
 
-\begin{longtblr}[
-  caption = {Визуальная система интерфейса},
-  label   = {tab:ui-colors},
-]{
-  colspec  = {|X[1.0,l]|X[0.8,l]|X[2.2,l]|},
-  hlines,
-  width    = \linewidth,
-  rowhead  = 1,
-  row{1}   = {font=\bfseries\small},
-  row{2-Z} = {font=\small},
-}
-Элемент & Значение & Назначение \\
-Фон основного контента & \texttt{\#121218} & Снижение утомляемости при длительной работе \\
-Фон боковой панели & \texttt{\#1A1A24} & Визуальное разделение навигации и контента \\
-Акцентный цвет & \texttt{\#4F8EF7} & Интерактивные элементы, активные состояния \\
-Статус RUNNING & \texttt{\#22C55E} & Процесс запущен и активен \\
-Статус REGISTERED / STOPPED & \texttt{\#EAB308} & Процесс зарегистрирован, не запущен \\
-Статус ERROR / UNAVAILABLE & \texttt{\#EF4444} & Ошибка или недоступность хоста \\
-Основной текст & \texttt{\#E2E8F0} & Высокий контраст на тёмном фоне \\
-Вторичный текст & \texttt{\#94A3B8} & Метаданные, метки полей, подсказки \\
-Основной шрифт & Inter & Читаемость, доступность в Linux \\
-Моноширинный шрифт & JetBrains Mono & Технические идентификаторы и аргументы \\
-\end{longtblr}
+% \begin{longtblr}[
+%   caption = {Визуальная система интерфейса},
+%   label   = {tab:ui-colors},
+% ]{
+%   colspec  = {|X[1.0,l]|X[0.8,l]|X[2.2,l]|},
+%   hlines,
+%   width    = \linewidth,
+%   rowhead  = 1,
+%   row{1}   = {font=\bfseries\small},
+%   row{2-Z} = {font=\small},
+% }
+% Элемент & Значение & Назначение \\
+% Фон основного контента & \texttt{\#121218} & Снижение утомляемости при длительной работе \\
+% Фон боковой панели & \texttt{\#1A1A24} & Визуальное разделение навигации и контента \\
+% Акцентный цвет & \texttt{\#4F8EF7} & Интерактивные элементы, активные состояния \\
+% Статус RUNNING & \texttt{\#22C55E} & Процесс запущен и активен \\
+% Статус REGISTERED / STOPPED & \texttt{\#EAB308} & Процесс зарегистрирован, не запущен \\
+% Статус ERROR / UNAVAILABLE & \texttt{\#EF4444} & Ошибка или недоступность хоста \\
+% Основной текст & \texttt{\#E2E8F0} & Высокий контраст на тёмном фоне \\
+% Вторичный текст & \texttt{\#94A3B8} & Метаданные, метки полей, подсказки \\
+% Основной шрифт & Inter & Читаемость, доступность в Linux \\
+% Моноширинный шрифт & JetBrains Mono & Технические идентификаторы и аргументы \\
+% \end{longtblr}
+
+\begin{xltabular}{\textwidth}{|X|X|X|}
+\caption{Визуальная система интерфейса} \label{tab:ui-colors} \\
+\hline
+\textbf{Элемент} & \textbf{Значение} & \textbf{Назначение} \\ \hline
+\endfirsthead
+\hline
+\textbf{Элемент} & \textbf{Значение} & \textbf{Назначение} \\ \hline
+\endhead
+
+Фон контента & \#121218 & Основной фон \\ \hline
+Фон боковой панели & \#1A1A24 & Навигация \\ \hline
+Акцентный цвет & \#4F8EF7 & Кнопки, ссылки \\ \hline
+Статус RUNNING & \#22C55E & Процесс запущен \\ \hline
+Статус REGISTERED / STOPPED & \#EAB308 & Зарегистрирован, не запущен \\ \hline
+Статус ERROR / UNAVAILABLE & \#EF4444 & Ошибка/недоступен \\ \hline
+Основной текст & \#E2E8F0 & Основной контент \\ \hline
+Вторичный текст & \#94A3B8 & Метки, подсказки \\ \hline
+Основной шрифт & Inter & Текст \\ \hline
+Моноширинный шрифт & JetBrains Mono & Код, пути, аргументы \\ \hline
+\end{xltabular}
 
 \subsection{Структура навигации и общий хром приложения}
 

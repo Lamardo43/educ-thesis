@@ -251,26 +251,60 @@ Apache Tomcat -- свободно распространяемый контей�
 % \noindent Источники данных: \cite{wiremock}, \cite{mockserver}, \cite{mountebank}, \cite{tomcat}.
 % \end{table}
 
-\begin{longtblr}[
-  caption = {Сравнительный анализ средств управления имитационными сервисами},
-  label   = {tab:comparison},
-  note{}  = {Источники данных: \cite{wiremock}, \cite{mockserver}, \cite{mountebank}, \cite{tomcat}.},
-]{
-  colspec  = {|X[1.4,l]|X[0.9,l]|X[0.9,l]|X[0.9,l]|X[1.0,l]|X[1.3,l]|},
-  hlines,
-  width    = \linewidth,
-  rowhead  = 1,
-  row{1}   = {font=\bfseries},
-  row{2-Z} = {font=\small},
-  row{1}   = {font=\bfseries\small},
+% \begin{longtblr}[
+%   caption = {Сравнительный анализ средств управления имитационными сервисами},
+%   label   = {tab:comparison},
+%   note{}  = {Источники данных: \cite{wiremock}, \cite{mockserver}, \cite{mountebank}, \cite{tomcat}.},
+% ]{
+%   colspec  = {|X[1.4,l]|X[0.9,l]|X[0.9,l]|X[0.9,l]|X[1.0,l]|X[1.3,l]|},
+%   hlines,
+%   width    = \linewidth,
+%   rowhead  = 1,
+%   row{1}   = {font=\bfseries},
+%   row{2-Z} = {font=\small},
+%   row{1}   = {font=\bfseries\small},
+% }
+% Критерий & Wire\-Mock & Mock\-Server & Mounte\-bank & Apache Tomcat & Разрабаты\-ваемая система \\
+% Управление JAR/WAR без пересборки & Нет & Нет & Нет & Частично & Да \\
+% Централи\-зованная оркестрация кластера & Нет & Нет & Нет & Нет & Да \\
+% Динамический Rate Limiting & Нет & Нет & Нет & Нет & Да \\
+% Потребление ресурсов управляющего слоя & Высокое (JVM) & Высокое (JVM) & Среднее & Высокое (JVM) & Низкое (Python) \\
+% Совместимость с Astra Linux & Частичная & Частичная & Да & Частичная & Да \\
+% \end{longtblr}
+
+% \begin{xltabular}{\textwidth}{|X|X|X|X|X|X|}
+% \caption{Сравнительный анализ средств управления имитационными сервисами} \label{tab:comparison} \\
+% \hline
+% \textbf{Критерий} & \textbf{WireMock} & \textbf{MockServer} & \textbf{Mountebank} & \textbf{Apache Tomcat} & \textbf{Разраб. система} \\ \hline
+% \endfirsthead
+% \hline
+% \textbf{Критерий} & \textbf{WireMock} & \textbf{MockServer} & \textbf{Mountebank} & \textbf{Apache Tomcat} & \textbf{Разраб. система} \\ \hline
+% \endhead
+
+% Управление JAR/WAR без пересборки & Нет & Нет & Нет & Частично & Да \\ \hline
+% Централизованная оркестрация & Нет & Нет & Нет & Нет & Да \\ \hline
+% Динамический Rate Limiting & Нет & Нет & Нет & Нет & Да \\ \hline
+% Потребление ресурсов & Высокое (JVM) & Высокое (JVM) & Среднее & Высокое (JVM) & Низкое \\ \hline
+% Совместимость с Astra Linux & Частично & Частично & Да & Частично & Да \\ \hline
+% \end{xltabular}
+
+{\small
+\begin{xltabular}{\textwidth}{|p{3.2cm}|X|X|X|X|X|}
+\caption{Сравнительный анализ средств управления имитационными сервисами} \label{tab:comparison} \\
+\hline
+\textbf{Критерий} & \textbf{Wire\-Mock} & \textbf{Mock\-Server} & \textbf{Mounte\-bank} & \textbf{Apache Tomcat} & \textbf{Разраб. система} \\ \hline
+\endfirsthead
+\hline
+\textbf{Критерий} & \textbf{Wire\-Mock} & \textbf{Mock\-Server} & \textbf{Mounte\-bank} & \textbf{Apache Tomcat} & \textbf{Разраб. система} \\ \hline
+\endhead
+
+Управление JAR/WAR без пересборки & Нет & Нет & Нет & Частично & Да \\ \hline
+Централизо\-ванная оркестрация & Нет & Нет & Нет & Нет & Да \\ \hline
+Динами\-ческий Rate Limiting & Нет & Нет & Нет & Нет & Да \\ \hline
+Потребление ресурсов & Высокое (JVM) & Высокое (JVM) & Среднее & Высокое (JVM) & Низкое \\ \hline
+Совмести\-мость с Astra Linux & Частично & Частично & Да & Частично & Да \\ \hline
+\end{xltabular}
 }
-Критерий & Wire\-Mock & Mock\-Server & Mounte\-bank & Apache Tomcat & Разрабаты\-ваемая система \\
-Управление JAR/WAR без пересборки & Нет & Нет & Нет & Частично & Да \\
-Централи\-зованная оркестрация кластера & Нет & Нет & Нет & Нет & Да \\
-Динамический Rate Limiting & Нет & Нет & Нет & Нет & Да \\
-Потребление ресурсов управляющего слоя & Высокое (JVM) & Высокое (JVM) & Среднее & Высокое (JVM) & Низкое (Python) \\
-Совместимость с Astra Linux & Частичная & Частичная & Да & Частичная & Да \\
-\end{longtblr}
 
 \subsection{Обоснование разработки собственного программного комплекса}
 
