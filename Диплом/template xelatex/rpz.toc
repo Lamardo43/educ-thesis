@@ -1,26 +1,26 @@
 \babel@toc {russian}{}\relax 
-\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ВВЕДЕНИЕ}}}{8}{section*.3}%
-\contentsline {chapter}{\numberline {1}{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{АНАЛИЗ ПРЕДМЕТНОЙ ОБЛАСТИ И ОБОСНОВАНИЕ ВЫБОРА ТЕХНОЛОГИЙ}}}{11}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Исследование инфраструктуры нагрузочного тестирования и роли имитационных сервисов}{11}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Анализ существующих подходов к управлению сервисами-заглушками и проблема импортозамещения}{12}{section.1.2}%
-\contentsline {section}{\numberline {1.3}Сравнительный анализ инструментальных средств разработки и обоснование технологического стека}{14}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1}Обоснование выбора языка программирования серверной части}{15}{subsection.1.3.1}%
-\contentsline {subsection}{\numberline {1.3.2}Сравнительный анализ веб-фреймворков}{17}{subsection.1.3.2}%
-\contentsline {subsection}{\numberline {1.3.3}Обоснование выбора системы управления данными (СУБД)}{18}{subsection.1.3.3}%
-\contentsline {subsection}{\numberline {1.3.4}Итоговый выбор средств разработки}{20}{subsection.1.3.4}%
-\contentsline {section}{\numberline {1.4}Обзор аналогичных решений и обоснование разработки собственного программного комплекса}{20}{section.1.4}%
-\contentsline {subsection}{\numberline {1.4.1}Анализ решения WireMock}{21}{subsection.1.4.1}%
-\contentsline {subsection}{\numberline {1.4.2}Анализ решения MockServer}{22}{subsection.1.4.2}%
-\contentsline {subsection}{\numberline {1.4.3}Анализ решения Mountebank}{23}{subsection.1.4.3}%
-\contentsline {subsection}{\numberline {1.4.4}Анализ решения Apache Tomcat}{24}{subsection.1.4.4}%
-\contentsline {subsection}{\numberline {1.4.5}Сравнительная характеристика}{25}{subsection.1.4.5}%
-\contentsline {subsection}{\numberline {1.4.6}Обоснование разработки собственного программного комплекса}{26}{subsection.1.4.6}%
+\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ВВЕДЕНИЕ}}}{9}{section*.3}%
+\contentsline {chapter}{\numberline {1}{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{АНАЛИЗ ПРЕДМЕТНОЙ ОБЛАСТИ И ОБОСНОВАНИЕ ВЫБОРА ТЕХНОЛОГИЙ}}}{12}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Исследование инфраструктуры нагрузочного тестирования и роли имитационных сервисов}{12}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Анализ существующих подходов к управлению сервисами-заглушками и проблема импортозамещения}{13}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Сравнительный анализ инструментальных средств разработки и обоснование технологического стека}{15}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Обоснование выбора языка программирования серверной части}{16}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Сравнительный анализ веб-фреймворков}{18}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Обоснование выбора системы управления данными (СУБД)}{19}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Итоговый выбор средств разработки}{21}{subsection.1.3.4}%
+\contentsline {section}{\numberline {1.4}Обзор аналогичных решений и обоснование разработки собственного программного комплекса}{21}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Анализ решения WireMock}{22}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Анализ решения MockServer}{23}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}Анализ решения Mountebank}{24}{subsection.1.4.3}%
+\contentsline {subsection}{\numberline {1.4.4}Анализ решения Apache Tomcat}{25}{subsection.1.4.4}%
+\contentsline {subsection}{\numberline {1.4.5}Сравнительная характеристика}{26}{subsection.1.4.5}%
+\contentsline {subsection}{\numberline {1.4.6}Обоснование разработки собственного программного комплекса}{27}{subsection.1.4.6}%
 \contentsline {subsection}{\numberline {1.4.7}Вывод по подразделу}{28}{subsection.1.4.7}%
 \contentsline {section}{\numberline {1.5}Формирование функциональных и технических требований к системе}{28}{section.1.5}%
 \contentsline {subsection}{\numberline {1.5.1}Требования к режимам функционирования}{28}{subsection.1.5.1}%
 \contentsline {subsection}{\numberline {1.5.2}Функциональные требования}{29}{subsection.1.5.2}%
 \contentsline {subsubsection}{\numberline {1.5.2.1}Требования к подсистеме управления жизненным циклом (Runtime)}{29}{subsubsection.1.5.2.1}%
-\contentsline {subsubsection}{\numberline {1.5.2.2}Требования к подсистеме проксирования запросов (Proxy Engine)}{29}{subsubsection.1.5.2.2}%
+\contentsline {subsubsection}{\numberline {1.5.2.2}Требования к подсистеме проксирования запросов (Proxy Engine)}{30}{subsubsection.1.5.2.2}%
 \contentsline {subsubsection}{\numberline {1.5.2.3}Требования к управляющему модулю (Master/Dashboard)}{30}{subsubsection.1.5.2.3}%
 \contentsline {subsection}{\numberline {1.5.3}Нефункциональные (технические) требования}{31}{subsection.1.5.3}%
 \contentsline {subsubsection}{\numberline {1.5.3.1}Требования к производительности}{31}{subsubsection.1.5.3.1}%
@@ -32,27 +32,44 @@
 \contentsline {section}{\numberline {1.6}Выводы по первой главе}{32}{section.1.6}%
 \contentsline {section}{Выводы по первой главе}{32}{section.1.6}%
 \contentsline {chapter}{\numberline {2}{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ПРОЕКТИРОВАНИЕ И ТЕХНИЧЕСКАЯ РЕАЛИЗАЦИЯ СИСТЕМЫ УПРАВЛЕНИЯ}}}{34}{chapter.2}%
-\contentsline {chapter}{\numberline {3}Проектирование и техническая реализация системы управления}{35}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Разработка архитектуры распределённого программного комплекса}{35}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Выбор архитектурного стиля}{35}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}Топология развёртывания и гибкость инфраструктуры}{38}{subsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.1.3}Контекстная диаграмма системы}{39}{subsection.3.1.3}%
-\contentsline {subsection}{\numberline {3.1.4}Контейнерная диаграмма}{41}{subsection.3.1.4}%
-\contentsline {subsection}{\numberline {3.1.5}Компонентная диаграмма REST API}{43}{subsection.3.1.5}%
-\contentsline {subsection}{\numberline {3.1.6}Архитектура модуля настроек системы}{44}{subsection.3.1.6}%
-\contentsline {subsection}{\numberline {3.1.7}Диаграмма развёртывания}{48}{subsection.3.1.7}%
-\contentsline {subsection}{\numberline {3.1.8}Сценарии взаимодействия компонентов}{49}{subsection.3.1.8}%
-\contentsline {section}{\numberline {3.2}Проектирование структур данных для хранения конфигураций и состояний в Redis}{52}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Обоснование модели данных}{52}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Структура данных заглушки}{53}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Структура данных хоста}{55}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}Структура данных учётной записи}{56}{subsection.3.2.4}%
-\contentsline {subsection}{\numberline {3.2.5}Структуры данных реестров}{57}{subsection.3.2.5}%
-\contentsline {subsection}{\numberline {3.2.6}Структура данных счётчика Rate Limiter}{58}{subsection.3.2.6}%
-\contentsline {subsection}{\numberline {3.2.7}Глобальные настройки системы}{60}{subsection.3.2.7}%
-\contentsline {subsection}{\numberline {3.2.8}Персистентность данных и стратегия восстановления}{61}{subsection.3.2.8}%
-\contentsline {section}{\numberline {3.3}Выводы по второй главе}{63}{section.3.3}%
-\contentsline {chapter}{\numberline {4}{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ВНЕДРЕНИЕ, ТЕСТИРОВАНИЕ И ЭКСПЛУАТАЦИЯ РАЗРАБОТАННОГО ПРОГРАММНОГО КОМПЛЕКСА}}}{64}{chapter.4}%
-\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ЗАКЛЮЧЕНИЕ}}}{65}{section*.15}%
-\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}}}{66}{section*.16}%
-\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ПРИЛОЖЕНИЕ А}}}{67}{section*.17}%
+\contentsline {section}{\numberline {2.1}Разработка архитектуры распределённого программного комплекса}{34}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Выбор архитектурного стиля}{34}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Топология развёртывания и гибкость инфраструктуры}{37}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Контекстная диаграмма системы}{38}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Контейнерная диаграмма}{40}{subsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.1.5}Компонентная диаграмма REST API}{41}{subsection.2.1.5}%
+\contentsline {subsection}{\numberline {2.1.6}Архитектура модуля настроек системы}{43}{subsection.2.1.6}%
+\contentsline {subsection}{\numberline {2.1.7}Диаграмма развёртывания}{46}{subsection.2.1.7}%
+\contentsline {subsection}{\numberline {2.1.8}Сценарии взаимодействия компонентов}{47}{subsection.2.1.8}%
+\contentsline {section}{\numberline {2.2}Проектирование структур данных для хранения конфигураций и состояний в Redis}{49}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Обоснование модели данных}{49}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Структура данных заглушки}{50}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Структура данных хоста}{52}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Структура данных учётной записи}{53}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Структуры данных реестров}{54}{subsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.2.6}Структура данных счётчика Rate Limiter}{55}{subsection.2.2.6}%
+\contentsline {subsection}{\numberline {2.2.7}Глобальные настройки системы}{57}{subsection.2.2.7}%
+\contentsline {subsection}{\numberline {2.2.8}Персистентность данных и стратегия восстановления}{58}{subsection.2.2.8}%
+\contentsline {section}{\numberline {2.3}Разработка макетов приложения}{59}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Обоснование стиля и цветового решения}{59}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Структура навигации и общий хром приложения}{61}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Макет главной панели управления (Dashboard)}{62}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Макет модального окна регистрации заглушки}{63}{subsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.3.5}Макет страницы настроек: управление хостами}{64}{subsection.2.3.5}%
+\contentsline {subsection}{\numberline {2.3.6}Макет страницы просмотра журналов процессов}{66}{subsection.2.3.6}%
+\contentsline {subsection}{\numberline {2.3.7}Итоги проектирования интерфейса}{67}{subsection.2.3.7}%
+\contentsline {section}{\numberline {2.4}Реализация асинхронных механизмов управления процессами и ввода пользовательских параметров (JVM-аргументы). }{68}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Разработка модуля динамического проксирования запросов на базе FastAPI и алгоритма Rate Limiting. }{68}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Проектирование и программная реализация пользовательского интерфейса (Dashboard, управление кластером). }{68}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Реализация механизма экспорта метрик мониторинга}{68}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Выводы по второй главе.}{68}{section.2.8}%
+\contentsline {chapter}{\numberline {3}{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ВНЕДРЕНИЕ, ТЕСТИРОВАНИЕ И ЭКСПЛУАТАЦИЯ РАЗРАБОТАННОГО ПРОГРАММНОГО КОМПЛЕКСА}}}{69}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Описание процесса развертывания системы в среде ОС Astra Linux (настройка Uvicorn/Gunicorn и службы Redis). }{69}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Тестирование механизмов автоматического восстановления состояний (персистентность Redis AOF) и перезапуска сервисов. }{69}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Экспериментальная оценка производительности прокси-модуля и эффективности алгоритма Rate Limiting под нагрузкой. }{69}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Анализ работы системы в кластерном режиме и оценка алгоритмов распределения нагрузки между узлами. }{69}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Рекомендации по дальнейшему развитию системы (шаблонизация конфигураций, Self-healing). }{69}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Выводы по третьей главе.}{69}{section.3.6}%
+\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ЗАКЛЮЧЕНИЕ}}}{70}{section*.15}%
+\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}}}{71}{section*.16}%
+\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ПРИЛОЖЕНИЕ А}}}{72}{section*.17}%

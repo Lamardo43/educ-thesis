@@ -228,26 +228,49 @@ Apache Tomcat -- свободно распространяемый контей�
 
 Для наглядного сравнения рассмотренных решений с проектируемой системой составлена таблица~\ref{tab:comparison}.
 
-\begin{table}[H]
-\caption{Сравнительный анализ средств управления имитационными сервисами}
-\label{tab:comparison}
-\centering
-% \begin{tabular}{|p{3.5cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2.5cm}|}
-\begin{tblr}{
-  colspec = {|X|X|X|X|X|X|},
+
+
+% \begin{table}[H]
+% \caption{Сравнительный анализ средств управления имитационными сервисами}
+% \label{tab:comparison}
+% \centering
+% \small % Уменьшаем размер шрифта для таблицы
+% \begin{tblr}{
+%   colspec = {|X[1.2,l]|X[0.8,l]|X[0.8,l]|X[0.8,l]|X[0.9,l]|X[1.3,l]|},
+%   hlines,
+%   width = \linewidth
+% }
+% \textbf{Критерий} & \textbf{Wire\-Mock} & \textbf{Mock\-Server} & \textbf{Mounte\-bank} & \textbf{Apache Tomcat} & \textbf{Разрабаты\-ваемая система} \\
+% Управление JAR/WAR без пересборки & Нет & Нет & Нет & Частично & Да \\
+% Централи\-зованная оркестрация кластера & Нет & Нет & Нет & Нет & Да \\
+% Динамический Rate Limiting & Нет & Нет & Нет & Нет & Да \\
+% Потребление ресурсов управляющего слоя & Высокое (JVM) & Высокое (JVM) & Среднее & Высокое (JVM) & Низкое (Python) \\
+% Совместимость с Astra Linux & Частичная & Частичная & Да & Частичная & Да \\
+% \end{tblr}
+
+% \noindent Источники данных: \cite{wiremock}, \cite{mockserver}, \cite{mountebank}, \cite{tomcat}.
+% \end{table}
+
+\begin{longtblr}[
+  caption = {Сравнительный анализ средств управления имитационными сервисами},
+  label   = {tab:comparison},
+  note{}  = {Источники данных: \cite{wiremock}, \cite{mockserver}, \cite{mountebank}, \cite{tomcat}.},
+]{
+  colspec  = {|X[1.4,l]|X[0.9,l]|X[0.9,l]|X[0.9,l]|X[1.0,l]|X[1.3,l]|},
   hlines,
-  width = \linewidth,
+  width    = \linewidth,
+  rowhead  = 1,
+  row{1}   = {font=\bfseries},
+  row{2-Z} = {font=\small},
+  row{1}   = {font=\bfseries\small},
 }
-Критерий & WireMock & MockServer & Mountebank & Apache Tomcat & Разрабатываемая система \\
+Критерий & Wire\-Mock & Mock\-Server & Mounte\-bank & Apache Tomcat & Разрабаты\-ваемая система \\
 Управление JAR/WAR без пересборки & Нет & Нет & Нет & Частично & Да \\
-Централизованная оркестрация кластера & Нет & Нет & Нет & Нет & Да \\
+Централи\-зованная оркестрация кластера & Нет & Нет & Нет & Нет & Да \\
 Динамический Rate Limiting & Нет & Нет & Нет & Нет & Да \\
 Потребление ресурсов управляющего слоя & Высокое (JVM) & Высокое (JVM) & Среднее & Высокое (JVM) & Низкое (Python) \\
 Совместимость с Astra Linux & Частичная & Частичная & Да & Частичная & Да \\
-\end{tblr}
-
-\noindent Источники данных: \cite{wiremock}, \cite{mockserver}, \cite{mountebank}, \cite{tomcat}.
-\end{table}
+\end{longtblr}
 
 \subsection{Обоснование разработки собственного программного комплекса}
 

@@ -6,7 +6,21 @@
 % \setotherlanguage{english}
 
 \usepackage{xurl}
+
+% ДОБАВЛЯЛ САМ
 \usepackage{tabularray}
+% Оформление longtblr по ГОСТ
+\DefTblrTemplate{caption-tag}{default}{Таблица~\thetblrcounter}
+\DefTblrTemplate{caption-sep}{default}{\enskip\textendash\enskip}
+\DefTblrTemplate{caption}{default}{%
+  \raggedright
+  \UseTblrTemplate{caption-tag}{default}%
+  \UseTblrTemplate{caption-sep}{default}%
+  \UseTblrTemplate{caption-text}{default}%
+}
+\DefTblrTemplate{conthead-text}{default}{Продолжение таблицы~\thetblrcounter}
+\DefTblrTemplate{contfoot-text}{default}{}
+% ::::::::::::
 
 \input{preamble.inc}
 
