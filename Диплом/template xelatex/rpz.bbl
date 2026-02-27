@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 \def\selectlanguageifdefined#1{
 \expandafter\ifx\csname date#1\endcsname\relax
 \else\language\csname l@#1\endcsname\fi}
@@ -6,6 +6,77 @@
 \ifx\undefined\BibUrl\def\BibUrl#1{\url{#1}}\else\fi
 \ifx\undefined\BibAnnote\long\def\BibAnnote#1{}\else\fi
 \ifx\undefined\BibEmph\def\BibEmph#1{\emph{#1}}\else\fi
+
+\bibitem{wildfly}
+\selectlanguageifdefined{english}
+WildFly — JBoss Application Server Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://www.wildfly.org/documentation/}.
+
+\bibitem{glassfish}
+\selectlanguageifdefined{english}
+Eclipse GlassFish Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://glassfish.org/documentation}.
+
+\bibitem{python-asyncio}
+\selectlanguageifdefined{english}
+asyncio — Asynchronous I/O. Python 3.12 Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://docs.python.org/3/library/asyncio.html}.
+
+\bibitem{fastapi}
+\selectlanguageifdefined{english}
+FastAPI Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://fastapi.tiangolo.com/}.
+
+\bibitem{asgi-spec}
+\selectlanguageifdefined{english}
+ASGI (Asynchronous Server Gateway Interface) Specification. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://asgi.readthedocs.io/en/latest/}.
+
+\bibitem{pydantic}
+\selectlanguageifdefined{english}
+Pydantic Documentation — Data validation using Python type hints. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://docs.pydantic.dev/}.
+
+\bibitem{uvicorn}
+\selectlanguageifdefined{english}
+Uvicorn — An ASGI web server, for Python. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://www.uvicorn.org/}.
+
+\bibitem{redis-docs}
+\selectlanguageifdefined{english}
+Redis Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://redis.io/docs/}.
+
+\bibitem{redis-aof}
+\selectlanguageifdefined{english}
+Redis Persistence: Append Only File. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://redis.io/docs/management/persistence/}.
+
+\bibitem{astra-linux}
+\selectlanguageifdefined{english}
+Astra Linux Special Edition — официальная
+  документация. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://wiki.astralinux.ru/}.
 
 \bibitem{wiremock}
 \selectlanguageifdefined{english}
@@ -50,5 +121,76 @@ Apache Tomcat Configuration Reference: The Rate Limit Filter. --
 \newblock [Электронный ресурс] Дата обращения:
   09.01.2026. \BibUrl{
   https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html\#Rate_Limit_Filter}.
+
+\bibitem{openjdk}
+\selectlanguageifdefined{english}
+OpenJDK 17 Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://openjdk.org/projects/jdk/17/}.
+
+\bibitem{c4model}
+\selectlanguageifdefined{english}
+The C4 model for visualising software architecture. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://c4model.com/}.
+
+\bibitem{jinja2}
+\selectlanguageifdefined{english}
+Jinja2 Documentation — The Python Template Engine. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://jinja.palletsprojects.com/}.
+
+\bibitem{paramiko}
+\selectlanguageifdefined{english}
+Paramiko Documentation — SSH2 protocol library for Python. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://www.paramiko.org/}.
+
+\bibitem{httpx}
+\selectlanguageifdefined{english}
+HTTPX — A next-generation HTTP client for Python. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://www.python-httpx.org/}.
+
+\bibitem{cryptography-fernet}
+\selectlanguageifdefined{english}
+Cryptography Library — Fernet (symmetric encryption). --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://cryptography.io/en/latest/fernet/}.
+
+\bibitem{prometheus-docs}
+\selectlanguageifdefined{english}
+Prometheus Documentation. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://prometheus.io/docs/introduction/overview/}.
+
+\bibitem{prometheus-exposition}
+\selectlanguageifdefined{english}
+Prometheus Exposition Formats. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{
+  https://prometheus.io/docs/instrumenting/exposition_formats/}.
+
+\bibitem{redis-incr}
+\selectlanguageifdefined{english}
+Redis Commands: INCR — Increment the integer value of a key. --
+\newblock 2025. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://redis.io/commands/incr/}.
+
+\bibitem{wcag21}
+\selectlanguageifdefined{english}
+Web Content Accessibility Guidelines (WCAG) 2.1. --
+\newblock 2018. --
+\newblock [Электронный ресурс] Дата обращения:
+  15.02.2026. \BibUrl{ https://www.w3.org/TR/WCAG21/}.
 
 \end{thebibliography}

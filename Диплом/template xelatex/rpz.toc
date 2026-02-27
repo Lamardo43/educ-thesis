@@ -72,4 +72,4 @@
 \contentsline {section}{\numberline {3.6}Выводы по третьей главе.}{67}{section.3.6}%
 \contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ЗАКЛЮЧЕНИЕ}}}{68}{section*.15}%
 \contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}}}{69}{section*.16}%
-\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ПРИЛОЖЕНИЕ А}}}{70}{section*.17}%
+\contentsline {chapter}{{\fontsize {14pt}{21pt}\selectfont \MakeUppercase []{ПРИЛОЖЕНИЕ А}}}{72}{section*.17}%
