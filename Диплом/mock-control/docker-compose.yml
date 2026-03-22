@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+
+  redis:
+    image: redis:7-alpine
+    container_name: mock-control-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --save 900 1
+      --save 300 10
+      --loglevel notice
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build: .
+    container_name: mock-control-app
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DATA_DIR: /app/data/redis
+      FERNET_KEY_PATH: /app/data/fernet.key
+      UPLOAD_TEMP_DIR: /app/data/uploads
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+    volumes:
+      - app_data:/app/data
+    ports:
+      - "8000:8000"
+
+volumes:
+  redis_data:
+  app_data:
