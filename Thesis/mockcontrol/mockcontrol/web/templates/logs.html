@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Журналы — MockControl{% endblock %}
+{% block page_title %}Журналы процессов{% endblock %}
+
+{% block content %}
+<!-- Панель управления -->
+<div class="logs-toolbar">
+    <div class="logs-toolbar-left">
+        <label class="form-label-inline">Заглушка:</label>
+        <select id="log-mock-select" class="form-select" onchange="loadLogs()">
+            <option value="">Выберите заглушку...</option>
+            {% for filename, config in mocks.items() %}
+            <option value="{{ filename }}"
+                    data-pid="{{ config.pid or '' }}"
+                    data-port="{{ config.port or '' }}"
+                    data-status="{{ config.status.value }}">
+                {{ filename }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="logs-toolbar-right">
+        <label class="toggle-label">
+            <input type="checkbox" id="log-auto-refresh" onchange="toggleAutoRefresh()">
+            <span class="toggle-slider-sm"></span>
+            <span>Авто</span>
+        </label>
+        <button class="btn btn-sm btn-outline" onclick="loadLogs()">⟳ Обновить</button>
+        <button class="btn btn-sm btn-outline" onclick="clearLogDisplay()">Очистить</button>
+    </div>
+</div>
+
+<!-- Строка состояния -->
+<div class="logs-status-bar" id="log-status-bar" style="display:none">
+    <span id="log-status-text"></span>
+    <span class="text-muted" id="log-line-count"></span>
+</div>
+
+<!-- Терминальный блок -->
+<div class="terminal" id="log-terminal">
+    <div class="terminal-placeholder">
+        Выберите заглушку для просмотра журнала
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let autoRefreshInterval = null;
+
+    function loadLogs() {
+        const select = document.getElementById('log-mock-select');
+        const mockName = select.value;
+        if (!mockName) return;
+
+        const option = select.selectedOptions[0];
+        const pid = option.dataset.pid;
+        const port = option.dataset.port;
+        const statusVal = option.dataset.status;
+
+        // Обновить строку состояния
+        const statusBar = document.getElementById('log-status-bar');
+        const statusText = document.getElementById('log-status-text');
+        statusBar.style.display = 'flex';
+        statusText.innerHTML =
+            `● <code>${mockName}</code>` +
+            (pid ? ` — PID ${pid}` : '') +
+            (port ? ` — порт ${port}` : '') +
+            ` — <span class="badge badge-${statusVal.toLowerCase()}">${statusVal}</span>`;
+
+        // Запросить логи
+        fetch(`/api/v1/logs/${encodeURIComponent(mockName)}?lines=500`)
+            .then(r => r.json())
+            .then(data => {
+                renderLogs(data.content);
+                document.getElementById('log-line-count').textContent =
+                    `Строк в буфере: ${data.content.split('\n').length}`;
+            })
+            .catch(err => {
+                document.getElementById('log-terminal').innerHTML =
+                    `<div class="terminal-error">Ошибка загрузки: ${err.message}</div>`;
+            });
+    }
+
+    function renderLogs(content) {
+        const terminal = document.getElementById('log-terminal');
+        if (!content || !content.trim()) {
+            terminal.innerHTML = '<div class="terminal-placeholder">Лог пуст</div>';
+            return;
+        }
+
+        const lines = content.split('\n');
+        const html = lines.map(line => {
+            let cls = 'log-line';
+            if (line.includes('ERROR') || line.includes('error')) {
+                cls += ' log-error';
+            } else if (line.includes('WARN') || line.includes('warn')) {
+                cls += ' log-warn';
+            }
+            // Подсветить timestamp в начале строки
+            const escaped = escapeHtml(line);
+            const highlighted = escaped.replace(
+                /^(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}[\.,]\d+)/,
+                '<span class="log-ts">$1</span>'
+            );
+            return `<div class="${cls}">${highlighted}</div>`;
+        }).join('');
+
+        terminal.innerHTML = html;
+        terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function clearLogDisplay() {
+        document.getElementById('log-terminal').innerHTML =
+            '<div class="terminal-placeholder">Буфер очищен</div>';
+        document.getElementById('log-line-count').textContent = '';
+    }
+
+    function toggleAutoRefresh() {
+        const checked = document.getElementById('log-auto-refresh').checked;
+        if (checked) {
+            autoRefreshInterval = setInterval(loadLogs, 3000);
+        } else {
+            clearInterval(autoRefreshInterval);
+            autoRefreshInterval = null;
+        }
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+</script>
+{% endblock %}

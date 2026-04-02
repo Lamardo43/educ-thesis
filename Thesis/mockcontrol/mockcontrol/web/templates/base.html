@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MockControl{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Боковая панель навигации -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-logo">◈</span>
+            <span class="sidebar-title">MockControl</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="/dashboard" class="nav-item {% if page == 'dashboard' %}active{% endif %}">
+                <span class="nav-icon">⊞</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/settings" class="nav-item {% if page == 'settings' %}active{% endif %}">
+                <span class="nav-icon">⚙</span>
+                <span>Настройки</span>
+            </a>
+            <a href="/logs" class="nav-item {% if page == 'logs' %}active{% endif %}">
+                <span class="nav-icon">☰</span>
+                <span>Журналы</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <span class="version">v 1.0.0</span>
+        </div>
+    </aside>
+
+    <!-- Основная область -->
+    <main class="main-area">
+        <!-- Верхняя полоса -->
+        <header class="topbar">
+            <h1 class="topbar-title">{% block page_title %}{% endblock %}</h1>
+            <div class="topbar-status">
+                <span class="redis-dot {% if redis_ok %}redis-ok{% else %}redis-fail{% endif %}"></span>
+                <span class="redis-label">
+                    Redis: {% if redis_ok %}подключён{% else %}недоступен{% endif %}
+                </span>
+            </div>
+        </header>
+
+        <!-- Контент страницы -->
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Уведомления -->
+    <div id="toast-container"></div>
+
+    <script src="/static/js/app.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
