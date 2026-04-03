@@ -13,11 +13,14 @@
 """
 
 import logging
+import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request as StarletteRequest
 
 from mockcontrol.api import metrics_router, proxy_router, v1_router
 from mockcontrol.dependencies import init_container, shutdown_container
@@ -29,7 +32,49 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
+
+# Подавление избыточных логов сторонних библиотек:
+# httpx пишет INFO на каждый проксируемый запрос — оставляем только WARNING и выше
+logging.getLogger("httpx").setLevel(logging.WARNING)
+# httpcore — транспортный слой httpx, тоже многословен
+logging.getLogger("httpcore").setLevel(logging.WARNING)
+# Uvicorn access log дублирует информацию о запросах — отключаем
+logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+
 logger = logging.getLogger(__name__)
+
+# Порог «медленного» запроса в миллисекундах
+_SLOW_REQUEST_MS = 500.0
+
+
+class TimingMiddleware(BaseHTTPMiddleware):
+    """
+    Middleware замера времени каждого HTTP-запроса.
+
+    - Добавляет заголовок X-Process-Time-Ms в ответ.
+    - Логирует все запросы на уровне DEBUG.
+    - Запросы дольше _SLOW_REQUEST_MS мс — на уровне WARNING.
+    """
+
+    async def dispatch(self, request: StarletteRequest, call_next):
+        start = time.monotonic()
+        response = await call_next(request)
+        elapsed_ms = (time.monotonic() - start) * 1000
+
+        if elapsed_ms >= _SLOW_REQUEST_MS:
+            logger.warning(
+                "SLOW REQUEST  %.1f ms  %s %s -> %d",
+                elapsed_ms, request.method, request.url.path, response.status_code,
+            )
+        else:
+            logger.debug(
+                "request  %.1f ms  %s %s -> %d",
+                elapsed_ms, request.method, request.url.path, response.status_code,
+            )
+
+        response.headers["X-Process-Time-Ms"] = f"{elapsed_ms:.1f}"
+        return response
+
 
 # Путь к каталогу статических файлов
 STATIC_DIR = Path(__file__).parent / "web" / "static"
@@ -77,6 +122,9 @@ def create_app() -> FastAPI:
         redoc_url="/api/redoc",
         openapi_url="/api/openapi.json",
     )
+
+    # --- Middleware ---
+    app.add_middleware(TimingMiddleware)
 
     # --- Статические файлы (CSS, JS) ---
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")

@@ -72,8 +72,7 @@ async def dashboard_page(
     # Список хостов для выпадающего списка в модалке
     host_list = sorted(host_configs.keys())
 
-    return templates.TemplateResponse("dashboard.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "dashboard.html", {
         "page": "dashboard",
         "redis_ok": redis_ok,
         "total_mocks": total_mocks,
@@ -102,8 +101,7 @@ async def settings_page(
     except Exception:
         redis_ok = False
 
-    return templates.TemplateResponse("settings.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "settings.html", {
         "page": "settings",
         "redis_ok": redis_ok,
         "hosts": host_configs,
@@ -126,8 +124,7 @@ async def logs_page(
     except Exception:
         redis_ok = False
 
-    return templates.TemplateResponse("logs.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "logs.html", {
         "page": "logs",
         "redis_ok": redis_ok,
         "mocks": mock_configs,

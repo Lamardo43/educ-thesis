@@ -10,6 +10,7 @@ Proxy Engine — прозрачный обратный прокси-сервер
 """
 
 import logging
+import time
 from typing import Optional
 
 import httpx
@@ -98,8 +99,12 @@ class ProxyEngine:
         Returns:
             HTTP-ответ от заглушки или ответ с ошибкой (503, 429, 502).
         """
+        t0 = time.monotonic()
+
         # Шаг 1: получить конфигурацию заглушки
         mock_config = await self._mocks.get(mock_name)
+        t_redis_ms = (time.monotonic() - t0) * 1000
+
         if mock_config is None:
             return Response(
                 content=f"Mock '{mock_name}' not found",
@@ -120,13 +125,16 @@ class ProxyEngine:
             )
 
         # Шаг 3: проверить Rate Limiter (если включён)
+        t_rl_ms = 0.0
         if mock_config.rate_limit_enabled and mock_config.rate_limit > 0:
+            t_rl0 = time.monotonic()
             global_settings = await self._settings.get()
             result = await self._rate_limiter.check(
                 filename=mock_name,
                 limit=mock_config.rate_limit,
                 window_size=global_settings.rate_limit_window_size,
             )
+            t_rl_ms = (time.monotonic() - t_rl0) * 1000
             if not result.allowed:
                 return Response(
                     content="Too Many Requests",
@@ -151,6 +159,7 @@ class ProxyEngine:
         # Прочитать тело запроса
         body = await request.body()
 
+        t_http0 = time.monotonic()
         try:
             proxy_response = await self._client.request(
                 method=request.method,
@@ -185,6 +194,23 @@ class ProxyEngine:
             return Response(
                 content="Bad Gateway",
                 status_code=502,
+            )
+        t_http_ms = (time.monotonic() - t_http0) * 1000
+
+        total_ms = (time.monotonic() - t0) * 1000
+        logger.debug(
+            "PROXY %s %s %s: redis=%.1f ms  rate_limit=%.1f ms  http=%.1f ms  total=%.1f ms",
+            request.method, mock_name, path,
+            t_redis_ms, t_rl_ms, t_http_ms, total_ms,
+        )
+        if t_redis_ms > 50:
+            logger.warning(
+                "SLOW redis lookup for '%s': %.1f ms", mock_name, t_redis_ms,
+            )
+        if t_http_ms > 200:
+            logger.warning(
+                "SLOW upstream response from '%s' at %s: %.1f ms",
+                mock_name, target_url, t_http_ms,
             )
 
         # Шаг 5: вернуть ответ заглушки без изменений
