@@ -1,0 +1,450 @@
+{% extends "base.html" %}
+
+{% block title %}Настройки — MockControl{% endblock %}
+
+{% block page_title %}Настройки{% endblock %}
+
+{% block content %}
+<div
+  class="settings-page"
+  data-page="settings"
+  data-api-hosts="/api/v1/hosts"
+  data-api-accounts="/api/v1/accounts"
+>
+  <div class="tabs" role="tablist" aria-label="Разделы настроек">
+    <button
+      type="button"
+      class="tabs__btn is-active"
+      id="tab-hosts"
+      role="tab"
+      aria-selected="true"
+      aria-controls="panel-hosts"
+      data-action="settings-tab"
+      data-tab="hosts"
+    >
+      Хосты
+    </button>
+    <button
+      type="button"
+      class="tabs__btn"
+      id="tab-accounts"
+      role="tab"
+      aria-selected="false"
+      aria-controls="panel-accounts"
+      data-action="settings-tab"
+      data-tab="accounts"
+    >
+      Учётные записи
+    </button>
+  </div>
+
+  <div
+    id="panel-hosts"
+    class="tab-panel is-active"
+    role="tabpanel"
+    aria-labelledby="tab-hosts"
+    data-tab-panel="hosts"
+  >
+    <div class="section-header section-header--split">
+      <h2 style="margin: 0; font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em">
+        Хосты
+      </h2>
+      <div class="section-header__actions">
+        <button
+          type="button"
+          class="btn btn--accent"
+          data-action="open-host-modal"
+          data-host-modal-mode="add"
+          aria-haspopup="dialog"
+        >
+          + Добавить хост
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Хост / адрес</th>
+            <th scope="col">SSH-порт</th>
+            <th scope="col">Рабочая директория</th>
+            <th scope="col">Статус</th>
+            <th scope="col">Проверено</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if hosts %}
+          {% for host in hosts %}
+          <tr
+            data-host-row
+            data-hostname="{{ host.hostname | e }}"
+            data-ssh-port="{{ host.ssh_port }}"
+            data-account-uuid="{{ host.account_uuid | e }}"
+            data-working-dir="{{ host.working_dir | e }}"
+            data-java-path="{{ host.java_path | e }}"
+            data-mock-port-min="{{ host.mock_port_min }}"
+            data-mock-port-max="{{ host.mock_port_max }}"
+            data-description="{{ host.description | e }}"
+          >
+            <td class="mono">{{ host.hostname }}</td>
+            <td>{{ host.ssh_port }}</td>
+            <td class="mono">{{ host.working_dir }}</td>
+            <td>
+              {% if host.status == 'AVAILABLE' %}
+              <span class="badge badge--available">{{ host.status }}</span>
+              {% elif host.status == 'UNAVAILABLE' %}
+              <span class="badge badge--unavailable">{{ host.status }}</span>
+              {% else %}
+              <span class="badge badge--unknown">{{ host.status }}</span>
+              {% endif %}
+            </td>
+            <td class="text-muted">{{ host.last_checked_at or '—' }}</td>
+            <td>{{ host.description or '—' }}</td>
+            <td>
+              <div class="table-actions">
+                <button
+                  type="button"
+                  class="btn btn--ghost btn--sm"
+                  data-action="host-edit"
+                  data-hostname="{{ host.hostname | e }}"
+                >
+                  Изменить
+                </button>
+                <button
+                  type="button"
+                  class="btn btn--danger btn--sm"
+                  data-action="host-delete"
+                  data-hostname="{{ host.hostname | e }}"
+                >
+                  Удалить
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="7" class="text-muted" style="text-align: center; padding: 24px">
+              Хосты не добавлены. Нажмите «+ Добавить хост».
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div
+    id="panel-accounts"
+    class="tab-panel"
+    role="tabpanel"
+    aria-labelledby="tab-accounts"
+    data-tab-panel="accounts"
+  >
+    <div class="section-header section-header--split">
+      <h2 style="margin: 0; font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em">
+        Учётные записи SSH
+      </h2>
+      <div class="section-header__actions">
+        <button
+          type="button"
+          class="btn btn--accent"
+          data-action="open-account-modal"
+          data-account-modal-mode="add"
+          aria-haspopup="dialog"
+        >
+          + Добавить учётную запись
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Логин</th>
+            <th scope="col">Пароль</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if accounts %}
+          {% for account in accounts %}
+          <tr
+            data-account-row
+            data-account-uuid="{{ account.uuid | e }}"
+            data-username="{{ account.username | e }}"
+            data-description="{{ account.description | e }}"
+          >
+            <td class="mono">{{ account.username }}</td>
+            <td>
+              <span class="mono" aria-hidden="true">••••••••</span>
+              <span class="sr-only">Пароль не отображается</span>
+            </td>
+            <td>{{ account.description or '—' }}</td>
+            <td class="text-muted">{{ account.created_at }}</td>
+            <td>
+              <div class="table-actions">
+                <button
+                  type="button"
+                  class="btn btn--ghost btn--sm"
+                  data-action="account-edit"
+                  data-account-uuid="{{ account.uuid | e }}"
+                >
+                  Изменить
+                </button>
+                <button
+                  type="button"
+                  class="btn btn--danger btn--sm"
+                  data-action="account-delete"
+                  data-account-uuid="{{ account.uuid | e }}"
+                >
+                  Удалить
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="5" class="text-muted" style="text-align: center; padding: 24px">
+              Учётные записи не созданы. Нажмите «+ Добавить учётную запись».
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div
+    id="modal-host"
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-host-title"
+    aria-hidden="true"
+    data-modal="host"
+  >
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="modal-host-title" class="modal__title" data-host-modal-title>Добавить хост</h2>
+        <button
+          type="button"
+          class="modal__close"
+          data-action="close-host-modal"
+          aria-label="Закрыть"
+        >
+          ×
+        </button>
+      </div>
+
+      <form id="form-host" data-settings-host-form novalidate>
+        <input type="hidden" name="form_mode" value="add" data-host-form-mode />
+
+        <div class="form-group">
+          <label class="form-label" for="host-hostname">Hostname / IP</label>
+          <input
+            class="input mono"
+            type="text"
+            id="host-hostname"
+            name="hostname"
+            required
+            autocomplete="off"
+            data-host-field="hostname"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="host-ssh-port">SSH-порт</label>
+          <input
+            class="input"
+            type="number"
+            id="host-ssh-port"
+            name="ssh_port"
+            min="1"
+            max="65535"
+            value="22"
+            data-host-field="ssh_port"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="host-account">Учётная запись</label>
+          <select
+            class="select"
+            id="host-account"
+            name="account_uuid"
+            required
+            data-host-field="account_uuid"
+          >
+            <option value="" disabled selected>Выберите учётную запись…</option>
+            {% for account in accounts %}
+            <option value="{{ account.uuid | e }}">
+              {{ account.username }}{% if account.description %} — {{ account.description }}{% endif %}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="host-working-dir">Рабочая директория</label>
+          <input
+            class="input mono"
+            type="text"
+            id="host-working-dir"
+            name="working_dir"
+            required
+            autocomplete="off"
+            value="/opt/mocks"
+            data-host-field="working_dir"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="host-java-path">Путь к Java</label>
+          <input
+            class="input mono"
+            type="text"
+            id="host-java-path"
+            name="java_path"
+            required
+            autocomplete="off"
+            value="/usr/bin/java"
+            data-host-field="java_path"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="host-mock-port-min">Порт мин. (диапазон заглушек)</label>
+          <input
+            class="input"
+            type="number"
+            id="host-mock-port-min"
+            name="mock_port_min"
+            min="1"
+            max="65535"
+            value="8100"
+            required
+            data-host-field="mock_port_min"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="host-mock-port-max">Порт макс.</label>
+          <input
+            class="input"
+            type="number"
+            id="host-mock-port-max"
+            name="mock_port_max"
+            min="1"
+            max="65535"
+            value="8200"
+            required
+            data-host-field="mock_port_max"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="host-description">Описание</label>
+          <textarea
+            class="textarea"
+            id="host-description"
+            name="description"
+            rows="2"
+            data-host-field="description"
+          ></textarea>
+        </div>
+
+        <div class="modal__footer">
+          <button type="button" class="btn btn--ghost" data-action="close-host-modal">Отмена</button>
+          <button type="submit" class="btn btn--accent" data-action="submit-host-form">Сохранить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div
+    id="modal-account"
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-account-title"
+    aria-hidden="true"
+    data-modal="account"
+  >
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="modal-account-title" class="modal__title" data-account-modal-title>
+          Добавить учётную запись
+        </h2>
+        <button
+          type="button"
+          class="modal__close"
+          data-action="close-account-modal"
+          aria-label="Закрыть"
+        >
+          ×
+        </button>
+      </div>
+
+      <form id="form-account" data-settings-account-form novalidate>
+        <input type="hidden" name="uuid" value="" data-account-field="uuid" />
+
+        <div class="form-group">
+          <label class="form-label" for="account-username">Логин</label>
+          <input
+            class="input mono"
+            type="text"
+            id="account-username"
+            name="username"
+            required
+            autocomplete="username"
+            data-account-field="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="account-password">Пароль</label>
+          <input
+            class="input mono"
+            type="password"
+            id="account-password"
+            name="password"
+            autocomplete="new-password"
+            data-account-field="password"
+          />
+          <p class="form-hint" data-account-password-hint>
+            Обязательно при создании записи.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="account-description">Описание</label>
+          <textarea
+            class="textarea"
+            id="account-description"
+            name="description"
+            rows="2"
+            data-account-field="description"
+          ></textarea>
+        </div>
+
+        <div class="modal__footer">
+          <button type="button" class="btn btn--ghost" data-action="close-account-modal">
+            Отмена
+          </button>
+          <button type="submit" class="btn btn--accent" data-action="submit-account-form">
+            Сохранить
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

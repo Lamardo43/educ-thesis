@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}MockControl{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="sidebar__logo">
+          <span class="sidebar__logo-mark" aria-hidden="true">◇</span>
+          <span>MockControl</span>
+        </div>
+        <nav class="sidebar__nav" aria-label="Основная навигация">
+          <a
+            href="/"
+            class="sidebar__link{% if active_page == 'dashboard' %} is-active{% endif %}"
+          >
+            <span class="sidebar__link-icon" aria-hidden="true">▣</span>
+            Dashboard
+          </a>
+          <a
+            href="/settings"
+            class="sidebar__link{% if active_page == 'settings' %} is-active{% endif %}"
+          >
+            <span class="sidebar__link-icon" aria-hidden="true">⚙</span>
+            Настройки
+          </a>
+          <a
+            href="/logs"
+            class="sidebar__link{% if active_page == 'logs' %} is-active{% endif %}"
+          >
+            <span class="sidebar__link-icon" aria-hidden="true">≡</span>
+            Журналы
+          </a>
+        </nav>
+        <div class="sidebar__version">v 1.0.0</div>
+      </aside>
+
+      <div class="main-area">
+        <header class="topbar">
+          <h1 class="topbar__title">{% block page_title %}MockControl{% endblock %}</h1>
+          {% if redis_connected %}
+          <div class="redis-indicator redis-indicator--ok" role="status">
+            <span class="redis-indicator__dot" aria-hidden="true">●</span>
+            <span>Redis: подключён</span>
+          </div>
+          {% else %}
+          <div class="redis-indicator redis-indicator--bad" role="status">
+            <span class="redis-indicator__dot" aria-hidden="true">●</span>
+            <span>Redis: отключён</span>
+          </div>
+          {% endif %}
+        </header>
+        <main class="page-content">{% block content %}{% endblock %}</main>
+      </div>
+    </div>
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — MockControl{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div
+  class="dashboard"
+  data-page="dashboard"
+  data-poll-interval-ms="5000"
+  data-api-mocks="/api/v1/mocks"
+  data-api-hosts="/api/v1/hosts"
+>
+  <div class="section-header section-header--split">
+    <h2 style="margin: 0; font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em">
+      Заглушки
+    </h2>
+    <div class="section-header__actions">
+      <button
+        type="button"
+        class="btn btn--accent"
+        data-action="open-register-mock-modal"
+        aria-haspopup="dialog"
+      >
+        + Зарегистрировать заглушку
+      </button>
+    </div>
+  </div>
+
+  <div class="stat-grid" aria-label="Сводка по заглушкам и хостам">
+    <article class="card">
+      <p class="card__label">Всего заглушек</p>
+      <p class="card__value card__value--white">{{ mocks_total }}</p>
+    </article>
+    <article class="card">
+      <p class="card__label">Запущено</p>
+      <p class="card__value card__value--green">{{ mocks_running }}</p>
+    </article>
+    <article class="card">
+      <p class="card__label">Ошибок</p>
+      <p class="card__value card__value--red">{{ mocks_errors }}</p>
+    </article>
+    <article class="card">
+      <p class="card__label">Хостов доступно</p>
+      <p class="card__value card__value--blue">{{ hosts_available }}</p>
+    </article>
+  </div>
+
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Имя файла</th>
+          <th scope="col">Хост</th>
+          <th scope="col">Статус</th>
+          <th scope="col">Порт</th>
+          <th scope="col">Rate limiter</th>
+          <th scope="col">Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if mocks %}
+        {% for mock in mocks %}
+        <tr data-mock-filename="{{ mock.filename | e }}">
+          <td class="mono">{{ mock.filename }}</td>
+          <td>{{ mock.hostname }}</td>
+          <td>
+            {% if mock.status == 'RUNNING' %}
+            <span class="badge badge--running">{{ mock.status }}</span>
+            {% elif mock.status == 'ERROR' %}
+            <span class="badge badge--error">{{ mock.status }}</span>
+            {% elif mock.status == 'REGISTERED' %}
+            <span class="badge badge--registered">{{ mock.status }}</span>
+            {% elif mock.status == 'STOPPED' %}
+            <span class="badge badge--stopped">{{ mock.status }}</span>
+            {% else %}
+            <span class="badge badge--unknown">{{ mock.status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if mock.port is not none %}
+            {{ mock.port }}
+            {% else %}
+            <span class="text-dash">—</span>
+            {% endif %}
+          </td>
+          <td>
+            <label
+              class="toggle"
+              title="Включить или выключить ограничение запросов"
+              data-action="mock-rate-limit-toggle"
+              data-mock-filename="{{ mock.filename | e }}"
+            >
+              <input
+                type="checkbox"
+                {% if mock.rate_limit_enabled %}checked{% endif %}
+                aria-label="Rate limiter для {{ mock.filename | e }}"
+                data-mock-filename="{{ mock.filename | e }}"
+                data-rate-limit-enabled="{{ 'true' if mock.rate_limit_enabled else 'false' }}"
+              />
+              <span class="toggle__track"><span class="toggle__thumb"></span></span>
+            </label>
+          </td>
+          <td>
+            <div class="table-actions">
+              {% if mock.status == 'RUNNING' %}
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm"
+                data-action="mock-stop"
+                data-mock-filename="{{ mock.filename | e }}"
+              >
+                Стоп
+              </button>
+              {% else %}
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm"
+                data-action="mock-start"
+                data-mock-filename="{{ mock.filename | e }}"
+              >
+                Старт
+              </button>
+              {% endif %}
+              <button
+                type="button"
+                class="btn btn--danger btn--sm"
+                data-action="mock-delete"
+                data-mock-filename="{{ mock.filename | e }}"
+              >
+                Удалить
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-muted" style="text-align: center; padding: 24px">
+            Нет зарегистрированных заглушек. Нажмите «+ Зарегистрировать заглушку».
+          </td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <div
+    id="modal-register-mock"
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-register-mock-title"
+    aria-hidden="true"
+    data-modal="register-mock"
+  >
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="modal-register-mock-title" class="modal__title">Регистрация заглушки</h2>
+        <button
+          type="button"
+          class="modal__close"
+          data-action="close-register-mock-modal"
+          aria-label="Закрыть"
+        >
+          ×
+        </button>
+      </div>
+
+      <form
+        id="form-register-mock"
+        class="register-mock-form"
+        method="post"
+        action="/api/v1/mocks"
+        enctype="multipart/form-data"
+        data-action="register-mock-form"
+      >
+        <div class="form-group">
+          <span class="form-label">Артефакт (.jar / .war, до 512 МБ)</span>
+          <label
+            class="dropzone"
+            data-register-dropzone
+            data-max-bytes="536870912"
+          >
+            <input
+              type="file"
+              name="file"
+              accept=".jar,.war,application/java-archive,application/x-java-archive"
+              data-register-file-input
+            />
+            <p class="dropzone__text">Перетащите файл сюда или нажмите для выбора</p>
+            <p class="dropzone__file" data-register-file-name hidden></p>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="register-hostname">Целевой хост</label>
+          <select
+            class="select"
+            id="register-hostname"
+            name="hostname"
+            required
+            data-register-host-select
+          >
+            <option value="" disabled selected>Выберите хост…</option>
+            {% for host in hosts %}
+            <option value="{{ host.hostname | e }}">
+              {{ host.hostname }} — {{ host.description or '—' }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="register-jvm-args">JVM-аргументы</label>
+          <textarea
+            class="textarea textarea--mono"
+            id="register-jvm-args"
+            name="jvm_args"
+            rows="3"
+            placeholder="-Xms128m -Xmx256m"
+            data-register-jvm-args
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="register-rate-limit">Лимит запросов (req/s)</label>
+          <input
+            class="input"
+            type="number"
+            id="register-rate-limit"
+            name="rate_limit"
+            min="0"
+            value="500"
+            placeholder="500"
+            data-register-rate-limit
+          />
+          <p class="form-hint">0 — без ограничений</p>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox">
+            <input type="checkbox" name="auto_start" value="true" data-register-auto-start />
+            <span class="checkbox__box" aria-hidden="true"></span>
+            <span class="checkbox__text">Запустить сразу после регистрации</span>
+          </label>
+        </div>
+
+        <div class="modal__footer">
+          <button type="button" class="btn btn--ghost" data-action="close-register-mock-modal">
+            Отмена
+          </button>
+          <button type="submit" class="btn btn--accent" data-action="submit-register-mock">
+            Зарегистрировать
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
