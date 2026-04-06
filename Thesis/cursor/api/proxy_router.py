@@ -21,6 +21,7 @@ from dependencies import get_rate_limiter
 from models.mock import MockStatus
 from services.proxy import ProxyClientRegistry, proxy_request
 from services.rate_limiter import RateLimiter
+from services.metrics import record_proxy_observation
 
 _PROXY_METHODS = ("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS")
 
@@ -95,136 +96,108 @@ async def _handle_proxy(
     settings: Settings,
     rate_limiter: RateLimiter,
 ) -> Response:
-    req_started = time.perf_counter()
-    key = f"mocks:{mock_name}"
-    t0 = time.perf_counter()
-    hostname_raw, port_raw, status_raw, rate_limit_raw, rate_on_raw = await redis.hmget(
-        key,
-        "hostname",
-        "port",
-        "status",
-        "rate_limit",
-        "rate_limit_enabled",
-    )
-    mock_lookup_ms = (time.perf_counter() - t0) * 1000.0
-    if status_raw is None:
-        logger.info(
-            "proxy_timing mock=%s step=mock_lookup status=not_found elapsed_ms=%.2f",
-            mock_name,
-            mock_lookup_ms,
-        )
-        raise HTTPException(status_code=404, detail="Заглушка не найдена")
-    data = {
-        "hostname": hostname_raw or "",
-        "port": port_raw or "",
-        "status": status_raw or "",
-        "rate_limit": rate_limit_raw or "0",
-        "rate_limit_enabled": rate_on_raw or "false",
-    }
-    hostname, port, status, rate_limit, rate_limit_enabled = _parse_mock_record(data)
+    started_at = time.perf_counter()
+    timeline: dict[str, float] = {}
+    outcome = "ok"
+    upstream_status: int | None = None
 
-    if status != MockStatus.RUNNING:
-        logger.info(
-            "proxy_timing mock=%s method=%s status=503_not_running mock_lookup_ms=%.2f total_ms=%.2f",
-            mock_name,
+    def _mark(stage: str, stage_started_at: float) -> None:
+        timeline[stage] = round((time.perf_counter() - stage_started_at) * 1000.0, 3)
+    try:
+        key = f"mocks:{mock_name}"
+        t = time.perf_counter()
+        hostname_raw, port_raw, status_raw, rate_limit_raw, rate_on_raw = await redis.hmget(
+            key,
+            "hostname",
+            "port",
+            "status",
+            "rate_limit",
+            "rate_limit_enabled",
+        )
+        _mark("redis_mock_hmget_ms", t)
+        if status_raw is None:
+            outcome = "not_found"
+            raise HTTPException(status_code=404, detail="Заглушка не найдена")
+        data = {
+            "hostname": hostname_raw or "",
+            "port": port_raw or "",
+            "status": status_raw or "",
+            "rate_limit": rate_limit_raw or "0",
+            "rate_limit_enabled": rate_on_raw or "false",
+        }
+        t = time.perf_counter()
+        hostname, port, status, rate_limit, rate_limit_enabled = _parse_mock_record(data)
+        _mark("parse_mock_record_ms", t)
+
+        if status != MockStatus.RUNNING:
+            outcome = "not_running"
+            raise HTTPException(status_code=503, detail="Заглушка не запущена")
+
+        if not hostname or port <= 0:
+            outcome = "invalid_target"
+            raise HTTPException(status_code=503, detail="Сервис заглушки недоступен")
+
+        t = time.perf_counter()
+        window_size, timeout_sec = await _load_proxy_runtime(redis, settings)
+        _mark("redis_runtime_hmget_ms", t)
+
+        if rate_limit_enabled and rate_limit > 0:
+            t = time.perf_counter()
+            allowed = await rate_limiter.check(mock_name, rate_limit, window_size)
+            _mark("rate_limiter_check_ms", t)
+            if not allowed:
+                t = time.perf_counter()
+                await redis.incr(f"metrics:rejected_total:{mock_name}")
+                _mark("redis_incr_rejected_ms", t)
+                outcome = "rate_limited"
+                upstream_status = 429
+                raise HTTPException(status_code=429, detail="Превышен лимит запросов")
+
+        t = time.perf_counter()
+        await redis.incr(f"metrics:proxy_total:{mock_name}")
+        _mark("redis_incr_proxy_total_ms", t)
+
+        base_url = f"http://{hostname}:{port}"
+        t = time.perf_counter()
+        client = await registry.get_or_create(mock_name, base_url, timeout_sec)
+        _mark("httpx_client_get_or_create_ms", t)
+
+        body: bytes | None
+        t = time.perf_counter()
+        if request.method in ("GET", "HEAD", "OPTIONS"):
+            body = None
+        else:
+            body = await request.body()
+        _mark("request_body_read_ms", t)
+
+        t = time.perf_counter()
+        status_code, resp_headers, resp_body, upstream_observation = await proxy_request(
+            client,
             request.method,
-            mock_lookup_ms,
-            (time.perf_counter() - req_started) * 1000.0,
+            path,
+            request.headers,
+            body,
+            request.url.query,
         )
-        raise HTTPException(status_code=503, detail="Заглушка не запущена")
+        _mark("httpx_proxy_request_ms", t)
+        timeline.update(upstream_observation.timings_ms)
+        outcome = upstream_observation.outcome
+        upstream_status = upstream_observation.upstream_status
 
-    if not hostname or port <= 0:
-        logger.info(
-            "proxy_timing mock=%s method=%s status=503_unavailable mock_lookup_ms=%.2f total_ms=%.2f",
-            mock_name,
-            request.method,
-            mock_lookup_ms,
-            (time.perf_counter() - req_started) * 1000.0,
+        t = time.perf_counter()
+        response = Response(
+            content=resp_body,
+            status_code=status_code,
+            headers=resp_headers,
         )
-        raise HTTPException(status_code=503, detail="Сервис заглушки недоступен")
-
-    t0 = time.perf_counter()
-    window_size, timeout_sec = await _load_proxy_runtime(redis, settings)
-    runtime_lookup_ms = (time.perf_counter() - t0) * 1000.0
-
-    if rate_limit_enabled and rate_limit > 0:
-        t0 = time.perf_counter()
-        allowed = await rate_limiter.check(mock_name, rate_limit, window_size)
-        rate_limit_ms = (time.perf_counter() - t0) * 1000.0
-    else:
-        allowed = True
-        rate_limit_ms = 0.0
-
-    if rate_limit_enabled and rate_limit > 0:
-        if not allowed:
-            t0 = time.perf_counter()
-            await redis.incr(f"metrics:rejected_total:{mock_name}")
-            rejected_metric_ms = (time.perf_counter() - t0) * 1000.0
-            total_ms = (time.perf_counter() - req_started) * 1000.0
-            logger.info(
-                "proxy_timing mock=%s method=%s status=429 mock_lookup_ms=%.2f "
-                "runtime_lookup_ms=%.2f rate_limit_ms=%.2f rejected_metric_ms=%.2f total_ms=%.2f",
-                mock_name,
-                request.method,
-                mock_lookup_ms,
-                runtime_lookup_ms,
-                rate_limit_ms,
-                rejected_metric_ms,
-                total_ms,
-            )
-            raise HTTPException(status_code=429, detail="Превышен лимит запросов")
-
-    t0 = time.perf_counter()
-    await redis.incr(f"metrics:proxy_total:{mock_name}")
-    proxy_metric_ms = (time.perf_counter() - t0) * 1000.0
-
-    base_url = f"http://{hostname}:{port}"
-    t0 = time.perf_counter()
-    client = await registry.get_or_create(mock_name, base_url, timeout_sec)
-    client_lookup_ms = (time.perf_counter() - t0) * 1000.0
-
-    body: bytes | None
-    if request.method in ("GET", "HEAD", "OPTIONS"):
-        body = None
-        body_read_ms = 0.0
-    else:
-        t0 = time.perf_counter()
-        body = await request.body()
-        body_read_ms = (time.perf_counter() - t0) * 1000.0
-
-    t0 = time.perf_counter()
-    status_code, resp_headers, resp_body = await proxy_request(
-        client,
-        request.method,
-        path,
-        request.headers,
-        body,
-        request.url.query,
-    )
-    upstream_ms = (time.perf_counter() - t0) * 1000.0
-    total_ms = (time.perf_counter() - req_started) * 1000.0
-    logger.info(
-        "proxy_timing mock=%s method=%s status=%s mock_lookup_ms=%.2f runtime_lookup_ms=%.2f "
-        "rate_limit_ms=%.2f proxy_metric_ms=%.2f client_lookup_ms=%.2f body_read_ms=%.2f "
-        "upstream_ms=%.2f total_ms=%.2f",
-        mock_name,
-        request.method,
-        status_code,
-        mock_lookup_ms,
-        runtime_lookup_ms,
-        rate_limit_ms,
-        proxy_metric_ms,
-        client_lookup_ms,
-        body_read_ms,
-        upstream_ms,
-        total_ms,
-    )
-
-    return Response(
-        content=resp_body,
-        status_code=status_code,
-        headers=resp_headers,
-    )
+        _mark("response_build_ms", t)
+        return response
+    finally:
+        timeline["proxy_total_ms"] = round((time.perf_counter() - started_at) * 1000.0, 3)
+        try:
+            await record_proxy_observation(redis, mock_name, timeline, outcome, upstream_status)
+        except Exception:
+            logger.exception("Failed to persist proxy metrics for %s", mock_name)
 
 
 @router.api_route(

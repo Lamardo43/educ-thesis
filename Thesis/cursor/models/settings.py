@@ -12,6 +12,14 @@ class GlobalSettings(BaseModel):
     host_check_interval_sec: int = Field(default=30, ge=1, description="Интервал проверки хостов (сек)")
     proxy_timeout_sec: int = Field(default=10, ge=1, description="Таймаут проксирования (сек)")
     log_retention_lines: int = Field(default=1000, ge=1, description="Макс. строк лога в буфере")
+    enable_health_checker: bool = Field(
+        default=True,
+        description="Включение фоновой задачи health checker",
+    )
+    enable_log_collector: bool = Field(
+        default=True,
+        description="Включение фоновой задачи log collector",
+    )
 
 
 class GlobalSettingsUpdate(BaseModel):
@@ -21,3 +29,5 @@ class GlobalSettingsUpdate(BaseModel):
     host_check_interval_sec: Optional[int] = Field(default=None, ge=1)
     proxy_timeout_sec: Optional[int] = Field(default=None, ge=1)
     log_retention_lines: Optional[int] = Field(default=None, ge=1)
+    enable_health_checker: Optional[bool] = Field(default=None)
+    enable_log_collector: Optional[bool] = Field(default=None)

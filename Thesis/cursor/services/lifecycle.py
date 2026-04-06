@@ -558,6 +558,11 @@ class LifecycleManager:
 
         await self._redis.delete(f"metrics:proxy_total:{filename}")
         await self._redis.delete(f"metrics:rejected_total:{filename}")
+        await self._redis.delete(f"metrics:proxy_stage_sum_ms:{filename}")
+        await self._redis.delete(f"metrics:proxy_stage_count:{filename}")
+        await self._redis.delete(f"metrics:proxy_stage_last_ms:{filename}")
+        await self._redis.delete(f"metrics:proxy_outcome_total:{filename}")
+        await self._redis.delete(f"metrics:proxy_upstream_status_total:{filename}")
         logger.info("Mock deleted: %s", filename)
 
     async def restore_state(self) -> None:

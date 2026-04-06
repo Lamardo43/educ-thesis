@@ -3,13 +3,20 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import logging
+import os
+import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Awaitable, Callable
 
 import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from redis.asyncio import Redis
+
+from config import Settings
 
 from api.proxy_router import router as proxy_router
 from api.v1.accounts import router as accounts_router
@@ -27,6 +34,22 @@ from web.routes import router as web_router
 logger = logging.getLogger(__name__)
 
 _BASE_DIR = Path(__file__).resolve().parent
+_SINGLETON_LOCK_TTL_SEC = 30
+_SINGLETON_LOCK_RENEW_INTERVAL_SEC = 10.0
+_SINGLETON_LOCK_ACQUIRE_RETRY_SEC = 3.0
+
+
+def _default_uvicorn_workers() -> int:
+    """Авточисло воркеров: CPU×2, минимум 1 (если cpu_count недоступен — считаем 1 CPU)."""
+    cpus = os.cpu_count() or 1
+    return max(1, 2 * cpus)
+
+
+def resolve_uvicorn_workers(settings: Settings) -> int:
+    """Явное значение из Settings (UVICORN_WORKERS / uvicorn_workers) или расчёт по CPU."""
+    if settings.uvicorn_workers is not None:
+        return settings.uvicorn_workers
+    return _default_uvicorn_workers()
 
 
 def _configure_quiet_logging() -> None:
@@ -36,13 +59,122 @@ def _configure_quiet_logging() -> None:
         logging.getLogger(name).setLevel(logging.WARNING)
 
 
+def _singleton_lock_key(task_name: str) -> str:
+    return f"singleton:task:{task_name}"
+
+
+async def _acquire_singleton_lock(redis: Redis, lock_key: str, owner_id: str) -> bool:
+    got = await redis.set(lock_key, owner_id, ex=_SINGLETON_LOCK_TTL_SEC, nx=True)
+    return bool(got)
+
+
+async def _renew_singleton_lock(redis: Redis, lock_key: str, owner_id: str) -> bool:
+    renewed = await redis.eval(
+        """
+        if redis.call('get', KEYS[1]) == ARGV[1] then
+            return redis.call('expire', KEYS[1], ARGV[2])
+        end
+        return 0
+        """,
+        1,
+        lock_key,
+        owner_id,
+        str(_SINGLETON_LOCK_TTL_SEC),
+    )
+    return bool(int(renewed))
+
+
+async def _release_singleton_lock(redis: Redis, lock_key: str, owner_id: str) -> None:
+    await redis.eval(
+        """
+        if redis.call('get', KEYS[1]) == ARGV[1] then
+            return redis.call('del', KEYS[1])
+        end
+        return 0
+        """,
+        1,
+        lock_key,
+        owner_id,
+    )
+
+
+async def _run_singleton_background_task(
+    task_name: str,
+    redis: Redis,
+    task_factory: Callable[[], Awaitable[None]],
+) -> None:
+    """Запускает фоновый task только у одного worker (через Redis lock + heartbeat)."""
+    lock_key = _singleton_lock_key(task_name)
+    owner_id = f"{os.getpid()}:{uuid.uuid4().hex}"
+    worker_task: asyncio.Task[None] | None = None
+    try:
+        while True:
+            try:
+                got_lock = await _acquire_singleton_lock(redis, lock_key, owner_id)
+            except Exception:
+                logger.exception("Singleton %s: failed to acquire lock, retrying", task_name)
+                await asyncio.sleep(_SINGLETON_LOCK_ACQUIRE_RETRY_SEC)
+                continue
+
+            if not got_lock:
+                await asyncio.sleep(_SINGLETON_LOCK_ACQUIRE_RETRY_SEC)
+                continue
+
+            logger.info("Singleton %s: lock acquired by pid=%s", task_name, os.getpid())
+            worker_task = asyncio.create_task(task_factory(), name=task_name)
+            try:
+                while True:
+                    done, _ = await asyncio.wait(
+                        {worker_task},
+                        timeout=_SINGLETON_LOCK_RENEW_INTERVAL_SEC,
+                    )
+                    if done:
+                        try:
+                            worker_task.result()
+                        except asyncio.CancelledError:
+                            raise
+                        except Exception:
+                            logger.exception("Singleton %s: background task crashed", task_name)
+                        else:
+                            logger.warning("Singleton %s: background task finished unexpectedly", task_name)
+                        worker_task = None
+                        break
+
+                    try:
+                        renewed = await _renew_singleton_lock(redis, lock_key, owner_id)
+                    except Exception:
+                        logger.exception("Singleton %s: lock heartbeat failed", task_name)
+                        renewed = False
+                    if renewed:
+                        continue
+                    logger.warning("Singleton %s: lock lost, cancelling local task", task_name)
+                    worker_task.cancel()
+                    with contextlib.suppress(asyncio.CancelledError):
+                        await worker_task
+                    worker_task = None
+                    break
+            finally:
+                with contextlib.suppress(Exception):
+                    await _release_singleton_lock(redis, lock_key, owner_id)
+
+            await asyncio.sleep(_SINGLETON_LOCK_ACQUIRE_RETRY_SEC)
+    except asyncio.CancelledError:
+        if worker_task is not None:
+            worker_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await worker_task
+        with contextlib.suppress(Exception):
+            await _release_singleton_lock(redis, lock_key, owner_id)
+        raise
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup: зависимости, глобальные настройки Redis, восстановление RUNNING, фоновые задачи. Shutdown: отмена задач, закрытие ресурсов."""
     _configure_quiet_logging()
     await init_dependencies(app)
 
-    await app.state.settings_service.get_settings()
+    global_settings = await app.state.settings_service.get_settings()
     await app.state.lifecycle_manager.restore_state()
 
     redis = get_redis()
@@ -50,14 +182,29 @@ async def lifespan(app: FastAPI):
     crypto = app.state.crypto
     settings = app.state.settings
 
-    app.state.health_checker_task = asyncio.create_task(
-        run_health_checker(redis, ssh_pool, crypto, settings),
-        name="health_checker",
-    )
-    app.state.log_collector_task = asyncio.create_task(
-        run_log_collector(redis, ssh_pool, crypto, settings),
-        name="log_collector",
-    )
+    if global_settings.enable_health_checker:
+        app.state.health_checker_task = asyncio.create_task(
+            _run_singleton_background_task(
+                "health_checker",
+                redis,
+                lambda: run_health_checker(redis, ssh_pool, crypto, settings),
+            ),
+            name="health_checker_singleton_supervisor",
+        )
+    else:
+        logger.warning("Health checker is disabled via settings:global.enable_health_checker")
+
+    if global_settings.enable_log_collector:
+        app.state.log_collector_task = asyncio.create_task(
+            _run_singleton_background_task(
+                "log_collector",
+                redis,
+                lambda: run_log_collector(redis, ssh_pool, crypto, settings),
+            ),
+            name="log_collector_singleton_supervisor",
+        )
+    else:
+        logger.warning("Log collector is disabled via settings:global.enable_log_collector")
 
     yield
 
@@ -102,10 +249,14 @@ if __name__ == "__main__":
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
     _configure_quiet_logging()
+    _settings = Settings()
+    workers = resolve_uvicorn_workers(_settings)
+    logger.info("Uvicorn workers: %s (cpus=%s)", workers, os.cpu_count())
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
         port=8000,
         log_level="info",
         access_log=False,
+        workers=workers,
     )

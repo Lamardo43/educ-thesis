@@ -1,5 +1,7 @@
 """Глобальная конфигурация приложения (Pydantic Settings, значения из .env)."""
 
+from typing import Optional
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -44,4 +46,9 @@ class Settings(BaseSettings):
         default=1000,
         ge=1,
         description="Максимум строк лога в буфере по умолчанию",
+    )
+    uvicorn_workers: Optional[int] = Field(
+        default=None,
+        ge=1,
+        description="Число процессов Uvicorn; не задано — CPU×2 (минимум 1)",
     )

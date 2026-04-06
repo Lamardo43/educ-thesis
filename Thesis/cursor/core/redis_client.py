@@ -7,7 +7,10 @@
 - rate limit: String `rate:{filename}:{window}` с INCR/TTL;
 - глобальные настройки: Hash `settings:global`;
 - логи: List `logs:{filename}`;
-- метрики: String `metrics:proxy_total:{filename}`, `metrics:rejected_total:{filename}`.
+- метрики: String `metrics:proxy_total:{filename}`, `metrics:rejected_total:{filename}`;
+  Hash `metrics:proxy_stage_sum_ms:{filename}`, `metrics:proxy_stage_count:{filename}`,
+  `metrics:proxy_stage_last_ms:{filename}`, `metrics:proxy_outcome_total:{filename}`,
+  `metrics:proxy_upstream_status_total:{filename}`.
 
 Объекты-заглушки, хосты и учётные записи хранятся как Redis Hash (HSET/HGET/HGETALL),
 а не как JSON-строки.

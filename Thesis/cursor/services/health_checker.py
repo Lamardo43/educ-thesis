@@ -9,7 +9,6 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
-import time
 from datetime import datetime, timezone
 from typing import Any
 
@@ -116,13 +115,10 @@ class HealthChecker:
         return username, password, port
 
     async def _check_hosts(self) -> None:
-        started = time.perf_counter()
         hostnames = await self._redis.smembers(HOSTS_REGISTRY_KEY)
         if not hostnames:
-            logger.info("health_checker_timing step=check_hosts hosts=0 total_ms=%.2f", (time.perf_counter() - started) * 1000.0)
             return
         for hostname in sorted(hostnames):
-            host_started = time.perf_counter()
             try:
                 key = _host_key(hostname)
                 data = await self._redis.hgetall(key)
@@ -134,22 +130,12 @@ class HealthChecker:
                         key,
                         mapping={"status": "AVAILABLE", "last_checked_at": _utc_iso()},
                     )
-                    logger.info(
-                        "health_checker_timing step=host_check host=%s status=AVAILABLE elapsed_ms=%.2f",
-                        hostname,
-                        (time.perf_counter() - host_started) * 1000.0,
-                    )
                     continue
                 creds = await self._ssh_creds_for_host(data, hostname)
                 if creds is None:
                     await self._redis.hset(
                         key,
                         mapping={"status": "UNAVAILABLE", "last_checked_at": _utc_iso()},
-                    )
-                    logger.info(
-                        "health_checker_timing step=host_check host=%s status=UNAVAILABLE elapsed_ms=%.2f",
-                        hostname,
-                        (time.perf_counter() - host_started) * 1000.0,
                     )
                     continue
                 user, password, ssh_port = creds
@@ -171,26 +157,10 @@ class HealthChecker:
                     key,
                     mapping={"status": status, "last_checked_at": _utc_iso()},
                 )
-                logger.info(
-                    "health_checker_timing step=host_check host=%s status=%s elapsed_ms=%.2f",
-                    hostname,
-                    status,
-                    (time.perf_counter() - host_started) * 1000.0,
-                )
             except asyncio.CancelledError:
                 raise
             except Exception:
                 logger.exception("Host %r: unexpected error during check", hostname)
-                logger.info(
-                    "health_checker_timing step=host_check host=%s status=error elapsed_ms=%.2f",
-                    hostname,
-                    (time.perf_counter() - host_started) * 1000.0,
-                )
-        logger.info(
-            "health_checker_timing step=check_hosts hosts=%s total_ms=%.2f",
-            len(hostnames),
-            (time.perf_counter() - started) * 1000.0,
-        )
 
     async def _pid_alive_local(self, pid: int) -> bool:
         def check() -> bool:
@@ -230,34 +200,15 @@ class HealthChecker:
 
     async def _http_root_ok(self, client: httpx.AsyncClient, hostname: str, port: int) -> bool:
         url = f"http://{hostname}:{port}/"
-        started = time.perf_counter()
         try:
             response = await client.get(url)
             # Любой полученный ответ считается «сервис отвечает»; таймауты/обрыв — ошибка.
             _ = response.status_code
-            logger.info(
-                "health_checker_timing step=http_root host=%s port=%s status=ok elapsed_ms=%.2f",
-                hostname,
-                port,
-                (time.perf_counter() - started) * 1000.0,
-            )
             return True
         except httpx.RequestError:
-            logger.info(
-                "health_checker_timing step=http_root host=%s port=%s status=request_error elapsed_ms=%.2f",
-                hostname,
-                port,
-                (time.perf_counter() - started) * 1000.0,
-            )
             return False
         except Exception:
             logger.exception("HTTP GET %s: unexpected error", url)
-            logger.info(
-                "health_checker_timing step=http_root host=%s port=%s status=error elapsed_ms=%.2f",
-                hostname,
-                port,
-                (time.perf_counter() - started) * 1000.0,
-            )
             return False
 
     async def _check_running_mock(
@@ -266,7 +217,6 @@ class HealthChecker:
         data: dict[str, str],
         http_client: httpx.AsyncClient,
     ) -> None:
-        started = time.perf_counter()
         hostname = (data.get("hostname") or "").strip()
         if not hostname:
             logger.warning("Mock %r: empty hostname", filename)
@@ -330,20 +280,12 @@ class HealthChecker:
 
         self._http_failures.pop(filename, None)
         await self._redis.hset(_mock_key(filename), mapping={"status": "RUNNING"})
-        logger.info(
-            "health_checker_timing step=mock_check mock=%s status=RUNNING elapsed_ms=%.2f",
-            filename,
-            (time.perf_counter() - started) * 1000.0,
-        )
 
     async def _check_mocks(self, http_client: httpx.AsyncClient) -> None:
-        started = time.perf_counter()
         filenames = await self._redis.smembers(MOCKS_REGISTRY_KEY)
         if not filenames:
-            logger.info("health_checker_timing step=check_mocks mocks=0 total_ms=%.2f", (time.perf_counter() - started) * 1000.0)
             return
         for filename in sorted(filenames):
-            mock_started = time.perf_counter()
             try:
                 key = _mock_key(filename)
                 data = await self._redis.hgetall(key)
@@ -355,33 +297,16 @@ class HealthChecker:
                 if status not in {"RUNNING", "ERROR"}:
                     continue
                 await self._check_running_mock(filename, data, http_client)
-                logger.info(
-                    "health_checker_timing step=mock_iteration mock=%s elapsed_ms=%.2f",
-                    filename,
-                    (time.perf_counter() - mock_started) * 1000.0,
-                )
             except asyncio.CancelledError:
                 raise
             except Exception:
                 logger.exception("Mock %r: health check error", filename)
-                logger.info(
-                    "health_checker_timing step=mock_iteration mock=%s status=error elapsed_ms=%.2f",
-                    filename,
-                    (time.perf_counter() - mock_started) * 1000.0,
-                )
-        logger.info(
-            "health_checker_timing step=check_mocks mocks=%s total_ms=%.2f",
-            len(filenames),
-            (time.perf_counter() - started) * 1000.0,
-        )
 
     async def run(self) -> None:
         """Запускает бесконечный цикл до отмены задачи (``CancelledError``)."""
         timeout = httpx.Timeout(_MOCK_HTTP_TIMEOUT_SEC, connect=_MOCK_HTTP_TIMEOUT_SEC)
         async with httpx.AsyncClient(timeout=timeout) as http_client:
             while True:
-                iteration_started = time.perf_counter()
-                interval = float(self._settings.default_host_check_interval)
                 try:
                     interval = await self._interval_sec()
                     await self._check_hosts()
@@ -390,11 +315,6 @@ class HealthChecker:
                     raise
                 except Exception:
                     logger.exception("HealthChecker: iteration failed, loop continues")
-                logger.info(
-                    "health_checker_timing step=iteration interval_sec=%.2f total_ms=%.2f",
-                    interval,
-                    (time.perf_counter() - iteration_started) * 1000.0,
-                )
                 try:
                     await asyncio.sleep(interval)
                 except asyncio.CancelledError:

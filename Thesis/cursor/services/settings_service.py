@@ -31,6 +31,8 @@ _DEFAULT_GLOBAL_HASH: dict[str, str] = {
     "host_check_interval_sec": "30",
     "proxy_timeout_sec": "10",
     "log_retention_lines": "1000",
+    "enable_health_checker": "true",
+    "enable_log_collector": "true",
 }
 
 
@@ -48,6 +50,17 @@ def _mock_key(filename: str) -> str:
 
 def _utc_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _parse_bool(raw: str | None, default: bool) -> bool:
+    if raw is None:
+        return default
+    v = raw.strip().lower()
+    if v in {"1", "true", "yes", "on"}:
+        return True
+    if v in {"0", "false", "no", "off"}:
+        return False
+    return default
 
 
 def _host_from_hash(hostname: str, data: dict[str, str]) -> HostResponse:
@@ -107,6 +120,8 @@ def _global_from_hash(data: dict[str, str]) -> GlobalSettings:
         host_check_interval_sec=int(data["host_check_interval_sec"]),
         proxy_timeout_sec=int(data["proxy_timeout_sec"]),
         log_retention_lines=int(data["log_retention_lines"]),
+        enable_health_checker=_parse_bool(data.get("enable_health_checker"), True),
+        enable_log_collector=_parse_bool(data.get("enable_log_collector"), True),
     )
 
 
@@ -116,6 +131,8 @@ def _global_to_redis_hash(settings: GlobalSettings) -> dict[str, str]:
         "host_check_interval_sec": str(settings.host_check_interval_sec),
         "proxy_timeout_sec": str(settings.proxy_timeout_sec),
         "log_retention_lines": str(settings.log_retention_lines),
+        "enable_health_checker": "true" if settings.enable_health_checker else "false",
+        "enable_log_collector": "true" if settings.enable_log_collector else "false",
     }
 
 
@@ -326,7 +343,12 @@ class SettingsService:
         if not payload:
             return await self.get_settings()
         await self.get_settings()
-        updates: dict[str, str] = {k: str(v) for k, v in payload.items()}
+        updates: dict[str, str] = {}
+        for key, value in payload.items():
+            if key in {"enable_health_checker", "enable_log_collector"}:
+                updates[key] = "true" if bool(value) else "false"
+            else:
+                updates[key] = str(value)
         await self._redis.hset(SETTINGS_GLOBAL_KEY, mapping=updates)
         merged = await self._redis.hgetall(SETTINGS_GLOBAL_KEY)
         return _global_from_hash(merged)

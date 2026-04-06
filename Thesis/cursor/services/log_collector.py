@@ -11,7 +11,6 @@ import asyncio
 import logging
 import os
 import shlex
-import time
 from typing import Any
 
 import aiofiles
@@ -101,30 +100,14 @@ class LogCollector:
         self._line_pending.pop(filename, None)
 
     async def _retention_lines(self) -> int:
-        started = time.perf_counter()
         raw = await self._redis.hget(SETTINGS_GLOBAL_KEY, "log_retention_lines")
         if raw is None or raw == "":
-            value = int(self._settings.default_log_retention_lines)
-            logger.info(
-                "log_collector_timing step=retention_lines source=default elapsed_ms=%.2f",
-                (time.perf_counter() - started) * 1000.0,
-            )
-            return value
+            return int(self._settings.default_log_retention_lines)
         try:
             v = int(raw)
-            value = v if v >= 1 else int(self._settings.default_log_retention_lines)
-            logger.info(
-                "log_collector_timing step=retention_lines source=redis elapsed_ms=%.2f",
-                (time.perf_counter() - started) * 1000.0,
-            )
-            return value
+            return v if v >= 1 else int(self._settings.default_log_retention_lines)
         except ValueError:
-            value = int(self._settings.default_log_retention_lines)
-            logger.info(
-                "log_collector_timing step=retention_lines source=fallback elapsed_ms=%.2f",
-                (time.perf_counter() - started) * 1000.0,
-            )
-            return value
+            return int(self._settings.default_log_retention_lines)
 
     async def _load_account(self, account_uuid: str) -> dict[str, str] | None:
         data = await self._redis.hgetall(_account_key(account_uuid))
@@ -216,7 +199,6 @@ class LogCollector:
         return raw if isinstance(raw, bytes) else bytes(raw)
 
     async def _read_new_bytes_local(self, filename: str, path: str) -> None:
-        started = time.perf_counter()
         pos = self._byte_positions.get(filename, 1)
 
         def stat_size() -> int | None:
@@ -244,12 +226,6 @@ class LogCollector:
         if data:
             await self._push_lines_from_chunk(filename, data.decode("utf-8", errors="replace"))
         self._byte_positions[filename] = new_pos
-        logger.info(
-            "log_collector_timing step=read_local mock=%s bytes=%s elapsed_ms=%.2f",
-            filename,
-            len(data),
-            (time.perf_counter() - started) * 1000.0,
-        )
 
     async def _read_new_bytes_remote(
         self,
@@ -260,7 +236,6 @@ class LogCollector:
         ssh_port: int,
         path: str,
     ) -> None:
-        started = time.perf_counter()
         pos = self._byte_positions.get(filename, 1)
         size = await self._remote_file_size(hostname, username, password, ssh_port, path)
         if size is None:
@@ -278,15 +253,8 @@ class LogCollector:
         if data:
             await self._push_lines_from_chunk(filename, data.decode("utf-8", errors="replace"))
         self._byte_positions[filename] = new_pos
-        logger.info(
-            "log_collector_timing step=read_remote mock=%s bytes=%s elapsed_ms=%.2f",
-            filename,
-            len(data),
-            (time.perf_counter() - started) * 1000.0,
-        )
 
     async def _push_lines_from_chunk(self, filename: str, text: str) -> None:
-        started = time.perf_counter()
         if not text:
             return
         pending = self._line_pending.get(filename, "")
@@ -300,15 +268,8 @@ class LogCollector:
             pipe.rpush(key, *lines)
             pipe.ltrim(key, -retention, -1)
             await pipe.execute()
-        logger.info(
-            "log_collector_timing step=push_lines mock=%s lines=%s elapsed_ms=%.2f",
-            filename,
-            len(lines),
-            (time.perf_counter() - started) * 1000.0,
-        )
 
     async def _collect_one_mock(self, filename: str, data: dict[str, str]) -> None:
-        started = time.perf_counter()
         hostname = (data.get("hostname") or "").strip()
         if not hostname:
             return
@@ -317,12 +278,6 @@ class LogCollector:
         try:
             if is_local(hostname):
                 await self._read_new_bytes_local(filename, path)
-                logger.info(
-                    "log_collector_timing step=collect_one mock=%s host=%s elapsed_ms=%.2f",
-                    filename,
-                    hostname,
-                    (time.perf_counter() - started) * 1000.0,
-                )
                 return
 
             host = await self._redis.hgetall(_host_key(hostname))
@@ -334,25 +289,12 @@ class LogCollector:
                 return
             u, p, sp = creds
             await self._read_new_bytes_remote(filename, hostname, u, p, sp, path)
-            logger.info(
-                "log_collector_timing step=collect_one mock=%s host=%s elapsed_ms=%.2f",
-                filename,
-                hostname,
-                (time.perf_counter() - started) * 1000.0,
-            )
         except asyncio.CancelledError:
             raise
         except Exception:
             logger.exception("LogCollector: log collection error for %r", filename)
-            logger.info(
-                "log_collector_timing step=collect_one mock=%s host=%s status=error elapsed_ms=%.2f",
-                filename,
-                hostname,
-                (time.perf_counter() - started) * 1000.0,
-            )
 
     async def _iteration(self) -> None:
-        started = time.perf_counter()
         filenames = await self._redis.smembers(MOCKS_REGISTRY_KEY)
         running: set[str] = set()
         running_data: dict[str, dict[str, str]] = {}
@@ -374,12 +316,6 @@ class LogCollector:
 
         for fn in sorted(running):
             await self._collect_one_mock(fn, running_data[fn])
-        logger.info(
-            "log_collector_timing step=iteration mocks_total=%s mocks_running=%s elapsed_ms=%.2f",
-            len(filenames),
-            len(running),
-            (time.perf_counter() - started) * 1000.0,
-        )
 
     async def run(self) -> None:
         """Бесконечный цикл до отмены задачи."""
