@@ -1,0 +1,62 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{async} \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}handle\PYGZus{}proxy}\PYG{p}{(}
+    \PYG{n}{mock\PYGZus{}name}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{path}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{request}\PYG{p}{:} \PYG{n}{Request}\PYG{p}{,}
+    \PYG{n}{redis}\PYG{p}{:} \PYG{n}{Redis}\PYG{p}{,} \PYG{n}{registry}\PYG{p}{:} \PYG{n}{ProxyClientRegistry}\PYG{p}{,}
+    \PYG{n}{settings}\PYG{p}{:} \PYG{n}{Settings}\PYG{p}{,} \PYG{n}{rate\PYGZus{}limiter}\PYG{p}{:} \PYG{n}{RateLimiter}\PYG{p}{,}
+\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Response}\PYG{p}{:}
+    \PYG{n}{started\PYGZus{}at} \PYG{o}{=} \PYG{n}{time}\PYG{o}{.}\PYG{n}{perf\PYGZus{}counter}\PYG{p}{()}
+    \PYG{n}{timeline}\PYG{p}{:} \PYG{n+nb}{dict}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{,} \PYG{n+nb}{float}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}\PYGZcb{}}
+    \PYG{n}{outcome} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}ok\PYGZdq{}}
+    \PYG{n}{upstream\PYGZus{}status}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{|} \PYG{k+kc}{None} \PYG{o}{=} \PYG{k+kc}{None}
+
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}mark}\PYG{p}{(}\PYG{n}{stage}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{t0}\PYG{p}{:} \PYG{n+nb}{float}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+        \PYG{n}{timeline}\PYG{p}{[}\PYG{n}{stage}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb}{round}\PYG{p}{((}\PYG{n}{time}\PYG{o}{.}\PYG{n}{perf\PYGZus{}counter}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{t0}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mf}{1000.0}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
+    \PYG{k}{try}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Шаг 1: чтение состояния заглушки из Redis (HMGET — 5 полей)}
+        \PYG{n}{t} \PYG{o}{=} \PYG{n}{time}\PYG{o}{.}\PYG{n}{perf\PYGZus{}counter}\PYG{p}{()}
+        \PYG{n}{hostname\PYGZus{}raw}\PYG{p}{,} \PYG{n}{port\PYGZus{}raw}\PYG{p}{,} \PYG{n}{status\PYGZus{}raw}\PYG{p}{,} \PYG{n}{rl\PYGZus{}raw}\PYG{p}{,} \PYG{n}{rl\PYGZus{}on\PYGZus{}raw} \PYG{o}{=} \PYG{k}{await} \PYG{n}{redis}\PYG{o}{.}\PYG{n}{hmget}\PYG{p}{(}
+            \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}mocks:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mock\PYGZus{}name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}hostname\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}port\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}status\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}rate\PYGZus{}limit\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}rate\PYGZus{}limit\PYGZus{}enabled\PYGZdq{}}\PYG{p}{,}
+        \PYG{p}{)}
+        \PYG{n}{\PYGZus{}mark}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}redis\PYGZus{}mock\PYGZus{}hmget\PYGZus{}ms\PYGZdq{}}\PYG{p}{,} \PYG{n}{t}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{n}{status\PYGZus{}raw} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{k}{raise} \PYG{n}{HTTPException}\PYG{p}{(}\PYG{n}{status\PYGZus{}code}\PYG{o}{=}\PYG{l+m+mi}{404}\PYG{p}{,} \PYG{n}{detail}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Заглушка не найдена\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{n}{hostname}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n}{status}\PYG{p}{,} \PYG{n}{rate\PYGZus{}limit}\PYG{p}{,} \PYG{n}{rate\PYGZus{}limit\PYGZus{}enabled} \PYG{o}{=} \PYGZbs{}
+            \PYG{n}{\PYGZus{}parse\PYGZus{}mock\PYGZus{}record}\PYG{p}{(\PYGZob{}}\PYG{o}{...}\PYG{p}{\PYGZcb{})}   \PYG{c+c1}{\PYGZsh{} разбор строк в типизированные поля}
+
+        \PYG{k}{if} \PYG{n}{status} \PYG{o}{!=} \PYG{n}{MockStatus}\PYG{o}{.}\PYG{n}{RUNNING}\PYG{p}{:}
+            \PYG{k}{raise} \PYG{n}{HTTPException}\PYG{p}{(}\PYG{n}{status\PYGZus{}code}\PYG{o}{=}\PYG{l+m+mi}{503}\PYG{p}{,} \PYG{n}{detail}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Заглушка не запущена\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Шаг 3: глобальные параметры (таймаут, размер окна)}
+        \PYG{n}{window\PYGZus{}size}\PYG{p}{,} \PYG{n}{timeout\PYGZus{}sec} \PYG{o}{=} \PYG{k}{await} \PYG{n}{\PYGZus{}load\PYGZus{}proxy\PYGZus{}runtime}\PYG{p}{(}\PYG{n}{redis}\PYG{p}{,} \PYG{n}{settings}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Шаги 4–5: Rate Limiter и счётчик успешных запросов}
+        \PYG{k}{if} \PYG{n}{rate\PYGZus{}limit\PYGZus{}enabled} \PYG{o+ow}{and} \PYG{n}{rate\PYGZus{}limit} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{:}
+            \PYG{n}{allowed} \PYG{o}{=} \PYG{k}{await} \PYG{n}{rate\PYGZus{}limiter}\PYG{o}{.}\PYG{n}{check}\PYG{p}{(}\PYG{n}{mock\PYGZus{}name}\PYG{p}{,} \PYG{n}{rate\PYGZus{}limit}\PYG{p}{,} \PYG{n}{window\PYGZus{}size}\PYG{p}{)}
+            \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{allowed}\PYG{p}{:}
+                \PYG{k}{await} \PYG{n}{redis}\PYG{o}{.}\PYG{n}{incr}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}metrics:rejected\PYGZus{}total:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mock\PYGZus{}name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+                \PYG{k}{raise} \PYG{n}{HTTPException}\PYG{p}{(}\PYG{n}{status\PYGZus{}code}\PYG{o}{=}\PYG{l+m+mi}{429}\PYG{p}{,} \PYG{n}{detail}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Превышен лимит запросов\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{k}{await} \PYG{n}{redis}\PYG{o}{.}\PYG{n}{incr}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}total:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mock\PYGZus{}name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} Шаги 6–8: получение клиента, чтение тела и проксирование}
+        \PYG{n}{client} \PYG{o}{=} \PYG{k}{await} \PYG{n}{registry}\PYG{o}{.}\PYG{n}{get\PYGZus{}or\PYGZus{}create}\PYG{p}{(}\PYG{n}{mock\PYGZus{}name}\PYG{p}{,} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}http://}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{hostname}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{port}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
+                                              \PYG{n}{timeout\PYGZus{}sec}\PYG{p}{)}
+        \PYG{n}{body} \PYG{o}{=} \PYG{k+kc}{None} \PYG{k}{if} \PYG{n}{request}\PYG{o}{.}\PYG{n}{method} \PYG{o+ow}{in} \PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}GET\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}HEAD\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}OPTIONS\PYGZdq{}}\PYG{p}{)} \PYGZbs{}
+               \PYG{k}{else} \PYG{k}{await} \PYG{n}{request}\PYG{o}{.}\PYG{n}{body}\PYG{p}{()}
+
+        \PYG{n}{status\PYGZus{}code}\PYG{p}{,} \PYG{n}{resp\PYGZus{}headers}\PYG{p}{,} \PYG{n}{resp\PYGZus{}body}\PYG{p}{,} \PYG{n}{obs} \PYG{o}{=} \PYG{k}{await} \PYG{n}{proxy\PYGZus{}request}\PYG{p}{(}
+            \PYG{n}{client}\PYG{p}{,} \PYG{n}{request}\PYG{o}{.}\PYG{n}{method}\PYG{p}{,} \PYG{n}{path}\PYG{p}{,} \PYG{n}{request}\PYG{o}{.}\PYG{n}{headers}\PYG{p}{,} \PYG{n}{body}\PYG{p}{,}
+            \PYG{n}{request}\PYG{o}{.}\PYG{n}{url}\PYG{o}{.}\PYG{n}{query}\PYG{p}{,}
+        \PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{Response}\PYG{p}{(}\PYG{n}{content}\PYG{o}{=}\PYG{n}{resp\PYGZus{}body}\PYG{p}{,} \PYG{n}{status\PYGZus{}code}\PYG{o}{=}\PYG{n}{status\PYGZus{}code}\PYG{p}{,}
+                        \PYG{n}{headers}\PYG{o}{=}\PYG{n}{resp\PYGZus{}headers}\PYG{p}{)}
+    \PYG{k}{finally}\PYG{p}{:}
+        \PYG{n}{timeline}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}proxy\PYGZus{}total\PYGZus{}ms\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb}{round}\PYG{p}{(}
+            \PYG{p}{(}\PYG{n}{time}\PYG{o}{.}\PYG{n}{perf\PYGZus{}counter}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{started\PYGZus{}at}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mf}{1000.0}\PYG{p}{,} \PYG{l+m+mi}{3}
+        \PYG{p}{)}
+        \PYG{k}{await} \PYG{n}{record\PYGZus{}proxy\PYGZus{}observation}\PYG{p}{(}\PYG{n}{redis}\PYG{p}{,} \PYG{n}{mock\PYGZus{}name}\PYG{p}{,} \PYG{n}{timeline}\PYG{p}{,} \PYG{n}{outcome}\PYG{p}{,}
+                                       \PYG{n}{upstream\PYGZus{}status}\PYG{p}{)}
+\end{MintedVerbatim}

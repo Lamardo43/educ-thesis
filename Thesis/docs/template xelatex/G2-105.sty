@@ -270,9 +270,10 @@
   \RequirePackage{fontspec}
   \RequirePackage{xecyr}
   \defaultfontfeatures{Mapping=tex-text}
-  \setmainfont{CMU Serif}
-  \setsansfont{CMU Sans Serif}
-  \setmonofont{CMU Typewriter Text}
+  % Use CMU fonts when available, otherwise fallback to bundled TeX fonts.
+  \IfFontExistsTF{CMU Serif}{\setmainfont{CMU Serif}}{\setmainfont{Latin Modern Roman}}
+  \IfFontExistsTF{CMU Sans Serif}{\setsansfont{CMU Sans Serif}}{\setsansfont{Latin Modern Sans}}
+  \IfFontExistsTF{CMU Typewriter Text}{\setmonofont{CMU Typewriter Text}}{\setmonofont{Latin Modern Mono}}
 \fi
 \RequirePackage{flafter}
 

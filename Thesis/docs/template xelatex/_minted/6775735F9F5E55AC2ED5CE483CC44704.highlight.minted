@@ -1,0 +1,17 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Заголовки, которые не пересылаются к upstream}
+\PYG{n}{\PYGZus{}STRIP\PYGZus{}REQUEST\PYGZus{}HEADERS} \PYG{o}{=} \PYG{n+nb}{frozenset}\PYG{p}{(\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}host\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}content\PYGZhy{}length\PYGZdq{}}\PYG{p}{\PYGZcb{})}
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}filtered\PYGZus{}request\PYGZus{}headers}\PYG{p}{(}\PYG{n}{headers}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{dict}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{,} \PYG{n+nb}{str}\PYG{p}{]:}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Копирует заголовки запроса, исключая host и content\PYGZhy{}length.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{return} \PYG{p}{\PYGZob{}}
+        \PYG{n}{key}\PYG{p}{:} \PYG{n}{value}
+        \PYG{k}{for} \PYG{n}{key}\PYG{p}{,} \PYG{n}{value} \PYG{o+ow}{in} \PYG{n}{headers}\PYG{o}{.}\PYG{n}{items}\PYG{p}{()}
+        \PYG{k}{if} \PYG{n}{key}\PYG{o}{.}\PYG{n}{lower}\PYG{p}{()} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{\PYGZus{}STRIP\PYGZus{}REQUEST\PYGZus{}HEADERS}
+    \PYG{p}{\PYGZcb{}}
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}request\PYGZus{}path}\PYG{p}{(}\PYG{n}{path}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{query\PYGZus{}string}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{str}\PYG{p}{:}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Собирает целевой URL\PYGZhy{}путь с query string.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{url\PYGZus{}path} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}/\PYGZdq{}} \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{path} \PYG{k}{else} \PYG{l+s+s2}{\PYGZdq{}/\PYGZdq{}} \PYG{o}{+} \PYG{n}{path}\PYG{o}{.}\PYG{n}{lstrip}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}/\PYGZdq{}}\PYG{p}{)}
+    \PYG{k}{return} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{url\PYGZus{}path}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{?}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{query\PYGZus{}string}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}} \PYG{k}{if} \PYG{n}{query\PYGZus{}string} \PYG{k}{else} \PYG{n}{url\PYGZus{}path}
+\end{MintedVerbatim}

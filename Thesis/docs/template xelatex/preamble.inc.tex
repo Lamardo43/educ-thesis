@@ -127,6 +127,7 @@ rightmargin=0pt % Reduces right outer margin
 \restylefloat{listing}
 
 \setminted{
+    encoding=utf8,          % кодировка исходников для pygments/minted
     linenos=true,           % включить номера строк
     numberblanklines=false, % не нумеровать пустые строки
     numbersep=5pt,          % расстояние между номерами строк и кодом
@@ -170,7 +171,18 @@ rightmargin=0pt % Reduces right outer margin
 % Указываем шрифты для основного текста и для кириллицы:
 \setmainfont{Times New Roman} % если установлен в системе
 % \setsansfont{Times New Roman}
-% \setmonofont{Times New Roman}
+\IfFontExistsTF{Consolas}{
+  \setmonofont{Consolas}
+  \newfontfamily\cyrillicfonttt{Consolas}
+}{
+  \IfFontExistsTF{Courier New}{
+    \setmonofont{Courier New}
+    \newfontfamily\cyrillicfonttt{Courier New}
+  }{
+    \setmonofont{Latin Modern Mono}
+    \newfontfamily\cyrillicfonttt{Latin Modern Mono}
+  }
+}
 \newfontfamily\cyrillicfont{Times New Roman} % для кириллического текста
 
 % Убирает точку после номера главы

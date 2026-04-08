@@ -1,0 +1,7 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+HSET\PYG{+w}{ }settings:global
+\PYG{+w}{    }rate\PYGZus{}limit\PYGZus{}window\PYGZus{}size\PYG{+w}{      }\PYG{l+m}{1}
+\PYG{+w}{    }host\PYGZus{}check\PYGZus{}interval\PYGZus{}sec\PYG{+w}{     }\PYG{l+m}{30}
+\PYG{+w}{    }proxy\PYGZus{}timeout\PYGZus{}sec\PYG{+w}{           }\PYG{l+m}{10}
+\PYG{+w}{    }log\PYGZus{}retention\PYGZus{}lines\PYG{+w}{         }\PYG{l+m}{1000}
+\end{MintedVerbatim}

@@ -1,0 +1,13 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Входная строка из Redis (поле jvm\PYGZus{}args)}
+\PYG{n}{jvm\PYGZus{}args} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}Xms128m \PYGZhy{}Xmx512m \PYGZhy{}Dspring.profiles.active=test\PYGZdq{}}
+
+\PYG{c+c1}{\PYGZsh{} Формирование аргументного вектора}
+\PYG{n}{argv} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}/usr/lib/jvm/java\PYGZhy{}17\PYGZhy{}openjdk\PYGZhy{}amd64/bin/java\PYGZdq{}}\PYG{p}{]}
+\PYG{n}{argv}\PYG{o}{.}\PYG{n}{extend}\PYG{p}{(}\PYG{n}{shlex}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{jvm\PYGZus{}args}\PYG{p}{))}   \PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZgt{} [\PYGZdq{}\PYGZhy{}Xms128m\PYGZdq{}, \PYGZdq{}\PYGZhy{}Xmx512m\PYGZdq{}, ...]}
+\PYG{n}{argv}\PYG{o}{.}\PYG{n}{extend}\PYG{p}{([}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}jar\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}/opt/mock\PYGZhy{}services/stub.jar\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}8105\PYGZdq{}}\PYG{p}{])}
+
+\PYG{c+c1}{\PYGZsh{} Итоговый вектор, передаваемый в create\PYGZus{}subprocess\PYGZus{}exec:}
+\PYG{c+c1}{\PYGZsh{} [\PYGZdq{}/usr/.../java\PYGZdq{}, \PYGZdq{}\PYGZhy{}Xms128m\PYGZdq{}, \PYGZdq{}\PYGZhy{}Xmx512m\PYGZdq{},}
+\PYG{c+c1}{\PYGZsh{}  \PYGZdq{}\PYGZhy{}Dspring.profiles.active=test\PYGZdq{}, \PYGZdq{}\PYGZhy{}jar\PYGZdq{}, \PYGZdq{}/opt/.../stub.jar\PYGZdq{}, \PYGZdq{}8105\PYGZdq{}]}
+\end{MintedVerbatim}

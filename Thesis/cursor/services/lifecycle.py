@@ -310,7 +310,7 @@ class LifecycleManager:
             await asyncio.to_thread(_unlink_tmp)
 
         registered_at = _utc_iso()
-        rate_limit_enabled = "true" if rate_limit > 0 else "false"
+        rate_limit_enabled = "false"
         mock_hash = {
             "hostname": hostname,
             "port": "",
@@ -339,6 +339,11 @@ class LifecycleManager:
         status = mock.get("status", "")
         if status == "RUNNING":
             raise MockAlreadyRunningError(f"Заглушка уже запущена: {filename!r}")
+
+        await self._start_mock_from_data(filename, mock)
+
+    async def _start_mock_from_data(self, filename: str, mock: dict[str, str]) -> None:
+        """Запускает заглушку из переданных данных (без проверки текущего статуса)."""
 
         hostname = mock.get("hostname", "")
         if not hostname:
@@ -574,59 +579,50 @@ class LifecycleManager:
             hostname = data.get("hostname", "")
             pid_s = (data.get("pid") or "").strip()
             port_s = (data.get("port") or "").strip()
-            if not pid_s or not port_s:
-                await self._redis.hset(
-                    _mock_key(filename),
-                    mapping={
-                        "status": "STOPPED",
-                        "port": "",
-                        "pid": "",
-                        "started_at": "",
-                    },
-                )
-                await self._proxy_clients.remove(filename)
-                continue
-            try:
-                pid = int(pid_s)
-                port = int(port_s)
-            except ValueError:
-                await self._redis.hset(
-                    _mock_key(filename),
-                    mapping={
-                        "status": "STOPPED",
-                        "port": "",
-                        "pid": "",
-                        "started_at": "",
-                    },
-                )
+            alive = False
+            port: int | None = None
+
+            if not hostname:
+                logger.warning("restore_state: missing hostname, skip restart: %s", filename)
                 await self._proxy_clients.remove(filename)
                 continue
 
-            if self._is_local(hostname):
-                alive = await self._process_alive_local(pid)
+            if not pid_s or not port_s:
+                logger.warning(
+                    "restore_state: missing pid/port for RUNNING mock, will restart: %s",
+                    filename,
+                )
             else:
                 try:
-                    host = await self._load_host(hostname)
-                    user, pwd, ssh_port = await self._ssh_creds_for_host(host, hostname)
-                    alive = await self._process_alive_remote(hostname, user, pwd, ssh_port, pid)
-                except Exception:
-                    logger.exception("restore_state: PID check error for %s", filename)
-                    alive = False
+                    pid = int(pid_s)
+                    port = int(port_s)
+                except ValueError:
+                    logger.warning(
+                        "restore_state: invalid pid/port for RUNNING mock, will restart: %s",
+                        filename,
+                    )
+                else:
+                    if self._is_local(hostname):
+                        alive = await self._process_alive_local(pid)
+                    else:
+                        try:
+                            host = await self._load_host(hostname)
+                            user, pwd, ssh_port = await self._ssh_creds_for_host(host, hostname)
+                            alive = await self._process_alive_remote(hostname, user, pwd, ssh_port, pid)
+                        except Exception:
+                            logger.exception("restore_state: PID check error for %s", filename)
+                            alive = False
 
-            if alive:
+            if alive and port is not None:
                 timeout = await self._proxy_timeout_sec()
                 base_url = f"http://{hostname}:{port}"
                 await self._proxy_clients.get_or_create(filename, base_url, timeout)
                 logger.info("restore_state: process alive, proxy client restored: %s", filename)
-            else:
-                await self._redis.hset(
-                    _mock_key(filename),
-                    mapping={
-                        "status": "STOPPED",
-                        "port": "",
-                        "pid": "",
-                        "started_at": "",
-                    },
-                )
-                await self._proxy_clients.remove(filename)
-                logger.warning("restore_state: process dead, status STOPPED: %s", filename)
+                continue
+
+            await self._proxy_clients.remove(filename)
+            try:
+                await self._start_mock_from_data(filename, data)
+                logger.info("restore_state: process restarted: %s", filename)
+            except Exception:
+                logger.exception("restore_state: failed to restart process: %s", filename)

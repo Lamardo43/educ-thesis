@@ -1,0 +1,39 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{ProxyClientRegistry}\PYG{p}{:}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Один httpx.AsyncClient на заглушку с пулом соединений.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}clients}\PYG{p}{:} \PYG{n+nb}{dict}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{httpx}\PYG{o}{.}\PYG{n}{AsyncClient}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}\PYGZcb{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}lock} \PYG{o}{=} \PYG{n}{asyncio}\PYG{o}{.}\PYG{n}{Lock}\PYG{p}{()}
+
+    \PYG{k}{async} \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{get\PYGZus{}or\PYGZus{}create}\PYG{p}{(}
+        \PYG{n+nb+bp}{self}\PYG{p}{,}
+        \PYG{n}{mock\PYGZus{}name}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,}
+        \PYG{n}{base\PYGZus{}url}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,}
+        \PYG{n}{timeout}\PYG{p}{:} \PYG{n+nb}{float} \PYG{o}{|} \PYG{n}{httpx}\PYG{o}{.}\PYG{n}{Timeout}\PYG{p}{,}
+    \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{httpx}\PYG{o}{.}\PYG{n}{AsyncClient}\PYG{p}{:}
+        \PYG{k}{async} \PYG{k}{with} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}lock}\PYG{p}{:}
+            \PYG{n}{existing} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}clients}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{n}{mock\PYGZus{}name}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{existing} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n}{existing}
+            \PYG{n}{limits} \PYG{o}{=} \PYG{n}{httpx}\PYG{o}{.}\PYG{n}{Limits}\PYG{p}{(}
+                \PYG{n}{max\PYGZus{}connections}\PYG{o}{=}\PYG{l+m+mi}{1000}\PYG{p}{,}
+                \PYG{n}{max\PYGZus{}keepalive\PYGZus{}connections}\PYG{o}{=}\PYG{l+m+mi}{200}\PYG{p}{,}
+                \PYG{n}{keepalive\PYGZus{}expiry}\PYG{o}{=}\PYG{l+m+mf}{60.0}\PYG{p}{,}
+            \PYG{p}{)}
+            \PYG{n}{t} \PYG{o}{=} \PYG{n}{timeout} \PYG{k}{if} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{timeout}\PYG{p}{,} \PYG{n}{httpx}\PYG{o}{.}\PYG{n}{Timeout}\PYG{p}{)} \PYG{k}{else} \PYG{n}{httpx}\PYG{o}{.}\PYG{n}{Timeout}\PYG{p}{(}\PYG{n}{timeout}\PYG{p}{)}
+            \PYG{n}{client} \PYG{o}{=} \PYG{n}{httpx}\PYG{o}{.}\PYG{n}{AsyncClient}\PYG{p}{(}
+                \PYG{n}{base\PYGZus{}url}\PYG{o}{=}\PYG{n}{base\PYGZus{}url}\PYG{o}{.}\PYG{n}{rstrip}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}/\PYGZdq{}}\PYG{p}{),}
+                \PYG{n}{timeout}\PYG{o}{=}\PYG{n}{t}\PYG{p}{,}
+                \PYG{n}{limits}\PYG{o}{=}\PYG{n}{limits}\PYG{p}{,}
+                \PYG{n}{follow\PYGZus{}redirects}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{,}
+            \PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}clients}\PYG{p}{[}\PYG{n}{mock\PYGZus{}name}\PYG{p}{]} \PYG{o}{=} \PYG{n}{client}
+            \PYG{k}{return} \PYG{n}{client}
+
+    \PYG{k}{async} \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{remove}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{mock\PYGZus{}name}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+        \PYG{k}{async} \PYG{k}{with} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}lock}\PYG{p}{:}
+            \PYG{n}{client} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}clients}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{n}{mock\PYGZus{}name}\PYG{p}{,} \PYG{k+kc}{None}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{client} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{k}{await} \PYG{n}{client}\PYG{o}{.}\PYG{n}{aclose}\PYG{p}{()}   \PYG{c+c1}{\PYGZsh{} корректное закрытие всех соединений пула}
+\end{MintedVerbatim}

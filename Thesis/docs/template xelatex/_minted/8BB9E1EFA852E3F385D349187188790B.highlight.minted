@@ -1,0 +1,7 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+HSET\PYG{+w}{ }accounts:\PYG{o}{\PYGZob{}}uuid\PYG{o}{\PYGZcb{}}
+\PYG{+w}{    }username\PYG{+w}{        }mock\PYGZhy{}runner
+\PYG{+w}{    }password\PYGZus{}enc\PYG{+w}{    }gAAAAABl...base64\PYGZhy{}encoded\PYGZhy{}ciphertext...
+\PYG{+w}{    }description\PYG{+w}{     }Сервисный\PYG{+w}{ }пользователь\PYG{+w}{ }для\PYG{+w}{ }запуска\PYG{+w}{ }заглушек
+\PYG{+w}{    }created\PYGZus{}at\PYG{+w}{      }\PYG{l+m}{2024}\PYGZhy{}10\PYGZhy{}15T09:00:00+00:00
+\end{MintedVerbatim}
