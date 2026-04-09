@@ -12,7 +12,7 @@
     \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}mark}\PYG{p}{(}\PYG{n}{stage}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{t0}\PYG{p}{:} \PYG{n+nb}{float}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
         \PYG{n}{timeline}\PYG{p}{[}\PYG{n}{stage}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb}{round}\PYG{p}{((}\PYG{n}{time}\PYG{o}{.}\PYG{n}{perf\PYGZus{}counter}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{t0}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mf}{1000.0}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
     \PYG{k}{try}\PYG{p}{:}
-        \PYG{c+c1}{\PYGZsh{} Шаг 1: чтение состояния заглушки из Redis (HMGET — 5 полей)}
+        \PYG{c+c1}{\PYGZsh{} Шаг 1: чтение состояния заглушки из Redis (HMGET \PYGZhy{}\PYGZhy{} 5 полей)}
         \PYG{n}{t} \PYG{o}{=} \PYG{n}{time}\PYG{o}{.}\PYG{n}{perf\PYGZus{}counter}\PYG{p}{()}
         \PYG{n}{hostname\PYGZus{}raw}\PYG{p}{,} \PYG{n}{port\PYGZus{}raw}\PYG{p}{,} \PYG{n}{status\PYGZus{}raw}\PYG{p}{,} \PYG{n}{rl\PYGZus{}raw}\PYG{p}{,} \PYG{n}{rl\PYGZus{}on\PYGZus{}raw} \PYG{o}{=} \PYG{k}{await} \PYG{n}{redis}\PYG{o}{.}\PYG{n}{hmget}\PYG{p}{(}
             \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}mocks:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mock\PYGZus{}name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}

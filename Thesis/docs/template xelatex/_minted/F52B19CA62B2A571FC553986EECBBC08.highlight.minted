@@ -1,0 +1,46 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n+nd}{@router}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}/\PYGZdq{}}\PYG{p}{,} \PYG{n}{include\PYGZus{}in\PYGZus{}schema}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+\PYG{k}{async} \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{dashboard\PYGZus{}page}\PYG{p}{(}
+    \PYG{n}{request}\PYG{p}{:} \PYG{n}{Request}\PYG{p}{,}
+    \PYG{n}{redis}\PYG{p}{:} \PYG{n}{RedisClientDep}\PYG{p}{,}
+    \PYG{n}{settings\PYGZus{}service}\PYG{p}{:} \PYG{n}{SettingsServiceDep}\PYG{p}{,}
+\PYG{p}{):}
+    \PYG{n}{names} \PYG{o}{=} \PYG{k}{await} \PYG{n}{redis}\PYG{o}{.}\PYG{n}{smembers}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}mocks:registry\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{ordered\PYGZus{}names} \PYG{o}{=} \PYG{n+nb}{sorted}\PYG{p}{(}\PYG{n}{names}\PYG{p}{)}
+
+    \PYG{n}{mocks}\PYG{p}{:} \PYG{n+nb}{list}\PYG{p}{[}\PYG{n+nb}{dict}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{,} \PYG{n+nb}{object}\PYG{p}{]]} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{k}{if} \PYG{n}{ordered\PYGZus{}names}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Pipeline: одна сетевая транзакция вместо N отдельных HGETALL}
+        \PYG{k}{async} \PYG{k}{with} \PYG{n}{redis}\PYG{o}{.}\PYG{n}{pipeline}\PYG{p}{(}\PYG{n}{transaction}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)} \PYG{k}{as} \PYG{n}{pipe}\PYG{p}{:}
+            \PYG{k}{for} \PYG{n}{name} \PYG{o+ow}{in} \PYG{n}{ordered\PYGZus{}names}\PYG{p}{:}
+                \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hgetall}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}mocks:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+            \PYG{n}{rows} \PYG{o}{=} \PYG{k}{await} \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{execute}\PYG{p}{()}
+
+        \PYG{k}{for} \PYG{n}{name}\PYG{p}{,} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{ordered\PYGZus{}names}\PYG{p}{,} \PYG{n}{rows}\PYG{p}{,} \PYG{n}{strict}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{):}
+            \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{row}\PYG{p}{:}
+                \PYG{k}{continue}
+            \PYG{n}{mocks}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(\PYGZob{}}
+                \PYG{l+s+s2}{\PYGZdq{}filename\PYGZdq{}}\PYG{p}{:}           \PYG{n}{name}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}hostname\PYGZdq{}}\PYG{p}{:}           \PYG{n}{row}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}hostname\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{),}
+                \PYG{l+s+s2}{\PYGZdq{}status\PYGZdq{}}\PYG{p}{:}             \PYG{n}{row}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}status\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}UNKNOWN\PYGZdq{}}\PYG{p}{),}
+                \PYG{l+s+s2}{\PYGZdq{}port\PYGZdq{}}\PYG{p}{:}               \PYG{n}{\PYGZus{}parse\PYGZus{}port}\PYG{p}{(}\PYG{n}{row}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}port\PYGZdq{}}\PYG{p}{)),}
+                \PYG{l+s+s2}{\PYGZdq{}rate\PYGZus{}limit\PYGZus{}enabled\PYGZdq{}}\PYG{p}{:} \PYG{n}{\PYGZus{}to\PYGZus{}bool}\PYG{p}{(}\PYG{n}{row}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}rate\PYGZus{}limit\PYGZus{}enabled\PYGZdq{}}\PYG{p}{)),}
+            \PYG{p}{\PYGZcb{})}
+
+    \PYG{n}{hosts}   \PYG{o}{=} \PYG{k}{await} \PYG{n}{settings\PYGZus{}service}\PYG{o}{.}\PYG{n}{list\PYGZus{}hosts}\PYG{p}{()}
+    \PYG{n}{running} \PYG{o}{=} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{l+m+mi}{1} \PYG{k}{for} \PYG{n}{m} \PYG{o+ow}{in} \PYG{n}{mocks} \PYG{k}{if} \PYG{n}{m}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}status\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}RUNNING\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{errors}  \PYG{o}{=} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{l+m+mi}{1} \PYG{k}{for} \PYG{n}{m} \PYG{o+ow}{in} \PYG{n}{mocks} \PYG{k}{if} \PYG{n}{m}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}status\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}ERROR\PYGZdq{}}\PYG{p}{)}
+
+    \PYG{k}{return} \PYG{n}{templates}\PYG{o}{.}\PYG{n}{TemplateResponse}\PYG{p}{(}\PYG{n}{request}\PYG{o}{=}\PYG{n}{request}\PYG{p}{,} \PYG{n}{name}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}dashboard.html\PYGZdq{}}\PYG{p}{,}
+        \PYG{n}{context}\PYG{o}{=}\PYG{p}{\PYGZob{}}
+            \PYG{l+s+s2}{\PYGZdq{}mocks\PYGZdq{}}\PYG{p}{:} \PYG{n}{mocks}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}hosts\PYGZdq{}}\PYG{p}{:} \PYG{n}{hosts}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}mocks\PYGZus{}total\PYGZdq{}}\PYG{p}{:}      \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{mocks}\PYG{p}{),}
+            \PYG{l+s+s2}{\PYGZdq{}mocks\PYGZus{}running\PYGZdq{}}\PYG{p}{:}    \PYG{n}{running}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}mocks\PYGZus{}errors\PYGZdq{}}\PYG{p}{:}     \PYG{n}{errors}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}hosts\PYGZus{}available\PYGZdq{}}\PYG{p}{:}  \PYG{n+nb}{sum}\PYG{p}{(}
+                \PYG{l+m+mi}{1} \PYG{k}{for} \PYG{n}{h} \PYG{o+ow}{in} \PYG{n}{hosts} \PYG{k}{if} \PYG{n}{h}\PYG{o}{.}\PYG{n}{status} \PYG{o}{==} \PYG{n}{HostStatus}\PYG{o}{.}\PYG{n}{AVAILABLE}
+            \PYG{p}{),}
+            \PYG{l+s+s2}{\PYGZdq{}redis\PYGZus{}connected\PYGZdq{}}\PYG{p}{:}  \PYG{k}{await} \PYG{n}{\PYGZus{}get\PYGZus{}redis\PYGZus{}connected}\PYG{p}{(}\PYG{n}{redis}\PYG{p}{),}
+            \PYG{l+s+s2}{\PYGZdq{}active\PYGZus{}page\PYGZdq{}}\PYG{p}{:}      \PYG{l+s+s2}{\PYGZdq{}dashboard\PYGZdq{}}\PYG{p}{,}
+        \PYG{p}{\PYGZcb{})}
+\end{MintedVerbatim}

@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+mockcontrol\PYGZus{}proxy\PYGZus{}stage\PYGZus{}latency\PYGZus{}ms\PYGZus{}count\PYGZob{}mock=\PYGZdq{}\PYGZus{}\PYGZus{}all\PYGZus{}\PYGZus{}\PYGZdq{},stage=\PYGZdq{}response\PYGZus{}build\PYGZus{}ms\PYGZdq{}\PYGZcb{} 158287
+mockcontrol\PYGZus{}proxy\PYGZus{}stage\PYGZus{}latency\PYGZus{}ms\PYGZus{}avg\PYGZob{}mock=\PYGZdq{}\PYGZus{}\PYGZus{}all\PYGZus{}\PYGZus{}\PYGZdq{},stage=\PYGZdq{}response\PYGZus{}build\PYGZus{}ms\PYGZdq{}\PYGZcb{} 0.008
+mockcontrol\PYGZus{}proxy\PYGZus{}stage\PYGZus{}latency\PYGZus{}ms\PYGZus{}last\PYGZob{}mock=\PYGZdq{}\PYGZus{}\PYGZus{}all\PYGZus{}\PYGZus{}\PYGZdq{},stage=\PYGZdq{}response\PYGZus{}build\PYGZus{}ms\PYGZdq{}\PYGZcb{} 0.008
+mockcontrol\PYGZus{}proxy\PYGZus{}outcome\PYGZus{}total\PYGZob{}mock=\PYGZdq{}uuid\PYGZhy{}stub\PYGZhy{}jdk8\PYGZhy{}2.1.war\PYGZdq{},outcome=\PYGZdq{}ok\PYGZdq{}\PYGZcb{} 1
+mockcontrol\PYGZus{}proxy\PYGZus{}outcome\PYGZus{}total\PYGZob{}mock=\PYGZdq{}uuid\PYGZhy{}stub\PYGZhy{}jdk8\PYGZhy{}fixed\PYGZhy{}local.war\PYGZdq{},outcome=\PYGZdq{}ok\PYGZdq{}\PYGZcb{} 158270
+mockcontrol\PYGZus{}proxy\PYGZus{}outcome\PYGZus{}total\PYGZob{}mock=\PYGZdq{}\PYGZus{}\PYGZus{}all\PYGZus{}\PYGZus{}\PYGZdq{},outcome=\PYGZdq{}not\PYGZus{}found\PYGZdq{}\PYGZcb{} 3
+\end{MintedVerbatim}

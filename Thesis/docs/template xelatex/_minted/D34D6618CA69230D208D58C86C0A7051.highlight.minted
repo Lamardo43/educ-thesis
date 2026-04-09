@@ -1,0 +1,26 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+function formatLogLine(raw) \PYGZob{}
+    var ts = \PYGZdq{}\PYGZdq{}, rest = raw;
+    // Выделение временной метки ISO 8601 или формата в квадратных скобках
+    var iso = raw.match(
+        /\PYGZca{}(\PYGZbs{}d\PYGZob{}4\PYGZcb{}\PYGZhy{}\PYGZbs{}d\PYGZob{}2\PYGZcb{}\PYGZhy{}\PYGZbs{}d\PYGZob{}2\PYGZcb{}[T ]\PYGZbs{}d\PYGZob{}2\PYGZcb{}:\PYGZbs{}d\PYGZob{}2\PYGZcb{}:\PYGZbs{}d\PYGZob{}2\PYGZcb{}
+           (?:[.,]\PYGZbs{}d\PYGZob{}1,3\PYGZcb{})?(?:Z|[+\PYGZhy{}]\PYGZbs{}d\PYGZob{}2\PYGZcb{}:?\PYGZbs{}d\PYGZob{}2\PYGZcb{})?)\PYGZbs{}s*/
+    );
+    if (iso) \PYGZob{} ts = iso[1]; rest = raw.slice(iso[0].length); \PYGZcb{}
+    else \PYGZob{}
+        var br = raw.match(/\PYGZca{}\PYGZbs{}[[\PYGZca{}\PYGZbs{}]\PYGZbs{}n]\PYGZob{}1,64\PYGZcb{}\PYGZbs{}]\PYGZbs{}s*/);
+        if (br) \PYGZob{} ts = br[0].trim(); rest = raw.slice(br[0].length); \PYGZcb{}
+    \PYGZcb{}
+    // Определение уровня сообщения и CSS\PYGZhy{}класса строки
+    var isError = /\PYGZbs{}bERROR\PYGZbs{}b/.test(raw);
+    var isWarn  = /\PYGZbs{}bWARN\PYGZbs{}b/.test(raw) \PYGZam{}\PYGZam{} !isError;
+    var cls = \PYGZdq{}terminal\PYGZus{}\PYGZus{}line\PYGZdq{};
+    if (isError)     cls += \PYGZdq{} terminal\PYGZus{}\PYGZus{}line\PYGZhy{}\PYGZhy{}error\PYGZdq{};
+    else if (isWarn) cls += \PYGZdq{} terminal\PYGZus{}\PYGZus{}line\PYGZhy{}\PYGZhy{}warn\PYGZdq{};
+
+    var tsHtml = ts
+        ? \PYGZsq{}\PYGZlt{}span class=\PYGZdq{}terminal\PYGZus{}\PYGZus{}ts\PYGZdq{}\PYGZgt{}\PYGZsq{} + escapeHtml(ts) + \PYGZdq{}\PYGZlt{}/span\PYGZgt{}\PYGZdq{}
+        : \PYGZdq{}\PYGZdq{};
+    return \PYGZdq{}\PYGZlt{}p class=\PYGZbs{}\PYGZdq{}\PYGZdq{} + cls + \PYGZdq{}\PYGZbs{}\PYGZdq{}\PYGZgt{}\PYGZdq{} + tsHtml + escapeHtml(rest) + \PYGZdq{}\PYGZlt{}/p\PYGZgt{}\PYGZdq{};
+\PYGZcb{}
+\end{MintedVerbatim}

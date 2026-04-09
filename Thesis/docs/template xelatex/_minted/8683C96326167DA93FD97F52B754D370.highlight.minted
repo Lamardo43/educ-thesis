@@ -1,0 +1,38 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{async} \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{record\PYGZus{}proxy\PYGZus{}observation}\PYG{p}{(}
+    \PYG{n}{redis}\PYG{p}{:} \PYG{n}{Redis}\PYG{p}{,}
+    \PYG{n}{mock\PYGZus{}name}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,}
+    \PYG{n}{stage\PYGZus{}timings\PYGZus{}ms}\PYG{p}{:} \PYG{n+nb}{dict}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{,} \PYG{n+nb}{float}\PYG{p}{],}
+    \PYG{n}{outcome}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,}
+    \PYG{n}{upstream\PYGZus{}status}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{|} \PYG{k+kc}{None}\PYG{p}{,}
+\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+    \PYG{n}{per\PYGZus{}sum}  \PYG{o}{=} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}stage\PYGZus{}sum\PYGZus{}ms:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mock\PYGZus{}name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}
+    \PYG{n}{per\PYGZus{}cnt}  \PYG{o}{=} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}stage\PYGZus{}count:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mock\PYGZus{}name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}
+    \PYG{n}{per\PYGZus{}last} \PYG{o}{=} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}stage\PYGZus{}last\PYGZus{}ms:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mock\PYGZus{}name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}
+    \PYG{n}{all\PYGZus{}sum}  \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}stage\PYGZus{}sum\PYGZus{}ms:\PYGZus{}\PYGZus{}all\PYGZus{}\PYGZus{}\PYGZdq{}}
+    \PYG{n}{all\PYGZus{}cnt}  \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}stage\PYGZus{}count:\PYGZus{}\PYGZus{}all\PYGZus{}\PYGZus{}\PYGZdq{}}
+    \PYG{n}{all\PYGZus{}last} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}stage\PYGZus{}last\PYGZus{}ms:\PYGZus{}\PYGZus{}all\PYGZus{}\PYGZus{}\PYGZdq{}}
+
+    \PYG{n}{pipe} \PYG{o}{=} \PYG{n}{redis}\PYG{o}{.}\PYG{n}{pipeline}\PYG{p}{(}\PYG{n}{transaction}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{stage}\PYG{p}{,} \PYG{n}{raw\PYGZus{}ms} \PYG{o+ow}{in} \PYG{n}{stage\PYGZus{}timings\PYGZus{}ms}\PYG{o}{.}\PYG{n}{items}\PYG{p}{():}
+        \PYG{n}{ms} \PYG{o}{=} \PYG{n+nb}{round}\PYG{p}{(}\PYG{n+nb}{max}\PYG{p}{(}\PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{n+nb}{float}\PYG{p}{(}\PYG{n}{raw\PYGZus{}ms}\PYG{p}{)),} \PYG{l+m+mi}{3}\PYG{p}{)}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hincrbyfloat}\PYG{p}{(}\PYG{n}{per\PYGZus{}sum}\PYG{p}{,}  \PYG{n}{stage}\PYG{p}{,} \PYG{n}{ms}\PYG{p}{)}   \PYG{c+c1}{\PYGZsh{} накопленная сумма}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hincrby}\PYG{p}{(}\PYG{n}{per\PYGZus{}cnt}\PYG{p}{,}  \PYG{n}{stage}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}          \PYG{c+c1}{\PYGZsh{} счётчик наблюдений}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hset}\PYG{p}{(}\PYG{n}{per\PYGZus{}last}\PYG{p}{,} \PYG{n}{stage}\PYG{p}{,} \PYG{n}{ms}\PYG{p}{)}            \PYG{c+c1}{\PYGZsh{} последнее значение}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hincrbyfloat}\PYG{p}{(}\PYG{n}{all\PYGZus{}sum}\PYG{p}{,}  \PYG{n}{stage}\PYG{p}{,} \PYG{n}{ms}\PYG{p}{)}    \PYG{c+c1}{\PYGZsh{} агрегат: сумма}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hincrby}\PYG{p}{(}\PYG{n}{all\PYGZus{}cnt}\PYG{p}{,}  \PYG{n}{stage}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}          \PYG{c+c1}{\PYGZsh{} агрегат: счётчик}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hset}\PYG{p}{(}\PYG{n}{all\PYGZus{}last}\PYG{p}{,} \PYG{n}{stage}\PYG{p}{,} \PYG{n}{ms}\PYG{p}{)}            \PYG{c+c1}{\PYGZsh{} агрегат: последнее}
+
+    \PYG{k}{if} \PYG{n}{outcome}\PYG{p}{:}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hincrby}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}outcome\PYGZus{}total:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mock\PYGZus{}name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{outcome}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hincrby}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}outcome\PYGZus{}total:\PYGZus{}\PYGZus{}all\PYGZus{}\PYGZus{}\PYGZdq{}}\PYG{p}{,}      \PYG{n}{outcome}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+    \PYG{k}{if} \PYG{n}{upstream\PYGZus{}status} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None}\PYG{p}{:}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hincrby}\PYG{p}{(}
+            \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}upstream\PYGZus{}status\PYGZus{}total:}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mock\PYGZus{}name}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{upstream\PYGZus{}status}\PYG{p}{),} \PYG{l+m+mi}{1}
+        \PYG{p}{)}
+        \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{hincrby}\PYG{p}{(}
+            \PYG{l+s+s2}{\PYGZdq{}metrics:proxy\PYGZus{}upstream\PYGZus{}status\PYGZus{}total:\PYGZus{}\PYGZus{}all\PYGZus{}\PYGZus{}\PYGZdq{}}\PYG{p}{,} \PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{upstream\PYGZus{}status}\PYG{p}{),} \PYG{l+m+mi}{1}
+        \PYG{p}{)}
+    \PYG{k}{await} \PYG{n}{pipe}\PYG{o}{.}\PYG{n}{execute}\PYG{p}{()}
+\end{MintedVerbatim}
