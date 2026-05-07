@@ -1,9 +1,247 @@
 \chapter{{\fontsize{14pt}{21pt}\selectfont\MakeUppercase{ПРИЛОЖЕНИЕ А}}}
 \label{cha:appendix1}
 
-% \counterwithin{figure}{chapter}
-% \setcounter{figure}{0}
-% \renewcommand{\thefigure}{A.\arabic{figure}}
+\counterwithin{figure}{chapter}
+\counterwithin{listing}{chapter}
+\setcounter{figure}{0}
+\setcounter{listing}{0}
+\renewcommand{\thefigure}{A.\arabic{figure}}
+\renewcommand{\thelisting}{A.\arabic{listing}}
+
+\begin{listing}[H]
+\caption{Запуск Java-процесса на локальном хосте}
+\label{lst:start-local}
+\begin{mdframed}
+\begin{minted}{python}
+async def start_mock(self, filename: str) -> None:
+    if self._is_local(hostname):
+        port = await self._pick_free_port_local(pmin, pmax)
+        log_file_path = _log_path_for_filename(filename)
+        # Открытие лог-файла вынесено в поток (I/O-bound операция)
+        lf = await asyncio.to_thread(open, log_file_path, "ab")
+        try:
+            argv = [java_path]
+            argv.extend(shlex.split(jvm_args) if jvm_args.strip() else [])
+            argv.extend(["-jar", artifact_path, f"{port}"])
+            # Неблокирующий запуск дочернего процесса
+            proc = await asyncio.create_subprocess_exec(
+                *argv,
+                stdin=asyncio.subprocess.DEVNULL,
+                stdout=lf,
+                stderr=asyncio.subprocess.STDOUT,
+                start_new_session=True)
+        finally:
+            lf.close()
+        pid = proc.pid
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\begin{listing}[H]
+\caption{Формирование SSH-команды запуска Java-процесса на удалённом хосте}
+\label{lst:start-remote}
+\begin{mdframed}
+\begin{minted}{python}
+# Экранирование JVM-аргументов для безопасной передачи через SSH
+jvm_part = " ".join(
+    shlex.quote(t) for t in shlex.split(jvm_args.strip())
+) if jvm_args.strip() else ""
+
+mid = f"{jvm_part} " if jvm_part else ""
+
+# Итоговая команда: nohup, перенаправление вывода, вывод PID
+cmd = (
+    f"nohup {shlex.quote(java_path)} {mid}"
+    f"-jar {shlex.quote(artifact_path)} {int(port)} "
+    f">> {shlex.quote(log_remote)} 2>&1 & echo $!"
+)
+proc = await self._ssh.run_command(
+    hostname, user, pwd, cmd, port=ssh_port, timeout=60.0
+)
+# Последняя строка вывода содержит PID запущенного процесса
+pid = int(proc.stdout.strip().splitlines()[-1])
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\begin{listing}[H]
+\caption{Методы проверки живости процесса}
+\label{lst:process-alive}
+\begin{mdframed}
+\begin{minted}{python}
+# Локальная проверка: системный вызов в пуле потоков
+async def _process_alive_local(self, pid: int) -> bool:
+    def check() -> bool:
+        try:
+            os.kill(pid, 0)   # сигнал 0: только проверка существования
+        except OSError:
+            return False      # процесс не найден или нет прав
+        return True
+
+    return await asyncio.to_thread(check)
+
+# Удалённая проверка: команда kill -0 через SSH
+async def _process_alive_remote(
+    self, hostname: str, username: str, password: str,
+    ssh_port: int, pid: int,
+) -> bool:
+    proc = await self._ssh.run_command(
+        hostname, username, password,
+        f"kill -0 {int(pid)} 2>/dev/null && echo OK || echo NO",
+        port=ssh_port, timeout=15.0,
+    )
+    return (proc.stdout or "").strip().endswith("OK")
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\begin{listing}[H]
+\caption{Реестр HTTP-клиентов ProxyClientRegistry}
+\label{lst:proxy-registry}
+\begin{mdframed}
+\begin{minted}{python}
+class ProxyClientRegistry:
+    """Один httpx.AsyncClient на заглушку с пулом соединений."""
+    def __init__(self) -> None:
+        self._clients: dict[str, httpx.AsyncClient] = {}
+        self._lock = asyncio.Lock()
+    async def get_or_create(
+        self,
+        mock_name: str,
+        base_url: str,
+        timeout: float | httpx.Timeout,
+    ) -> httpx.AsyncClient:
+        async with self._lock:
+            existing = self._clients.get(mock_name)
+            if existing is not None:
+                return existing
+            limits = httpx.Limits(
+                max_connections=1000,
+                max_keepalive_connections=200,
+                keepalive_expiry=60.0)
+            t = timeout if isinstance(timeout, httpx.Timeout) else httpx.Timeout(timeout)
+            client = httpx.AsyncClient(
+                base_url=base_url.rstrip("/"),
+                timeout=t,
+                limits=limits,
+                follow_redirects=False)
+            self._clients[mock_name] = client
+            return client
+    async def remove(self, mock_name: str) -> None:
+        async with self._lock:
+            client = self._clients.pop(mock_name, None)
+        if client is not None:
+            await client.aclose()   # корректное закрытие всех соединений пула
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\begin{listing}[H]
+\caption{Реализация алгоритма Fixed Window Counter}
+\label{lst:rate-limiter-impl}
+\begin{mdframed}
+\begin{minted}{python}
+class RateLimiter:
+    """Ограничение частоты запросов на заглушку в фиксированных временных окнах."""
+
+    def __init__(self, redis: Redis) -> None:
+        self._redis = redis
+
+    async def check(self, filename: str, limit: int,
+                    window_size: int = 1) -> bool:
+        """Инкрементирует счётчик текущего окна.
+        Возвращает True, если запрос в пределах лимита."""
+        window = int(time.time()) // window_size
+        key    = f"rate:{filename}:{window}"
+
+        # Атомарный инкремент: Redis гарантирует неделимость операции
+        count = await self._redis.incr(key)
+
+        # TTL устанавливается только при создании нового счётчика (count == 1)
+        if count == 1:
+            await self._redis.expire(key, window_size * 2)
+
+        return count <= limit   # True -> разрешить, False -> HTTP 429
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\begin{listing}[H]
+\caption{Маршрут Dashboard: конвейерная выборка заглушек из Redis}
+\label{lst:dashboard-route}
+\begin{mdframed}
+\begin{minted}{python}
+@router.get("/", include_in_schema=False)
+async def dashboard_page(request: Request, redis: RedisClientDep, ...):
+    names = sorted(await redis.smembers("mocks:registry"))
+    if names:
+        # Pipeline: одна сетевая транзакция вместо N отдельных HGETALL
+        async with redis.pipeline(transaction=False) as pipe:
+            for name in names:
+                pipe.hgetall(f"mocks:{name}")
+            rows = await pipe.execute()
+    return templates.TemplateResponse(request=request, name="dashboard.html",
+        context={"mocks": mocks, "mocks_total": len(mocks),
+                 "mocks_running": running, "redis_connected": ...,
+                 "active_page": "dashboard"})
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\begin{listing}[H]
+\caption{Двухпроходная конвейерная сборка метрик из Redis}
+\label{lst:collect-metrics}
+\begin{mdframed}
+\begin{minted}{python}
+async def collect_metrics(redis: Redis) -> str:
+    # Проход 1: реестры
+    pipe = redis.pipeline(transaction=False)
+    pipe.smembers("mocks:registry")
+    pipe.smembers("hosts:registry")
+    reg_results = await pipe.execute()
+    mock_files = sorted(reg_results[0] or [])
+    host_names = sorted(reg_results[1] or [])
+
+    # Проход 2: данные заглушек, хостов и все метрические ключи
+    pipe2 = redis.pipeline(transaction=False)
+    for filename in mock_files:
+        pipe2.hgetall(f"mocks:{filename}")          # статус заглушки
+    for hostname in host_names:
+        pipe2.hget(f"hosts:{hostname}", "status")   # статус хоста
+    for filename in mock_files:
+        pipe2.get(f"metrics:proxy_total:{filename}")
+        pipe2.get(f"metrics:rejected_total:{filename}")
+        pipe2.hgetall(f"metrics:proxy_stage_sum_ms:{filename}")
+        pipe2.hgetall(f"metrics:proxy_stage_count:{filename}")
+        pipe2.hgetall(f"metrics:proxy_stage_last_ms:{filename}")
+        pipe2.hgetall(f"metrics:proxy_outcome_total:{filename}")
+        pipe2.hgetall(f"metrics:proxy_upstream_status_total:{filename}")
+    # Агрегаты __all__
+    pipe2.hgetall("metrics:proxy_stage_sum_ms:__all__")
+    pipe2.hgetall("metrics:proxy_stage_count:__all__")
+    pipe2.hgetall("metrics:proxy_stage_last_ms:__all__")
+    pipe2.hgetall("metrics:proxy_outcome_total:__all__")
+    pipe2.hgetall("metrics:proxy_upstream_status_total:__all__")
+    batch = await pipe2.execute()
+    # ... формирование строк текстового ответа ...
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\begin{listing}[H]
+\caption{Фрагмент ответа эндпоинта \texttt{/metrics}}
+\label{lst:metrics-output}
+\begin{mdframed}
+\begin{minted}{text}
+mockcontrol_proxy_stage_latency_ms_count{mock="__all__",stage="response_build_ms"} 158287
+mockcontrol_proxy_stage_latency_ms_avg{mock="__all__",stage="response_build_ms"} 0.008
+mockcontrol_proxy_stage_latency_ms_last{mock="__all__",stage="response_build_ms"} 0.008
+mockcontrol_proxy_outcome_total{mock="uuid-stub-jdk8-2.1.war",outcome="ok"} 1
+mockcontrol_proxy_outcome_total{mock="uuid-stub-jdk8-fixed-local.war",outcome="ok"} 158270
+mockcontrol_proxy_outcome_total{mock="__all__",outcome="not_found"} 3
+\end{minted}
+\end{mdframed}
+\end{listing}
 
 % \begin{center}
 %     \begin{figure}

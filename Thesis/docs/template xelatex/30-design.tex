@@ -68,7 +68,7 @@
 
 \subsection{Архитектура системы в нотации C4 Model}
 
-Для формализованного описания архитектуры применяется нотация C4~Model\cite{c4model}. Контекстная диаграмма (рисунок~\ref{fig:c4-context}) представляет систему в окружении внешних акторов: инженера тестирования (управляет инфраструктурой через веб-интерфейс), потребителя (HTTP-клиент: нагрузочный инструмент или тестируемая система), Prometheus (сбор метрик) и целевого хоста Astra Linux\cite{astra-linux} с Java-процессами\cite{openjdk}.
+Для формализованного описания архитектуры применяется нотация C4~Model~\cite{c4model}. Контекстная диаграмма (рисунок~\ref{fig:c4-context}) представляет систему в окружении внешних акторов: инженера тестирования (управляет инфраструктурой через веб-интерфейс), потребителя (HTTP-клиент: нагрузочный инструмент или тестируемая система), Prometheus (сбор метрик) и целевого хоста Astra Linux~\cite{astra-linux} с Java-процессами~\cite{openjdk}.
 
 \begin{figure}[H]
 \centering
@@ -205,7 +205,7 @@
 %     }
 % }
 
-Контейнерная диаграмма (рисунок~\ref{fig:c4-container}) раскрывает три программных контейнера системы (в терминологии C4~Model -- логически обособленные исполняемые единицы). \textit{Веб-интерфейс} (FastAPI / Jinja2 SSR\cite{jinja2}) формирует HTML-страницы на стороне сервера без зависимостей от внешних CDN. \textit{REST API} (Python / FastAPI / Uvicorn) реализует всю бизнес-логику. \textit{Redis} (AOF-персистентность) хранит конфигурации и счётчики Rate Limiter. Выделенное хранилище артефактов намеренно отсутствует: бинарный файл заглушки принимается во временный каталог, немедленно копируется на целевой хост по SFTP и удаляется.
+Контейнерная диаграмма (рисунок~\ref{fig:c4-container}) раскрывает три программных контейнера системы (в терминологии C4~Model -- логически обособленные исполняемые единицы). \textit{Веб-интерфейс} (FastAPI / Jinja2 SSR~\cite{jinja2}) формирует HTML-страницы на стороне сервера без зависимостей от внешних CDN. \textit{REST API} (Python / FastAPI / Uvicorn) реализует всю бизнес-логику. \textit{Redis} (AOF-персистентность) хранит конфигурации и счётчики Rate Limiter. Выделенное хранилище артефактов намеренно отсутствует: бинарный файл заглушки принимается во временный каталог, немедленно копируется на целевой хост по SFTP и удаляется.
 
 \begin{figure}[H]
 \centering
@@ -231,12 +231,12 @@
 \hline
 \textbf{Компонент} & \textbf{Назначение} \\ \hline
 \endhead
-Lifecycle Manager & Регистрация (SFTP-загрузка на хост\cite{paramiko}), запуск (\texttt{nohup} через SSH), остановка и удаление Java-процессов \\ \hline
-Proxy Engine      & Прозрачная маршрутизация HTTP-запросов к заглушкам через \texttt{httpx}\cite{httpx} с сохранением метода, заголовков и тела \\ \hline
+Lifecycle Manager & Регистрация (SFTP-загрузка на хост~\cite{paramiko}), запуск (\texttt{nohup} через SSH), остановка и удаление Java-процессов \\ \hline
+Proxy Engine      & Прозрачная маршрутизация HTTP-запросов к заглушкам через \texttt{httpx}~\cite{httpx} с сохранением метода, заголовков и тела \\ \hline
 Rate Limiter      & Алгоритм Fixed Window Counter на уровне каждой заглушки; управляется флагом \texttt{rate\_limit\_enabled} без перезапуска \\ \hline
 Settings Module   & Управление учётными записями SSH и реестром хостов развёртывания (см. раздел~2.1.4) \\ \hline
-Crypto Service    & Шифрование/дешифрование паролей SSH алгоритмом AES-128 (Fernet\cite{cryptography-fernet}); ключ хранится в файле с правами 600 \\ \hline
-Metrics Exporter  & Эндпоинт \texttt{/metrics} в формате Prometheus exposition format\cite{prometheus-docs}\cite{prometheus-exposition}; детали в разделе~2.6 \\ \hline
+Crypto Service    & Шифрование/дешифрование паролей SSH алгоритмом AES-128 (Fernet~\cite{cryptography-fernet}); ключ хранится в файле с правами 600 \\ \hline
+Metrics Exporter  & Эндпоинт \texttt{/metrics} в формате Prometheus exposition format~\cite{prometheus-docs}~\cite{prometheus-exposition}; детали в разделе~2.6 \\ \hline
 \end{xltabular}
 
 \subsection{Диаграмма развёртывания}
@@ -292,7 +292,7 @@ Metrics Exporter  & Эндпоинт \texttt{/metrics} в формате Prometh
 
 \subsection{Архитектура модуля настроек и реестр хостов}
 
-Модуль настроек (Settings Module) управляет двумя категориями конфигурационных данных. \textbf{Учётные записи ОС Linux} используются для SSH-аутентификации на целевых хостах; применение учётных записей с ограниченными правами минимизирует риски при нештатном поведении Java-процессов. Пароли хранятся в Redis в зашифрованном виде: Crypto Service применяет AES-128 (Fernet\cite{cryptography-fernet}), ключ хранится вне Redis в файле с правами 600; дешифрование выполняется только в оперативной памяти на время установки соединения.
+Модуль настроек (Settings Module) управляет двумя категориями конфигурационных данных. \textbf{Учётные записи ОС Linux} используются для SSH-аутентификации на целевых хостах; применение учётных записей с ограниченными правами минимизирует риски при нештатном поведении Java-процессов. Пароли хранятся в Redis в зашифрованном виде: Crypto Service применяет AES-128 (Fernet~\cite{cryptography-fernet}), ключ хранится вне Redis в файле с правами 600; дешифрование выполняется только в оперативной памяти на время установки соединения.
 
 \textbf{Реестр хостов} представляет собой список серверов для развёртывания заглушек. Параметры записи приведены в таблице~\ref{tab:host-params}.
 
@@ -734,7 +734,7 @@ def check_rate_limit(filename: str, limit: int, window_size: int = 1) -> bool:
 \end{mdframed}
 \end{listing}
 
-TTL устанавливается равным удвоенному размеру окна и только при первом запросе (INCR возвращает 1), что гарантирует самоочистку устаревших ключей и предотвращает утечку памяти. Атомарность INCR\cite{redis-incr} обеспечивает корректный подсчёт при конкурентном поступлении запросов без транзакций и блокировок.
+TTL устанавливается равным удвоенному размеру окна и только при первом запросе (INCR возвращает 1), что гарантирует самоочистку устаревших ключей и предотвращает утечку памяти. Атомарность INCR~\cite{redis-incr} обеспечивает корректный подсчёт при конкурентном поступлении запросов без транзакций и блокировок.
 
 Глобальные параметры приложения хранятся под ключом \texttt{settings:global} (Hash). Структура записи приведена в листинге~\ref{lst:global-settings}, описание полей -- в таблице~\ref{tab:global-settings}.
 
@@ -803,7 +803,7 @@ HSET settings:global
 
 \subsection{Персистентность и стратегия восстановления}
 
-Redis настроен в режиме AOF\cite{redis-aof} (\texttt{appendfsync everysec}): каждая операция записи фиксируется в журнале, синхронизируемом с диском раз в секунду; максимальная потеря данных при аварии -- не более одной секунды.
+Redis настроен в режиме AOF~\cite{redis-aof} (\texttt{appendfsync everysec}): каждая операция записи фиксируется в журнале, синхронизируемом с диском раз в секунду; максимальная потеря данных при аварии -- не более одной секунды.
 
 При перезапуске управляющего приложения выполняется следующая процедура восстановления: считывается реестр заглушек (\texttt{SMEMBERS mocks:registry}), затем для каждой заглушки читается полная Hash-запись (\texttt{HGETALL}). Для каждой заглушки со статусом \texttt{RUNNING} выполняется SSH-проверка фактического наличия процесса по сохранённому PID. При подтверждении -- статус сохраняется, восстанавливается HTTP-клиент прокси-движка. При отсутствии процесса -- предпринимается автоматический перезапуск с сохранёнными JVM-аргументами; в случае успеха запись обновляется новыми \texttt{pid}, \texttt{port} и \texttt{started\_at}, при неудаче -- ошибка фиксируется в журнале, конфигурация остаётся неизменной для ручного вмешательства.
 
@@ -873,7 +873,7 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 
 Целевая аудитория системы~-- инженеры тестирования, одновременно отслеживающие состояние десятков заглушек. Это определяет два ключевых требования: минимальную утомляемость при длительной работе и мгновенную читаемость статусов без анализа текстовых подписей.
 
-Выбрана тёмная цветовая схема (dark theme) как стандарт для инструментов класса DevOps и Operations. Статусы объектов кодируются цветом однозначно: зелёный (\texttt{RUNNING}), жёлтый (\texttt{REGISTERED~/~STOPPED}), красный (\texttt{ERROR~/~UNAVAILABLE}). Акцентный цвет~-- синий \texttt{\#4F8EF7} с коэффициентом контрастности выше 4,5:1 (соответствует WCAG~2.1 уровня~AA\cite{wcag21}). Основной шрифт~-- Inter (входит в базовую поставку большинства дистрибутивов Linux, не требует внешних CDN), моноширинный~-- JetBrains~Mono для технических идентификаторов. Компоновка страниц: постоянная боковая панель навигации шириной 220~px и основная рабочая область. Сводная характеристика визуальной системы приведена в таблице~\ref{tab:ui-colors}.
+Выбрана тёмная цветовая схема (dark theme) как стандарт для инструментов класса DevOps и Operations. Статусы объектов кодируются цветом однозначно: зелёный (\texttt{RUNNING}), жёлтый (\texttt{REGISTERED~/~STOPPED}), красный (\texttt{ERROR~/~UNAVAILABLE}). Акцентный цвет~-- синий \texttt{\#4F8EF7} с коэффициентом контрастности выше 4,5:1 (соответствует WCAG~2.1 уровня~AA~\cite{wcag21}). Основной шрифт~-- Inter (входит в базовую поставку большинства дистрибутивов Linux, не требует внешних CDN), моноширинный~-- JetBrains~Mono для технических идентификаторов. Компоновка страниц: постоянная боковая панель навигации шириной 220~px и основная рабочая область. Сводная характеристика визуальной системы приведена в таблице~\ref{tab:ui-colors}.
 
 % \begin{longtblr}[
 %   caption = {Визуальная система интерфейса},
@@ -922,14 +922,8 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 
 \subsection{Структура навигации и макеты экранных форм}
 
-Все экранные формы разделяют единый шаблон-«обёртку»: постоянная боковая панель с тремя разделами (\textbf{Dashboard}, \textbf{Настройки}, \textbf{Журналы}) и верхняя строка с заголовком текущего раздела и индикатором подключения к Redis. Макет общего хрома приложения представлен на рисунке~\ref{fig:mockup-shell}.
+Все экранные формы разделяют единый шаблон-«обёртку»: постоянная боковая панель с тремя разделами (\textbf{Dashboard}, \textbf{Настройки}, \textbf{Журналы}) и верхняя строка с заголовком текущего раздела и индикатором подключения к Redis. Макет общего хрома приложения представлен в приложении Б (рисунок~\ref{fig:mockup-shell}).
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{mockup-shell.png}
-\caption{Макет общего хрома приложения с боковой навигацией}
-\label{fig:mockup-shell}
-\end{figure}
 
 %% ============================================================
 %% ПРОМТ 1 ДЛЯ FIGMA AI -- рисунок «Общий хром приложения»
@@ -984,14 +978,7 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 %   с центрированным текстом "Область контента" (14 px, #2D3748).
 %% ============================================================
 
-\textbf{Dashboard} (рисунок~\ref{fig:mockup-dashboard}) является основным рабочим экраном. Верхняя часть содержит четыре сводные карточки: всего заглушек, запущено, ошибок, хостов доступно. Таблица заглушек включает столбцы: имя файла (моноширинный шрифт), целевой хост, статусный бейдж, порт, тумблер Rate Limiter и кнопки действий. Кнопка «Зарегистрировать заглушку» открывает модальное окно.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{mockup-dashboard.png}
-\caption{Макет главной панели управления (Dashboard)}
-\label{fig:mockup-dashboard}
-\end{figure}
+\textbf{Dashboard} (приложение Б, рисунок~\ref{fig:mockup-dashboard}) является основным рабочим экраном. Верхняя часть содержит четыре сводные карточки: всего заглушек, запущено, ошибок, хостов доступно. Таблица заглушек включает столбцы: имя файла (моноширинный шрифт), целевой хост, статусный бейдж, порт, тумблер Rate Limiter и кнопки действий. Кнопка «Зарегистрировать заглушку» открывает модальное окно.
 
 %% ============================================================
 %% ПРОМТ 2 ДЛЯ FIGMA AI -- рисунок «Dashboard»
@@ -1057,14 +1044,8 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 % Модальных окон в этом кадре нет.
 %% ============================================================
 
-\textbf{Модальное окно регистрации заглушки} (рисунок~\ref{fig:mockup-register}) открывается поверх Dashboard без перехода на отдельную страницу, сохраняя контекст. Форма содержит: зону перетаскивания файла (\texttt{.jar}/\texttt{.war}), выпадающий список целевого хоста, поле JVM-аргументов (моноширинный шрифт), числовое поле лимита Rate Limiter и флажок немедленного запуска после регистрации.
+\textbf{Модальное окно регистрации заглушки} (приложение Б, рисунок~\ref{fig:mockup-register}) открывается поверх Dashboard без перехода на отдельную страницу, сохраняя контекст. Форма содержит: зону перетаскивания файла (\texttt{.jar}/\texttt{.war}), выпадающий список целевого хоста, поле JVM-аргументов (моноширинный шрифт), числовое поле лимита Rate Limiter и флажок немедленного запуска после регистрации.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{mockup-register.png}
-\caption{Макет модального окна регистрации новой заглушки}
-\label{fig:mockup-register}
-\end{figure}
 
 %% ============================================================
 %% ПРОМТ 3 ДЛЯ FIGMA AI -- рисунок «Модальное окно регистрации»
@@ -1122,14 +1103,8 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 %                border-radius 8 px, padding 0 20 px, 14 px medium.
 %% ============================================================
 
-\textbf{Страница настроек} (рисунок~\ref{fig:mockup-settings}) организована в виде двух вкладок: <<Хосты>> и <<Учётные записи>>. Вкладка <<Хосты>> отображает таблицу целевых серверов с индикатором SSH-доступности и временем последней проверки. Пароли учётных записей в таблице скрыты строкой «\texttt{••••••••}». Кнопка <<Добавить хост>> открывает модальную форму (рисунок~\ref{fig:mockup-add-host}) с полями реестра хостов из раздела~2.1.4.
+\textbf{Страница настроек} (приложение Б, рисунок~\ref{fig:mockup-settings}) организована в виде двух вкладок: <<Хосты>> и <<Учётные записи>>. Вкладка <<Хосты>> отображает таблицу целевых серверов с индикатором SSH-доступности и временем последней проверки. Пароли учётных записей в таблице скрыты строкой «\texttt{••••••••}». Кнопка <<Добавить хост>> открывает модальную форму (приложение Б, рисунок~\ref{fig:mockup-add-host}) с полями реестра хостов из раздела~2.1.4.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{mockup-settings.png}
-\caption{Макет страницы настроек, вкладка «Хосты»}
-\label{fig:mockup-settings}
-\end{figure}
 
 %% ============================================================
 %% ПРОМТ 4 ДЛЯ FIGMA AI -- рисунок «Настройки -- вкладка Хосты»
@@ -1187,12 +1162,6 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 % Модальных окон в этом кадре нет.
 %% ============================================================
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{mockup-add-host.png}
-\caption{Макет модального окна добавления нового хоста}
-\label{fig:mockup-add-host}
-\end{figure}
 
 %% ============================================================
 %% ПРОМТ 5 ДЛЯ FIGMA AI -- рисунок «Модальное окно -- добавление хоста»
@@ -1248,14 +1217,8 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 %     "Сохранить" -- фон #4F8EF7, белый текст, высота 40 px, border-radius 8 px.
 %% ============================================================
 
-\textbf{Страница журналов} (рисунок~\ref{fig:mockup-logs}) предназначена для просмотра stdout/stderr Java-процессов. Выбор заглушки~-- через выпадающий список. Основную часть экрана занимает терминальный блок: строки с \texttt{ERROR} и \texttt{WARN} выделяются соответственно красным и жёлтым фоном. Панель управления содержит тумблер автообновления, кнопку ручного обновления и очистки буфера; строка состояния показывает PID процесса и назначенный порт.
+\textbf{Страница журналов} (приложение Б, рисунок~\ref{fig:mockup-logs}) предназначена для просмотра stdout/stderr Java-процессов. Выбор заглушки~-- через выпадающий список. Основную часть экрана занимает терминальный блок: строки с \texttt{ERROR} и \texttt{WARN} выделяются соответственно красным и жёлтым фоном. Панель управления содержит тумблер автообновления, кнопку ручного обновления и очистки буфера; строка состояния показывает PID процесса и назначенный порт.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{mockup-logs.png}
-\caption{Макет страницы просмотра журналов процессов}
-\label{fig:mockup-logs}
-\end{figure}
 
 %% ============================================================
 %% ПРОМТ 6 ДЛЯ FIGMA AI -- рисунок «Журналы процессов»
@@ -1379,104 +1342,20 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 
 \subsection{Архитектура асинхронного управления процессами}
 
-Все методы класса \texttt{LifecycleManager} реализованы как корутины Python (\texttt{async}/\texttt{await}), что позволяет событийному циклу \texttt{asyncio}\cite{python-asyncio} переключаться между операциями ввода-вывода без блокировки вычислительного потока. Операции управления ветвятся по типу целевого хоста: компонент Host Resolver предоставляет функцию \texttt{is\_local(hostname)}, кэшированную через \texttt{functools.lru\_cache}. Для локального хоста применяются встроенные средства Python и системные вызовы ОС; для удалённого~-- пул постоянных SSH-соединений (\texttt{SSHPool}) на базе \texttt{asyncssh}. Ветвление инкапсулировано внутри \texttt{LifecycleManager} и прозрачно для API-слоя.
+Все методы класса \texttt{LifecycleManager} реализованы как корутины Python (\texttt{async}/\texttt{await}), что позволяет событийному циклу \texttt{asyncio}~\cite{python-asyncio} переключаться между операциями ввода-вывода без блокировки вычислительного потока. Операции управления ветвятся по типу целевого хоста: компонент Host Resolver предоставляет функцию \texttt{is\_local(hostname)}, кэшированную через \texttt{functools.lru\_cache}. Для локального хоста применяются встроенные средства Python и системные вызовы ОС; для удалённого~-- пул постоянных SSH-соединений (\texttt{SSHPool}) на базе \texttt{asyncssh}. Ветвление инкапсулировано внутри \texttt{LifecycleManager} и прозрачно для API-слоя.
 
 \subsection{Запуск Java-процесса}
 
-При запуске на \textbf{локальном хосте} поиск свободного TCP-порта выполняется в \texttt{asyncio.to\_thread} (блокирующий \texttt{socket.bind} вынесен в пул потоков). JVM-аргументы из Redis разбираются функцией \texttt{shlex.split}, которая корректно обрабатывает кавычки и экранирование, -- это позволяет задавать аргументы со встроенными пробелами: \texttt{"-Dmy.prop=value with spaces"}. Процесс запускается через \texttt{asyncio.create\_subprocess\_exec} с параметром \texttt{start\_new\_session=True}, обеспечивающим независимость Java-процесса от группы процессов управляющего приложения. Реализация приведена в листинге~\ref{lst:start-local}.
+При запуске на \textbf{локальном хосте} поиск свободного TCP-порта выполняется в \texttt{asyncio.to\_thread} (блокирующий \texttt{socket.bind} вынесен в пул потоков). JVM-аргументы из Redis разбираются функцией \texttt{shlex.split}, которая корректно обрабатывает кавычки и экранирование, -- это позволяет задавать аргументы со встроенными пробелами: \texttt{"-Dmy.prop=value with spaces"}. Процесс запускается через \texttt{asyncio.create\_subprocess\_exec} с параметром \texttt{start\_new\_session=True}, обеспечивающим независимость Java-процесса от группы процессов управляющего приложения. Реализация приведена в приложении А (листинг~\ref{lst:start-local}).
 
-\begin{listing}[H]
-\caption{Запуск Java-процесса на локальном хосте}
-\label{lst:start-local}
-\begin{mdframed}
-\begin{minted}{python}
-async def start_mock(self, filename: str) -> None:
-    if self._is_local(hostname):
-        port = await self._pick_free_port_local(pmin, pmax)
-        log_file_path = _log_path_for_filename(filename)
-        # Открытие лог-файла вынесено в поток (I/O-bound операция)
-        lf = await asyncio.to_thread(open, log_file_path, "ab")
-        try:
-            argv = [java_path]
-            argv.extend(shlex.split(jvm_args) if jvm_args.strip() else [])
-            argv.extend(["-jar", artifact_path, f"{port}"])
-            # Неблокирующий запуск дочернего процесса
-            proc = await asyncio.create_subprocess_exec(
-                *argv,
-                stdin=asyncio.subprocess.DEVNULL,
-                stdout=lf,
-                stderr=asyncio.subprocess.STDOUT,
-                start_new_session=True)
-        finally:
-            lf.close()
-        pid = proc.pid
-\end{minted}
-\end{mdframed}
-\end{listing}
 
-При запуске на \textbf{удалённом хосте} поиск свободного порта производится через SSH-команду \texttt{ss~-tln}. Токены JVM-аргументов дополнительно экранируются \texttt{shlex.quote} перед включением в строку команды, что предотвращает инъекцию оболочки. Конструкция \texttt{nohup \& echo \$!} запускает процесс в фоновом режиме и возвращает его PID в stdout. Формирование команды приведено в листинге~\ref{lst:start-remote}.
+При запуске на \textbf{удалённом хосте} поиск свободного порта производится через SSH-команду \texttt{ss~-tln}. Токены JVM-аргументов дополнительно экранируются \texttt{shlex.quote} перед включением в строку команды, что предотвращает инъекцию оболочки. Конструкция \texttt{nohup \& echo \$!} запускает процесс в фоновом режиме и возвращает его PID в stdout. Формирование команды приведено в приложении А (листинг~\ref{lst:start-remote}).
 
-\begin{listing}[H]
-\caption{Формирование SSH-команды запуска Java-процесса на удалённом хосте}
-\label{lst:start-remote}
-\begin{mdframed}
-\begin{minted}{python}
-# Экранирование JVM-аргументов для безопасной передачи через SSH
-jvm_part = " ".join(
-    shlex.quote(t) for t in shlex.split(jvm_args.strip())
-) if jvm_args.strip() else ""
-
-mid = f"{jvm_part} " if jvm_part else ""
-
-# Итоговая команда: nohup, перенаправление вывода, вывод PID
-cmd = (
-    f"nohup {shlex.quote(java_path)} {mid}"
-    f"-jar {shlex.quote(artifact_path)} {int(port)} "
-    f">> {shlex.quote(log_remote)} 2>&1 & echo $!"
-)
-proc = await self._ssh.run_command(
-    hostname, user, pwd, cmd, port=ssh_port, timeout=60.0
-)
-# Последняя строка вывода содержит PID запущенного процесса
-pid = int(proc.stdout.strip().splitlines()[-1])
-\end{minted}
-\end{mdframed}
-\end{listing}
 
 \subsection{Остановка процесса, проверка живости и пул SSH-соединений}
 
-Остановка реализует двухэтапный протокол: сначала отправляется \texttt{SIGTERM}, затем в течение 5~секунд (50 итераций \texttt{asyncio.sleep(0.1)}) проверяется живость процесса; при неуспехе~-- \texttt{SIGKILL}. Ожидание через \texttt{asyncio.sleep} не блокирует событийный цикл, позволяя серверу обрабатывать другие запросы. Проверка живости ветвится аналогично запуску: локально~-- \texttt{os.kill(pid, 0)} в \texttt{asyncio.to\_thread}, удалённо~-- \texttt{kill~-0~\{pid\}} через SSH. Реализация обоих методов приведена в листинге~\ref{lst:process-alive}.
+Остановка реализует двухэтапный протокол: сначала отправляется \texttt{SIGTERM}, затем в течение 5~секунд (50 итераций \texttt{asyncio.sleep(0.1)}) проверяется живость процесса; при неуспехе~-- \texttt{SIGKILL}. Ожидание через \texttt{asyncio.sleep} не блокирует событийный цикл, позволяя серверу обрабатывать другие запросы. Проверка живости ветвится аналогично запуску: локально~-- \texttt{os.kill(pid, 0)} в \texttt{asyncio.to\_thread}, удалённо~-- \texttt{kill~-0~\{pid\}} через SSH. Реализация обоих методов приведена в приложении А (листинг~\ref{lst:process-alive}).
 
-\begin{listing}[H]
-\caption{Методы проверки живости процесса}
-\label{lst:process-alive}
-\begin{mdframed}
-\begin{minted}{python}
-# Локальная проверка: системный вызов в пуле потоков
-async def _process_alive_local(self, pid: int) -> bool:
-    def check() -> bool:
-        try:
-            os.kill(pid, 0)   # сигнал 0: только проверка существования
-        except OSError:
-            return False      # процесс не найден или нет прав
-        return True
-
-    return await asyncio.to_thread(check)
-
-# Удалённая проверка: команда kill -0 через SSH
-async def _process_alive_remote(
-    self, hostname: str, username: str, password: str,
-    ssh_port: int, pid: int,
-) -> bool:
-    proc = await self._ssh.run_command(
-        hostname, username, password,
-        f"kill -0 {int(pid)} 2>/dev/null && echo OK || echo NO",
-        port=ssh_port, timeout=15.0,
-    )
-    return (proc.stdout or "").strip().endswith("OK")
-\end{minted}
-\end{mdframed}
-\end{listing}
 
 \texttt{SSHPool} хранит по одному постоянному соединению на хост, защищённому \texttt{asyncio.Lock} от гонок при переподключении. Перед каждым использованием соединение проверяется командой \texttt{true}; при неуспехе~-- пересоздаётся прозрачно для вызывающего кода. Передача артефактов реализована через \texttt{asyncssh.start\_sftp\_client} поверх существующего соединения, что исключает дополнительные SSH-сессии.
 
@@ -1495,49 +1374,8 @@ async def _process_alive_remote(
 
 Модуль реализует прозрачный обратный прокси: входящий запрос к заглушке перенаправляется к её Java-процессу, ответ возвращается клиенту без изменений. Прокси-роутер подключён к FastAPI последним~-- после всех API-маршрутов и маршрутов веб-интерфейса, что исключает конфликты при совпадении имён заглушек с системными эндпоинтами.
 
-Для каждой заглушки поддерживается отдельный постоянный \texttt{httpx.AsyncClient}\cite{httpx} с пулом соединений (до 1000~одновременных, до 200~keep-alive с TTL 60~с). Класс \texttt{ProxyClientRegistry} управляет их созданием и закрытием; создание защищено \texttt{asyncio.Lock} против гонки при конкурентных запросах к новой заглушке; параметр \texttt{follow\_redirects=False} гарантирует прозрачную передачу редиректов клиенту. Реализация приведена в листинге~\ref{lst:proxy-registry}.
+Для каждой заглушки поддерживается отдельный постоянный \texttt{httpx.AsyncClient}~\cite{httpx} с пулом соединений (до 1000~одновременных, до 200~keep-alive с TTL 60~с). Класс \texttt{ProxyClientRegistry} управляет их созданием и закрытием; создание защищено \texttt{asyncio.Lock} против гонки при конкурентных запросах к новой заглушке; параметр \texttt{follow\_redirects=False} гарантирует прозрачную передачу редиректов клиенту. Реализация приведена в приложении А (листинг~\ref{lst:proxy-registry}).
 
-\begin{listing}[H]
-\caption{Реестр HTTP-клиентов ProxyClientRegistry}
-% \captionof{listing}{Реестр HTTP-клиентов ProxyClientRegistry}
-\label{lst:proxy-registry}
-\begin{mdframed}
-\begin{minted}{python}
-class ProxyClientRegistry:
-    """Один httpx.AsyncClient на заглушку с пулом соединений."""
-    def __init__(self) -> None:
-        self._clients: dict[str, httpx.AsyncClient] = {}
-        self._lock = asyncio.Lock()
-    async def get_or_create(
-        self,
-        mock_name: str,
-        base_url: str,
-        timeout: float | httpx.Timeout,
-    ) -> httpx.AsyncClient:
-        async with self._lock:
-            existing = self._clients.get(mock_name)
-            if existing is not None:
-                return existing
-            limits = httpx.Limits(
-                max_connections=1000,
-                max_keepalive_connections=200,
-                keepalive_expiry=60.0)
-            t = timeout if isinstance(timeout, httpx.Timeout) else httpx.Timeout(timeout)
-            client = httpx.AsyncClient(
-                base_url=base_url.rstrip("/"),
-                timeout=t,
-                limits=limits,
-                follow_redirects=False)
-            self._clients[mock_name] = client
-            return client
-    async def remove(self, mock_name: str) -> None:
-        async with self._lock:
-            client = self._clients.pop(mock_name, None)
-        if client is not None:
-            await client.aclose()   # корректное закрытие всех соединений пула
-\end{minted}
-\end{mdframed}
-\end{listing}
 
 \subsection{Конвейер обслуживания запроса}
 
@@ -1547,39 +1385,10 @@ class ProxyClientRegistry:
 
 \subsection{Алгоритм Rate Limiting: Fixed Window Counter}
 
-Алгоритм реализован в классе \texttt{RateLimiter}: для каждой заглушки и каждого временного окна хранится счётчик по ключу \texttt{rate:\{filename\}:\{window\}}. Метка окна~-- целочисленное деление Unix-timestamp на размер окна. Проверка требует двух атомарных операций Redis: INCR и (только при создании нового счётчика) EXPIRE. Реализация приведена в листинге~\ref{lst:rate-limiter-impl}.
+Алгоритм реализован в классе \texttt{RateLimiter}: для каждой заглушки и каждого временного окна хранится счётчик по ключу \texttt{rate:\{filename\}:\{window\}}. Метка окна~-- целочисленное деление Unix-timestamp на размер окна. Проверка требует двух атомарных операций Redis: INCR и (только при создании нового счётчика) EXPIRE. Реализация приведена в приложении А (листинг~\ref{lst:rate-limiter-impl}).
 
-\begin{listing}[H]
-\caption{Реализация алгоритма Fixed Window Counter}
-\label{lst:rate-limiter-impl}
-\begin{mdframed}
-\begin{minted}{python}
-class RateLimiter:
-    """Ограничение частоты запросов на заглушку в фиксированных временных окнах."""
 
-    def __init__(self, redis: Redis) -> None:
-        self._redis = redis
-
-    async def check(self, filename: str, limit: int,
-                    window_size: int = 1) -> bool:
-        """Инкрементирует счётчик текущего окна.
-        Возвращает True, если запрос в пределах лимита."""
-        window = int(time.time()) // window_size
-        key    = f"rate:{filename}:{window}"
-
-        # Атомарный инкремент: Redis гарантирует неделимость операции
-        count = await self._redis.incr(key)
-
-        # TTL устанавливается только при создании нового счётчика (count == 1)
-        if count == 1:
-            await self._redis.expire(key, window_size * 2)
-
-        return count <= limit   # True -> разрешить, False -> HTTP 429
-\end{minted}
-\end{mdframed}
-\end{listing}
-
-Атомарность INCR\cite{redis-incr} гарантирует корректный подсчёт при конкурентных тысячах запросов без блокировок на стороне приложения. TTL равен удвоенному размеру окна и устанавливается только при первом запросе нового окна, что обеспечивает автоочистку устаревших ключей.
+Атомарность INCR~\cite{redis-incr} гарантирует корректный подсчёт при конкурентных тысячах запросов без блокировок на стороне приложения. TTL равен удвоенному размеру окна и устанавливается только при первом запросе нового окна, что обеспечивает автоочистку устаревших ключей.
 
 Алгоритм Fixed Window Counter допускает кратковременный всплеск до $2 \times limit$ на границе двух окон. Более точные альтернативы (Sliding Window Log, Sliding Window Counter) требуют хранения меток каждого запроса или двух счётчиков со взвешенным усреднением, что увеличивает нагрузку на Redis пропорционально трафику. В контексте нагрузочного тестирования задача Rate Limiter~-- защита заглушки от перегрузки, а не точное соблюдение квоты с субсекундной точностью; статистические показатели теста рассчитываются на интервалах в несколько секунд. Таким образом, Fixed Window Counter является оптимальным выбором по соотношению точности и операционной стоимости.
 
@@ -1608,7 +1417,7 @@ PATCH & \texttt{/api/v1/mocks/\{filename\}/config}     & Обновить пор
 
 \subsection{Технологический подход и структура шаблонов}
 
-Веб-интерфейс реализован по технологии Server-Side Rendering с применением шаблонизатора Jinja2\cite{jinja2}, встроенного в экосистему FastAPI. При каждом обращении к странице сервер формирует полный HTML-документ с актуальными данными из Redis и передаёт браузеру в готовом виде. Подход устраняет зависимость от внешних JavaScript-фреймворков и CDN-ресурсов и обеспечивает корректный рендер страницы даже при отключённом JavaScript. Динамическое обновление таблиц и журналов реализовано стандартным JavaScript без сторонних библиотек: страница периодически опрашивает REST API и точечно обновляет DOM. Весь клиентский код сосредоточен в одном файле \texttt{web/static/js/app.js}, стили~-- в \texttt{web/static/css/style.css}; оба обслуживаются FastAPI через \texttt{StaticFiles}.
+Веб-интерфейс реализован по технологии Server-Side Rendering с применением шаблонизатора Jinja2~\cite{jinja2}, встроенного в экосистему FastAPI. При каждом обращении к странице сервер формирует полный HTML-документ с актуальными данными из Redis и передаёт браузеру в готовом виде. Подход устраняет зависимость от внешних JavaScript-фреймворков и CDN-ресурсов и обеспечивает корректный рендер страницы даже при отключённом JavaScript. Динамическое обновление таблиц и журналов реализовано стандартным JavaScript без сторонних библиотек: страница периодически опрашивает REST API и точечно обновляет DOM. Весь клиентский код сосредоточен в одном файле \texttt{web/static/js/app.js}, стили~-- в \texttt{web/static/css/style.css}; оба обслуживаются FastAPI через \texttt{StaticFiles}.
 
 Все страницы наследуют базовый шаблон \texttt{base.html}: повторяющаяся разметка (боковая панель, заголовочная полоса, подключение стилей и сценариев) определяется единожды; дочерние шаблоны переопределяют только блоки переменного содержания через \texttt{\{\%~extends~\%\}} / \texttt{\{\%~block~\%\}}. Состав шаблонного пакета приведён в таблице~\ref{tab:templates-impl}.
 
@@ -1626,29 +1435,8 @@ PATCH & \texttt{/api/v1/mocks/\{filename\}/config}     & Обновить пор
 \texttt{logs.html}      & \texttt{GET /logs}     & Блок вывода журналов Java-процессов \\ \hline
 \end{xltabular}
 
-Маршруты веб-интерфейса обслуживаются FastAPI-роутером \texttt{web.routes}, подключённым первым~-- до API-маршрутов и прокси-роутера. Каждый маршрут выполняет минимальную выборку данных из Redis через конвейер команд (\texttt{transaction=False}): команды HGETALL для всех заглушек отправляются одним пакетом и считываются единственным вызовом \texttt{pipe.execute()}, что исключает пропорциональный рост числа сетевых обращений. Реализация маршрута Dashboard приведена в листинге~\ref{lst:dashboard-route}.
+Маршруты веб-интерфейса обслуживаются FastAPI-роутером \texttt{web.routes}, подключённым первым~-- до API-маршрутов и прокси-роутера. Каждый маршрут выполняет минимальную выборку данных из Redis через конвейер команд (\texttt{transaction=False}): команды HGETALL для всех заглушек отправляются одним пакетом и считываются единственным вызовом \texttt{pipe.execute()}, что исключает пропорциональный рост числа сетевых обращений. Реализация маршрута Dashboard приведена в приложении А (листинг~\ref{lst:dashboard-route}).
 
-\begin{listing}[H]
-\caption{Маршрут Dashboard: конвейерная выборка заглушек из Redis}
-\label{lst:dashboard-route}
-\begin{mdframed}
-\begin{minted}{python}
-@router.get("/", include_in_schema=False)
-async def dashboard_page(request: Request, redis: RedisClientDep, ...):
-    names = sorted(await redis.smembers("mocks:registry"))
-    if names:
-        # Pipeline: одна сетевая транзакция вместо N отдельных HGETALL
-        async with redis.pipeline(transaction=False) as pipe:
-            for name in names:
-                pipe.hgetall(f"mocks:{name}")
-            rows = await pipe.execute()
-    return templates.TemplateResponse(request=request, name="dashboard.html",
-        context={"mocks": mocks, "mocks_total": len(mocks),
-                 "mocks_running": running, "redis_connected": ...,
-                 "active_page": "dashboard"})
-\end{minted}
-\end{mdframed}
-\end{listing}
 
 \subsection{Базовый шаблон: навигация и индикатор Redis}
 
@@ -1660,14 +1448,8 @@ async def dashboard_page(request: Request, redis: RedisClientDep, ...):
 
 Верхняя часть Dashboard содержит четыре сводные карточки: всего заглушек, запущено (\texttt{RUNNING}), аварийных (\texttt{ERROR}), хостов доступно~-- для оценки состояния инфраструктуры без анализа таблицы. Таблица заглушек включает шесть столбцов: имя файла (JetBrains Mono), целевой хост, цветной статусный бейдж, TCP-порт, тумблер Rate Limiter и кнопки управления. Бейджи реализованы через CSS-классы \texttt{badge--running}, \texttt{badge--error}, \texttt{badge--registered}, \texttt{badge--stopped}: цвет однозначно кодирует состояние без чтения текста. Кнопки «Старт» и «Стоп» взаимоисключающи~-- шаблон отображает одну из них по текущему статусу.
 
-Тумблер Rate Limiter реализован как \texttt{<input~type="checkbox">} со специализированной CSS-разметкой \texttt{.toggle}; изменение состояния немедленно отправляет PATCH-запрос к \texttt{/api/v1/mocks/\{filename\}/rate-limit} без перезагрузки страницы. Таблица обновляется каждые 5~секунд через \texttt{setInterval} (интервал задаётся атрибутом \texttt{data-poll-interval-ms="5000"}): параллельные запросы к \texttt{/api/v1/mocks} и \texttt{/api/v1/hosts} выполняются через \texttt{Promise.all}, полученные данные точечно обновляют DOM без полного перестроения таблицы. Реализованная главная панель представлена на рисунке~\ref{fig:impl-dashboard}.
+Тумблер Rate Limiter реализован как \texttt{<input~type="checkbox">} со специализированной CSS-разметкой \texttt{.toggle}; изменение состояния немедленно отправляет PATCH-запрос к \texttt{/api/v1/mocks/\{filename\}/rate-limit} без перезагрузки страницы. Таблица обновляется каждые 5~секунд через \texttt{setInterval} (интервал задаётся атрибутом \texttt{data-poll-interval-ms="5000"}): параллельные запросы к \texttt{/api/v1/mocks} и \texttt{/api/v1/hosts} выполняются через \texttt{Promise.all}, полученные данные точечно обновляют DOM без полного перестроения таблицы. Реализованная главная панель представлена в приложении В (рисунок~\ref{fig:impl-dashboard}).
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/impl-dashboard.png}
-\caption{Реализованная главная панель управления}
-\label{fig:impl-dashboard}
-\end{figure}
 
 \subsection{Диалоговое окно регистрации заглушки}
 
@@ -1688,14 +1470,8 @@ async def dashboard_page(request: Request, redis: RedisClientDep, ...):
 \texttt{auto\_start} & Флажок                 & Запустить заглушку немедленно после регистрации \\ \hline
 \end{xltabular}
 
-Форма отправляется как \texttt{multipart/form-data} на \texttt{POST /api/v1/mocks}. Сервер отвечает кодом 202~(Accepted): SFTP-передача файла выполняется в фоне через \texttt{BackgroundTasks} FastAPI, что исключает зависание браузера при передаче крупных артефактов. После ответа 202 клиентский код закрывает диалог и через 1~секунду инициирует принудительное обновление таблицы. Область перетаскивания реализована на стандартных событиях \texttt{dragover}/\texttt{dragleave}/\texttt{drop}: при наведении рамка подсвечивается акцентным цветом, при сбросе отображается имя файла. Реализованное диалоговое окно представлено на рисунке~\ref{fig:impl-register-modal}.
+Форма отправляется как \texttt{multipart/form-data} на \texttt{POST /api/v1/mocks}. Сервер отвечает кодом 202~(Accepted): SFTP-передача файла выполняется в фоне через \texttt{BackgroundTasks} FastAPI, что исключает зависание браузера при передаче крупных артефактов. После ответа 202 клиентский код закрывает диалог и через 1~секунду инициирует принудительное обновление таблицы. Область перетаскивания реализована на стандартных событиях \texttt{dragover}/\texttt{dragleave}/\texttt{drop}: при наведении рамка подсвечивается акцентным цветом, при сбросе отображается имя файла. Реализованное диалоговое окно представлено в приложении В (рисунок~\ref{fig:impl-register-modal}).
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/impl-register-modal.png}
-\caption{Реализованное диалоговое окно регистрации заглушки}
-\label{fig:impl-register-modal}
-\end{figure}
 
 \subsection{Страница настроек: хосты и учётные записи}
 
@@ -1703,34 +1479,15 @@ async def dashboard_page(request: Request, redis: RedisClientDep, ...):
 
 \textbf{Вкладка «Хосты»} отображает таблицу целевых серверов: имя хоста, порт SSH, рабочую директорию, статус SSH-соединения (\texttt{AVAILABLE}/\texttt{UNAVAILABLE}/\texttt{UNKNOWN}), дату последней проверки и описание. Все параметры хоста хранятся в атрибутах \texttt{data-*} строки таблицы: при открытии формы редактирования клиентский код считывает их и заполняет поля без дополнительного запроса к API.
 
-\textbf{Вкладка «Учётные записи»} отображает список учётных записей Linux. Пароли скрыты строкой \texttt{••••••••} (\texttt{aria-hidden="true"} для программ экранного доступа)~-- это предотвращает случайную утечку при демонстрации системы. Пароль шифруется на сервере алгоритмом AES-128 (Fernet) перед записью в Redis. Реализованные страницы настроек представлены на рисунках~\ref{fig:impl-settings-hosts} и~\ref{fig:impl-settings-accounts}.
+\textbf{Вкладка «Учётные записи»} отображает список учётных записей Linux. Пароли скрыты строкой \texttt{••••••••} (\texttt{aria-hidden="true"} для программ экранного доступа)~-- это предотвращает случайную утечку при демонстрации системы. Пароль шифруется на сервере алгоритмом AES-128 (Fernet) перед записью в Redis. Реализованные страницы настроек представлены в приложении В (рисунки~\ref{fig:impl-settings-hosts} и~\ref{fig:impl-settings-accounts}).
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/impl-settings-hosts.png}
-\caption{Реализованная страница настроек, вкладка «Хосты»}
-\label{fig:impl-settings-hosts}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/impl-settings-accounts.png}
-\caption{Реализованная страница настроек, вкладка «Учётные записи»}
-\label{fig:impl-settings-accounts}
-\end{figure}
 
 \subsection{Страница журналов процессов}
 
 Страница предназначена для просмотра stdout/stderr Java-процессов в режиме, близком к реальному времени. Выбор заглушки~-- через раскрывающийся список; при смене выбора клиент последовательно запрашивает \texttt{GET /api/v1/mocks/\{filename\}} (текущие PID и порт) и \texttt{GET /api/v1/logs/\{filename\}} (строки журнала). Строка состояния над блоком вывода отображает имя файла, PID и порт процесса.
 
-Блок вывода (\texttt{.terminal}) реализован как \texttt{<div>} с тёмным фоном \texttt{\#0D0D0D} и шрифтом JetBrains Mono. Функция \texttt{formatLogLine} выделяет временну́ю метку регулярным выражением (ISO~8601 или в квадратных скобках) и окрашивает её в \texttt{\#64748B}; строки с \texttt{WARN} получают жёлтый фон и класс \texttt{terminal\_\_line--warn}, с \texttt{ERROR}~-- красный фон и класс \texttt{terminal\_\_line--error}. Автообновление реализовано через \texttt{setInterval} с интервалом 2~секунды, управляемым флажком «Авто». Кнопка «Очистить» вызывает \texttt{DELETE /api/v1/logs/\{filename\}}, что сбрасывает буфер в Redis-ключе \texttt{logs:\{filename\}}. Реализованная страница представлена на рисунке~\ref{fig:impl-logs}.
+Блок вывода (\texttt{.terminal}) реализован как \texttt{<div>} с тёмным фоном \texttt{\#0D0D0D} и шрифтом JetBrains Mono. Функция \texttt{formatLogLine} выделяет временну́ю метку регулярным выражением (ISO~8601 или в квадратных скобках) и окрашивает её в \texttt{\#64748B}; строки с \texttt{WARN} получают жёлтый фон и класс \texttt{terminal\_\_line--warn}, с \texttt{ERROR}~-- красный фон и класс \texttt{terminal\_\_line--error}. Автообновление реализовано через \texttt{setInterval} с интервалом 2~секунды, управляемым флажком «Авто». Кнопка «Очистить» вызывает \texttt{DELETE /api/v1/logs/\{filename\}}, что сбрасывает буфер в Redis-ключе \texttt{logs:\{filename\}}. Реализованная страница представлена в приложении В (рисунок~\ref{fig:impl-logs}).
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/impl-logs.png}
-\caption{Реализованная страница просмотра журналов процессов}
-\label{fig:impl-logs}
-\end{figure}
 
 \subsection{Делегирование событий, взаимодействие с API и система стилей}
 
@@ -1765,7 +1522,7 @@ async def dashboard_page(request: Request, redis: RedisClientDep, ...):
 
 \subsection{Общая схема и состав метрик}
 
-Механизм мониторинга построен по pull-модели Prometheus\cite{prometheus-docs}: внешняя система периодически опрашивает эндпоинт \texttt{GET /metrics}, а управляющее приложение возвращает актуальный снимок показателей в формате Prometheus exposition format\cite{prometheus-exposition}. Метрические данные хранятся в Redis и обновляются в процессе обслуживания каждого проксированного запроса: функция \texttt{collect\_metrics} при обращении к \texttt{/metrics} не вычисляет значения, а лишь считывает уже агрегированные данные за одну пакетную операцию.
+Механизм мониторинга построен по pull-модели Prometheus~\cite{prometheus-docs}: внешняя система периодически опрашивает эндпоинт \texttt{GET /metrics}, а управляющее приложение возвращает актуальный снимок показателей в формате Prometheus exposition format~\cite{prometheus-exposition}. Метрические данные хранятся в Redis и обновляются в процессе обслуживания каждого проксированного запроса: функция \texttt{collect\_metrics} при обращении к \texttt{/metrics} не вычисляет значения, а лишь считывает уже агрегированные данные за одну пакетную операцию.
 
 Реализация разделена на две части: функция накопления \texttt{record\_proxy\_observation}, вызываемая в конце каждого проксированного запроса, и функция экспорта \texttt{collect\_metrics}, вызываемая по каждому запросу к \texttt{/metrics}. Система экспортирует двенадцать метрических серий двух типов по спецификации Prometheus: счётчики (counter, монотонно возрастают) и измерители (gauge, текущее мгновенное значение). Полный состав метрик приведён в таблице~\ref{tab:metrics-list}.
 
@@ -1797,64 +1554,11 @@ async def dashboard_page(request: Request, redis: RedisClientDep, ...):
 
 По завершении каждого запроса функция \texttt{record\_proxy\_observation} обновляет показатели Redis через единственный конвейер (\texttt{transaction=False}): для каждого этапа выполняются HINCRBYFLOAT (сумма задержек), HINCRBY (счётчик наблюдений) и HSET (последнее значение)~-- как для ключа конкретной заглушки, так и для агрегирующего ключа \texttt{\_\_all\_\_}. Параметр \texttt{transaction=False} использован намеренно: частичная видимость промежуточных значений допустима, поскольку Prometheus считывает метрики с интервалом в десятки секунд.
 
-Функция \texttt{collect\_metrics} собирает все данные за два конвейерных прохода. В первом запрашиваются реестры \texttt{mocks:registry} и \texttt{hosts:registry}; во втором~-- единым пакетом: HGETALL каждой заглушки, HGET статуса каждого хоста и семь метрических ключей на заглушку плюс пять агрегирующих ключей \texttt{\_\_all\_\_}. Число сетевых транзакций фиксировано: два round-trip вне зависимости от числа заглушек. Реализация приведена в листинге~\ref{lst:collect-metrics}.
+Функция \texttt{collect\_metrics} собирает все данные за два конвейерных прохода. В первом запрашиваются реестры \texttt{mocks:registry} и \texttt{hosts:registry}; во втором~-- единым пакетом: HGETALL каждой заглушки, HGET статуса каждого хоста и семь метрических ключей на заглушку плюс пять агрегирующих ключей \texttt{\_\_all\_\_}. Число сетевых транзакций фиксировано: два round-trip вне зависимости от числа заглушек. Реализация приведена в приложении А (листинг~\ref{lst:collect-metrics}).
 
-\begin{listing}[H]
-\caption{Двухпроходная конвейерная сборка метрик из Redis}
-\label{lst:collect-metrics}
-\begin{mdframed}
-\begin{minted}{python}
-async def collect_metrics(redis: Redis) -> str:
-    # Проход 1: реестры
-    pipe = redis.pipeline(transaction=False)
-    pipe.smembers("mocks:registry")
-    pipe.smembers("hosts:registry")
-    reg_results = await pipe.execute()
-    mock_files = sorted(reg_results[0] or [])
-    host_names = sorted(reg_results[1] or [])
 
-    # Проход 2: данные заглушек, хостов и все метрические ключи
-    pipe2 = redis.pipeline(transaction=False)
-    for filename in mock_files:
-        pipe2.hgetall(f"mocks:{filename}")          # статус заглушки
-    for hostname in host_names:
-        pipe2.hget(f"hosts:{hostname}", "status")   # статус хоста
-    for filename in mock_files:
-        pipe2.get(f"metrics:proxy_total:{filename}")
-        pipe2.get(f"metrics:rejected_total:{filename}")
-        pipe2.hgetall(f"metrics:proxy_stage_sum_ms:{filename}")
-        pipe2.hgetall(f"metrics:proxy_stage_count:{filename}")
-        pipe2.hgetall(f"metrics:proxy_stage_last_ms:{filename}")
-        pipe2.hgetall(f"metrics:proxy_outcome_total:{filename}")
-        pipe2.hgetall(f"metrics:proxy_upstream_status_total:{filename}")
-    # Агрегаты __all__
-    pipe2.hgetall("metrics:proxy_stage_sum_ms:__all__")
-    pipe2.hgetall("metrics:proxy_stage_count:__all__")
-    pipe2.hgetall("metrics:proxy_stage_last_ms:__all__")
-    pipe2.hgetall("metrics:proxy_outcome_total:__all__")
-    pipe2.hgetall("metrics:proxy_upstream_status_total:__all__")
-    batch = await pipe2.execute()
-    # ... формирование строк текстового ответа ...
-\end{minted}
-\end{mdframed}
-\end{listing}
+После получения пакета функция разбирает результаты по позиционному индексу: первые \texttt{n\_m} элементов~-- Hash-записи заглушек, следующие \texttt{n\_h}~-- статусы хостов, оставшиеся~-- метрические ключи в порядке добавления в конвейер. Ответ формируется по спецификации Prometheus exposition format 0.0.4~\cite{prometheus-exposition} (\texttt{text/plain; version=0.0.4; charset=utf-8}): каждая серия открывается строками \texttt{\# HELP} и \texttt{\# TYPE}, после чего следуют строки значений. Значения меток экранируются функцией \texttt{\_escape\_label\_value} (обратный слеш, перевод строки, двойные кавычки), что обеспечивает корректный разбор при наличии специальных символов в именах файлов заглушек. Фрагмент ответа приведён в приложении А (листинг~\ref{lst:metrics-output}).
 
-После получения пакета функция разбирает результаты по позиционному индексу: первые \texttt{n\_m} элементов~-- Hash-записи заглушек, следующие \texttt{n\_h}~-- статусы хостов, оставшиеся~-- метрические ключи в порядке добавления в конвейер. Ответ формируется по спецификации Prometheus exposition format 0.0.4\cite{prometheus-exposition} (\texttt{text/plain; version=0.0.4; charset=utf-8}): каждая серия открывается строками \texttt{\# HELP} и \texttt{\# TYPE}, после чего следуют строки значений. Значения меток экранируются функцией \texttt{\_escape\_label\_value} (обратный слеш, перевод строки, двойные кавычки), что обеспечивает корректный разбор при наличии специальных символов в именах файлов заглушек. Фрагмент ответа приведён в листинге~\ref{lst:metrics-output}.
-
-\begin{listing}[H]
-\caption{Фрагмент ответа эндпоинта \texttt{/metrics}}
-\label{lst:metrics-output}
-\begin{mdframed}
-\begin{minted}{text}
-mockcontrol_proxy_stage_latency_ms_count{mock="__all__",stage="response_build_ms"} 158287
-mockcontrol_proxy_stage_latency_ms_avg{mock="__all__",stage="response_build_ms"} 0.008
-mockcontrol_proxy_stage_latency_ms_last{mock="__all__",stage="response_build_ms"} 0.008
-mockcontrol_proxy_outcome_total{mock="uuid-stub-jdk8-2.1.war",outcome="ok"} 1
-mockcontrol_proxy_outcome_total{mock="uuid-stub-jdk8-fixed-local.war",outcome="ok"} 158270
-mockcontrol_proxy_outcome_total{mock="__all__",outcome="not_found"} 3
-\end{minted}
-\end{mdframed}
-\end{listing}
 
 
 \section{Выводы по второй главе}
