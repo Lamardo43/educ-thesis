@@ -922,7 +922,7 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 
 \subsection{Структура навигации и макеты экранных форм}
 
-Все экранные формы разделяют единый шаблон-«обёртку»: постоянная боковая панель с тремя разделами (\textbf{Dashboard}, \textbf{Настройки}, \textbf{Журналы}) и верхняя строка с заголовком текущего раздела и индикатором подключения к Redis. Макет общего хрома приложения представлен в приложении Б (рисунок~\ref{fig:mockup-shell}).
+Все экранные формы разделяют единый шаблон-«обёртку»: постоянная боковая панель с тремя разделами (\textbf{Dashboard}, \textbf{Настройки}, \textbf{Журналы}) и верхняя строка с заголовком текущего раздела и индикатором подключения к Redis. Макет общего каркаса приложения представлен в приложении Б (рисунок~\ref{fig:mockup-shell}).
 
 
 %% ============================================================
@@ -1379,18 +1379,30 @@ Metrics Exporter  & SMEMBERS, HGETALL (Pipeline)          & Сбор метри�
 
 \subsection{Конвейер обслуживания запроса}
 
-Прокси-роутер регистрирует два catch-all маршрута: \texttt{/\{mock\_name\}} и \texttt{/\{mock\_name\}/\{path:path\}}~-- оба делегируются единой функции \texttt{\_handle\_proxy}. Конвейер обслуживания: (1)~HMGET пяти полей заглушки из Redis; (2)~проверка статуса (\texttt{RUNNING}, иначе HTTP~503); (3)~чтение глобальных параметров (\texttt{settings:global}); (4)~проверка Rate Limiter (при превышении~-- HTTP~429); (5)~инкремент счётчика успешных запросов; (6)~получение клиента из \texttt{ProxyClientRegistry}; (7)~чтение тела (кроме GET/HEAD/OPTIONS); (8)~вызов \texttt{proxy\_request} и возврат ответа; (9)~сохранение метрик задержки в Redis.
+Прокси-роутер регистрирует два catch-all маршрута: \texttt{/\{mock\_name\}} и \texttt{/\{mock\_name\}/\{path:path\}}~-- оба делегируются единой функции \texttt{\_handle\_proxy}. Конвейер обслуживания включает следующие этапы:
+
+\begin{enumerate}
+\item выполнение \texttt{HMGET} пяти полей заглушки из Redis;
+\item проверка статуса (\texttt{RUNNING}, иначе HTTP~503);
+\item чтение глобальных параметров (\texttt{settings:global});
+\item проверка Rate Limiter (при превышении~-- HTTP~429);
+\item инкремент счётчика успешных запросов;
+\item получение клиента из \texttt{ProxyClientRegistry};
+\item чтение тела запроса (кроме GET/HEAD/OPTIONS);
+\item вызов \texttt{proxy\_request} и возврат ответа;
+\item сохранение метрик задержки в Redis.
+\end{enumerate}
 
 Прозрачность достигается следующим образом: метод, тело и query string передаются upstream без изменений; заголовки пересылаются полностью за исключением \texttt{Host} и \texttt{Content-Length}, которые формируются заново для нового соединения. Ошибки транспортного уровня унифицированы: \texttt{httpx.TimeoutException}~-- HTTP~504, любой \texttt{httpx.RequestError}~-- HTTP~502. Все промежуточные этапы фиксируются в словаре \texttt{timeline} с точностью 0.001~мс, что позволяет на уровне Prometheus-метрик разделить задержку Redis, Rate Limiter и upstream.
 
-\subsection{Алгоритм Rate Limiting: Fixed Window Counter}
+% \subsection{Алгоритм Rate Limiting: Fixed Window Counter}
 
-Алгоритм реализован в классе \texttt{RateLimiter}: для каждой заглушки и каждого временного окна хранится счётчик по ключу \texttt{rate:\{filename\}:\{window\}}. Метка окна~-- целочисленное деление Unix-timestamp на размер окна. Проверка требует двух атомарных операций Redis: INCR и (только при создании нового счётчика) EXPIRE. Реализация приведена в приложении А (листинг~\ref{lst:rate-limiter-impl}).
+% Алгоритм реализован в классе \texttt{RateLimiter}: для каждой заглушки и каждого временного окна хранится счётчик по ключу \texttt{rate:\{filename\}:\{window\}}. Метка окна~-- целочисленное деление Unix-timestamp на размер окна. Проверка требует двух атомарных операций Redis: INCR и (только при создании нового счётчика) EXPIRE. Реализация приведена в приложении А (листинг~\ref{lst:rate-limiter-impl}).
 
 
-Атомарность INCR~\cite{redis-incr} гарантирует корректный подсчёт при конкурентных тысячах запросов без блокировок на стороне приложения. TTL равен удвоенному размеру окна и устанавливается только при первом запросе нового окна, что обеспечивает автоочистку устаревших ключей.
+% Атомарность INCR~\cite{redis-incr} гарантирует корректный подсчёт при конкурентных тысячах запросов без блокировок на стороне приложения. TTL равен удвоенному размеру окна и устанавливается только при первом запросе нового окна, что обеспечивает автоочистку устаревших ключей.
 
-Алгоритм Fixed Window Counter допускает кратковременный всплеск до $2 \times limit$ на границе двух окон. Более точные альтернативы (Sliding Window Log, Sliding Window Counter) требуют хранения меток каждого запроса или двух счётчиков со взвешенным усреднением, что увеличивает нагрузку на Redis пропорционально трафику. В контексте нагрузочного тестирования задача Rate Limiter~-- защита заглушки от перегрузки, а не точное соблюдение квоты с субсекундной точностью; статистические показатели теста рассчитываются на интервалах в несколько секунд. Таким образом, Fixed Window Counter является оптимальным выбором по соотношению точности и операционной стоимости.
+% Алгоритм Fixed Window Counter допускает кратковременный всплеск до $2 \times limit$ на границе двух окон. Более точные альтернативы (Sliding Window Log, Sliding Window Counter) требуют хранения меток каждого запроса или двух счётчиков со взвешенным усреднением, что увеличивает нагрузку на Redis пропорционально трафику. В контексте нагрузочного тестирования задача Rate Limiter~-- защита заглушки от перегрузки, а не точное соблюдение квоты с субсекундной точностью; статистические показатели теста рассчитываются на интервалах в несколько секунд. Таким образом, Fixed Window Counter является оптимальным выбором по соотношению точности и операционной стоимости.
 
 \subsection{Управление Rate Limiter через API}
 
@@ -1526,7 +1538,7 @@ PATCH & \texttt{/api/v1/mocks/\{filename\}/config}     & Обновить пор
 
 Реализация разделена на две части: функция накопления \texttt{record\_proxy\_observation}, вызываемая в конце каждого проксированного запроса, и функция экспорта \texttt{collect\_metrics}, вызываемая по каждому запросу к \texttt{/metrics}. Система экспортирует двенадцать метрических серий двух типов по спецификации Prometheus: счётчики (counter, монотонно возрастают) и измерители (gauge, текущее мгновенное значение). Полный состав метрик приведён в таблице~\ref{tab:metrics-list}.
 
-\begin{xltabular}{\textwidth}{|l|l|X|}
+\begin{xltabular}{\textwidth}{|X|l|X|}
 \caption{Экспортируемые метрики системы} \label{tab:metrics-list} \\
 \hline
 \textbf{Имя метрики} & \textbf{Тип} & \textbf{Описание} \\ \hline
@@ -1534,18 +1546,18 @@ PATCH & \texttt{/api/v1/mocks/\{filename\}/config}     & Обновить пор
 \hline
 \textbf{Имя метрики} & \textbf{Тип} & \textbf{Описание} \\ \hline
 \endhead
-\texttt{mockcontrol\_mocks\_total}                     & gauge   & Число зарегистрированных заглушек \\ \hline
-\texttt{mockcontrol\_mocks\_running}                   & gauge   & Число заглушек в состоянии RUNNING \\ \hline
-\texttt{mockcontrol\_mocks\_errors}                    & gauge   & Число заглушек в состоянии ERROR \\ \hline
-\texttt{mockcontrol\_hosts\_available}                 & gauge   & Число хостов в состоянии AVAILABLE \\ \hline
-\texttt{mockcontrol\_proxy\_requests\_total}           & counter & Успешно проксированных запросов (метка \texttt{mock}) \\ \hline
-\texttt{mockcontrol\_rate\_limit\_rejected\_total}     & counter & Отклонённых запросов по Rate Limiter (метка \texttt{mock}) \\ \hline
-\texttt{mockcontrol\_proxy\_stage\_latency\_ms\_sum}   & counter & Накопленная сумма задержек по этапам, мс (метки \texttt{mock}, \texttt{stage}) \\ \hline
-\texttt{mockcontrol\_proxy\_stage\_latency\_ms\_count} & counter & Число наблюдений задержки по этапам (метки \texttt{mock}, \texttt{stage}) \\ \hline
-\texttt{mockcontrol\_proxy\_stage\_latency\_ms\_avg}   & gauge   & Среднее время этапа, мс (метки \texttt{mock}, \texttt{stage}) \\ \hline
-\texttt{mockcontrol\_proxy\_stage\_latency\_ms\_last}  & gauge   & Последнее измеренное время этапа, мс (метки \texttt{mock}, \texttt{stage}) \\ \hline
-\texttt{mockcontrol\_proxy\_outcome\_total}            & counter & Исходы проксирования по типу (метки \texttt{mock}, \texttt{outcome}) \\ \hline
-\texttt{mockcontrol\_proxy\_upstream\_status\_total}   & counter & Ответы заглушки по HTTP-коду (метки \texttt{mock}, \texttt{status}) \\ \hline
+\texttt{mockcontrol\_\-mocks\_\-total}                                 & gauge   & Число зарегистрированных заглушек \\ \hline
+\texttt{mockcontrol\_\-mocks\_\-running}                               & gauge   & Число заглушек в состоянии RUNNING \\ \hline
+\texttt{mockcontrol\_\-mocks\_\-errors}                                & gauge   & Число заглушек в состоянии ERROR \\ \hline
+\texttt{mockcontrol\_\-hosts\_\-available}                             & gauge   & Число хостов в состоянии AVAILABLE \\ \hline
+\texttt{mockcontrol\_\-proxy\_\-requests\_\-total}           & counter & Успешно проксированных запросов (метка \texttt{mock}) \\ \hline
+\texttt{mockcontrol\_\-rate\_\-limit\_\-rejected\_\-total} & counter & Отклонённых запросов по Rate Limiter (метка \texttt{mock}) \\ \hline
+\texttt{mockcontrol\_\-proxy\_\-stage\_\-latency\_\-ms\_\-sum}   & counter & Накопленная сумма задержек по этапам, мс (метки \texttt{mock}, \texttt{stage}) \\ \hline
+\texttt{mockcontrol\_\-proxy\_\-stage\_\-latency\_\-ms\_\-count} & counter & Число наблюдений задержки по этапам (метки \texttt{mock}, \texttt{stage}) \\ \hline
+\texttt{mockcontrol\_\-proxy\_\-stage\_\-latency\_\-ms\_\-avg}   & gauge   & Среднее время этапа, мс (метки \texttt{mock}, \texttt{stage}) \\ \hline
+\texttt{mockcontrol\_\-proxy\_\-stage\_\-latency\_\-ms\_\-last}  & gauge   & Последнее измеренное время этапа, мс (метки \texttt{mock}, \texttt{stage}) \\ \hline
+\texttt{mockcontrol\_\-proxy\_\-outcome\_\-total}            & counter & Исходы проксирования по типу (метки \texttt{mock}, \texttt{outcome}) \\ \hline
+\texttt{mockcontrol\_\-proxy\_\-upstream\_\-status\_\-total}   & counter & Ответы заглушки по HTTP-коду (метки \texttt{mock}, \texttt{status}) \\ \hline
 \end{xltabular}
 
 Все метрики с меткой \texttt{mock} дополнительно агрегируются по значению \texttt{mock="\_\_all\_\_"}, что позволяет получать суммарные показатели по всем заглушкам единым Prometheus-запросом. Метка \texttt{stage} принимает значения этапов функции \texttt{\_handle\_proxy}: \texttt{redis\_mock\_hmget\_ms}, \texttt{rate\_limiter\_check\_ms}, \texttt{httpx\_proxy\_request\_ms}, \texttt{proxy\_total\_ms} и др. Метка \texttt{outcome} принимает семь значений: \texttt{ok}, \texttt{timeout}, \texttt{request\_error}, \texttt{not\_found}, \texttt{not\_running}, \texttt{invalid\_target}, \texttt{rate\_limited}.
