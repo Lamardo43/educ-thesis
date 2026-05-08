@@ -127,11 +127,12 @@ rightmargin=0pt % Reduces right outer margin
 \restylefloat{listing}
 
 \setminted{
-    encoding=utf8,          % кодировка исходников для pygments/minted
     linenos=true,           % включить номера строк
     numberblanklines=false, % не нумеровать пустые строки
     numbersep=5pt,          % расстояние между номерами строк и кодом
     xleftmargin=1em,        % отступ слева, чтобы номера не вылезали за границы
+    encoding=utf8,          % явно фиксируем UTF-8 для pygments/minted на Windows
+    fontfamily=tt,          % использовать моноширинное семейство
     fontsize=\small,
     breakanywhere=true,
     breakautoindent=true,

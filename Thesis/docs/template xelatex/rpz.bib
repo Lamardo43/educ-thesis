@@ -1,181 +1,428 @@
-@online{wiremock,
+% ─────────────────────────────────────────────
+%  Книги и монографии
+% ─────────────────────────────────────────────
+
+@phdthesis{fielding-dissertation,
+  author  = {Fielding, Roy Thomas},
+  title   = {Architectural Styles and the Design of Network-based Software Architectures},
+  school  = {University of California, Irvine},
+  year    = {2000},
+  pages   = {162}
+}
+
+@misc{beazley-gil,
+  author       = {Beazley, David},
+  title        = {Understanding the {Python} {GIL}},
+  howpublished = {PyCon 2010, Atlanta, Georgia. \url{http://www.dabeaz.com/python/GIL.pdf}},
+  year         = {2010},
+  note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
+}
+
+@book{beazley-python-cookbook,
+  author    = {Beazley, David and Jones, Brian K.},
+  title     = {Python Cookbook},
+  edition   = {3rd ed.},
+  publisher = {O'Reilly Media},
+  address   = {Sebastopol},
+  year      = {2013},
+  pages     = {706}
+}
+
+@book{greenberg-flask,
+  author    = {Гринберг, Мигель},
+  title     = {Разработка веб-приложений с использованием Flask на языке Python},
+  publisher = {ДМК Пресс},
+  address   = {М.},
+  year      = {2014},
+  pages     = {272},
+  language  = {russian}
+}
+
+@book{kerrisk-linux,
+  author    = {Kerrisk, Michael},
+  title     = {The Linux Programming Interface: A Linux and UNIX System Programming Handbook},
+  publisher = {No Starch Press},
+  address   = {San Francisco},
+  year      = {2010},
+  pages     = {1552}
+}
+
+@book{morgunov-postgresql,
+  author    = {Моргунов, Евгений Павлович},
+  title     = {PostgreSQL. Основы языка SQL},
+  publisher = {БХВ-Петербург},
+  address   = {СПб.},
+  year      = {2018},
+  pages     = {336},
+  language  = {russian}
+}
+
+@book{brown-c4,
+  author    = {Brown, Simon},
+  title     = {Software Architecture for Developers. Vol.~2: Visualise, document and explore your software architecture},
+  publisher = {Leanpub},
+  year      = {2019},
+  pages     = {193}
+}
+
+@book{tanenbaum-networks,
+  author    = {Таненбаум, Эндрю and Уэзеролл, Дэвид},
+  title     = {Компьютерные сети},
+  edition   = {5-е изд.},
+  publisher = {Питер},
+  address   = {СПб.},
+  year      = {2012},
+  pages     = {960},
+  language  = {russian}
+}
+
+@techreport{gost-25010-2015,
+  title       = {ГОСТ Р ИСО/МЭК 25010--2015. Информационные технологии. Системная и программная инженерия. Требования и оценка качества систем и программного обеспечения (SQuaRE). Модели качества систем и программных продуктов},
+  number      = {ГОСТ Р ИСО/МЭК 25010-2015},
+  institution = {Стандартинформ},
+  address     = {М.},
+  year        = {2015},
+  pages       = {36},
+  language    = {russian}
+}
+
+@book{kulikov-testing,
+  author    = {Куликов, Святослав},
+  title     = {Тестирование программного обеспечения. Базовый курс},
+  edition   = {3-е изд.},
+  publisher = {EPAM Systems},
+  year      = {2025},
+  pages     = {301},
+  language  = {russian}
+}
+
+@book{wiegers-requirements,
+  author    = {Вигерс, Карл and Битти, Джой},
+  title     = {Разработка требований к программному обеспечению},
+  edition   = {3-е изд., доп.},
+  publisher = {Русская Редакция; БХВ-Петербург},
+  address   = {М.; СПб.},
+  year      = {2014},
+  pages     = {736},
+  language  = {russian}
+}
+
+@book{newman-microservices,
+  author    = {Ньюмен, Сэм},
+  title     = {Создание микросервисов},
+  publisher = {Питер},
+  address   = {СПб.},
+  year      = {2016},
+  pages     = {304},
+  language  = {russian}
+}
+
+@book{kleppmann-ddia,
+  author    = {Клеппман, Мартин},
+  title     = {Высоконагруженные приложения. Программирование, масштабирование, поддержка},
+  publisher = {Питер},
+  address   = {СПб.},
+  year      = {2018},
+  pages     = {640},
+  language  = {russian}
+}
+
+@book{lubanovich-fastapi,
+  author    = {Любанович, Билл},
+  title     = {FastAPI: веб-разработка на Python},
+  publisher = {Спринт Бук},
+  address   = {Астана},
+  year      = {2024},
+  pages     = {288},
+  language  = {russian}
+}
+
+@book{sadalage-nosql,
+  author    = {Садаладж, Прамод Дж. and Фаулер, Мартин},
+  title     = {NoSQL: новая методология разработки нереляционных баз данных},
+  publisher = {Вильямс},
+  address   = {М.},
+  year      = {2013},
+  pages     = {192},
+  language  = {russian}
+}
+
+@book{macedo-redis,
+  author    = {Macedo, Tiago and Oliveira, Fred},
+  title     = {Redis Cookbook},
+  publisher = {O'Reilly Media},
+  address   = {Sebastopol},
+  year      = {2011},
+  pages     = {74}
+}
+
+@book{turnbull-prometheus,
+  author    = {Turnbull, James},
+  title     = {Monitoring with Prometheus},
+  publisher = {James Turnbull},
+  year      = {2018},
+  pages     = {392}
+}
+
+@book{fowler-eaa,
+  author    = {Фаулер, Мартин},
+  title     = {Архитектура корпоративных программных приложений},
+  publisher = {Издательский дом «Вильямс»},
+  address   = {М.},
+  year      = {2006},
+  pages     = {544},
+  language  = {russian}
+}
+
+@book{burenin-astra,
+  author    = {Буренин, П. В. and Девянин, П. Н. and Лыфарь, В. А. and Малофеев, А. А.},
+  title     = {Безопасность операционной системы специального назначения Astra Linux Special Edition},
+  edition   = {3-е изд., перераб. и доп.},
+  publisher = {Горячая линия -- Телеком},
+  address   = {М.},
+  year      = {2019},
+  pages     = {368},
+  language  = {russian}
+}
+
+@book{ramalho-python,
+  author    = {Рамальо, Лусиану},
+  title     = {Python. К вершинам мастерства: Лаконичное и эффективное программирование},
+  edition   = {2-е изд.},
+  publisher = {ДМК Пресс},
+  address   = {М.},
+  year      = {2022},
+  pages     = {898},
+  language  = {russian}
+}
+
+% ─────────────────────────────────────────────
+%  Стандарты
+% ─────────────────────────────────────────────
+
+@techreport{gost-7-32-2017,
+  title       = {ГОСТ 7.32--2017. Система стандартов по информации, библиотечному и издательскому делу. Отчёт о научно-исследовательской работе. Структура и правила оформления},
+  number      = {ГОСТ 7.32-2017},
+  institution = {Стандартинформ},
+  address     = {М.},
+  year        = {2018},
+  pages       = {27},
+  language    = {russian}
+}
+
+@techreport{gost-56920-2024,
+  title       = {ГОСТ Р 56920--2024. Системная и программная инженерия. Тестирование программного обеспечения. Общие положения},
+  number      = {ГОСТ Р 56920-2024},
+  institution = {Российский институт стандартизации},
+  address     = {М.},
+  year        = {2024},
+  pages       = {27},
+  language    = {russian}
+}
+
+@techreport{gost-34-602-2020,
+  title       = {ГОСТ 34.602--2020. Информационные технологии. Комплекс стандартов на автоматизированные системы. Техническое задание на создание автоматизированной системы},
+  number      = {ГОСТ 34.602-2020},
+  institution = {Российский институт стандартизации},
+  address     = {М.},
+  year        = {2021},
+  pages       = {10},
+  language    = {russian}
+}
+
+@techreport{gost-59793-2021,
+  title       = {ГОСТ Р 59793--2021. Информационные технологии. Комплекс стандартов на автоматизированные системы. Автоматизированные системы. Стадии создания},
+  number      = {ГОСТ Р 59793-2021},
+  institution = {Российский институт стандартизации},
+  address     = {М.},
+  year        = {2021},
+  pages       = {10},
+  language    = {russian}
+}
+
+% ─────────────────────────────────────────────
+%  Электронные ресурсы
+% ─────────────────────────────────────────────
+
+@misc{wiremock,
   title        = {WireMock Documentation},
   year         = {2025},
-  url          = {https://wiremock.org/docs/},
+  howpublished = {\url{https://wiremock.org/docs/}},
   note         = {[Электронный ресурс] Дата обращения: 09.01.2026}
 }
 
-@online{mockserver,
+@misc{mockserver,
   title        = {MockServer Documentation},
   year         = {2025},
-  url          = {https://www.mock-server.com/},
+  howpublished = {\url{https://www.mock-server.com/}},
   note         = {[Электронный ресурс] Дата обращения: 09.01.2026}
 }
 
-@online{mountebank,
+@misc{mountebank,
   title        = {Mountebank Documentation},
   year         = {2025},
-  url          = {http://www.mbtest.org/docs/},
+  howpublished = {\url{http://www.mbtest.org/docs/}},
   note         = {[Электронный ресурс] Дата обращения: 09.01.2026}
 }
 
-@online{tomcat,
+@misc{tomcat,
   title        = {Apache Tomcat 9 Documentation},
   year         = {2025},
-  url          = {https://tomcat.apache.org/tomcat-9.0-doc/index.html},
+  howpublished = {\url{https://tomcat.apache.org/tomcat-9.0-doc/index.html}},
   note         = {[Электронный ресурс] Дата обращения: 09.01.2026}
 }
 
-@online{tomcat-cluster,
+@misc{tomcat-cluster,
   title        = {Tomcat Clustering/Session Replication How-To},
   year         = {2025},
-  url          = {https://tomcat.apache.org/tomcat-9.0-doc/cluster-howto.html},
+  howpublished = {\url{https://tomcat.apache.org/tomcat-9.0-doc/cluster-howto.html}},
   note         = {[Электронный ресурс] Дата обращения: 09.01.2026}
 }
 
-@online{tomcat-ratelimit,
+@misc{tomcat-ratelimit,
   title        = {Apache Tomcat Configuration Reference: The Rate Limit Filter},
   year         = {2025},
-  url          = {https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html\#Rate_Limit_Filter},
+  howpublished = {\url{https://tomcat.apache.org/tomcat-9.0-doc/config/filter.html\#Rate_Limit_Filter}},
   note         = {[Электронный ресурс] Дата обращения: 09.01.2026}
 }
 
-@online{fastapi,
+@misc{fastapi,
   title        = {FastAPI Documentation},
   year         = {2025},
-  url          = {https://fastapi.tiangolo.com/},
+  howpublished = {\url{https://fastapi.tiangolo.com/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{uvicorn,
-  title        = {Uvicorn — An ASGI web server, for Python},
+@misc{uvicorn,
+  title        = {Uvicorn --- An ASGI web server, for Python},
   year         = {2025},
-  url          = {https://www.uvicorn.org/},
+  howpublished = {\url{https://www.uvicorn.org/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{redis-docs,
+@misc{redis-docs,
   title        = {Redis Documentation},
   year         = {2025},
-  url          = {https://redis.io/docs/},
+  howpublished = {\url{https://redis.io/docs/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{redis-aof,
+@misc{redis-aof,
   title        = {Redis Persistence: Append Only File},
   year         = {2025},
-  url          = {https://redis.io/docs/management/persistence/},
+  howpublished = {\url{https://redis.io/docs/management/persistence/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{paramiko,
-  title        = {Paramiko Documentation — SSH2 protocol library for Python},
+@misc{paramiko,
+  title        = {Paramiko Documentation --- SSH2 protocol library for Python},
   year         = {2025},
-  url          = {https://www.paramiko.org/},
+  howpublished = {\url{https://www.paramiko.org/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{httpx,
-  title        = {HTTPX — A next-generation HTTP client for Python},
+@misc{httpx,
+  title        = {HTTPX --- A next-generation HTTP client for Python},
   year         = {2025},
-  url          = {https://www.python-httpx.org/},
+  howpublished = {\url{https://www.python-httpx.org/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{pydantic,
-  title        = {Pydantic Documentation — Data validation using Python type hints},
+@misc{pydantic,
+  title        = {Pydantic Documentation --- Data validation using Python type hints},
   year         = {2025},
-  url          = {https://docs.pydantic.dev/},
+  howpublished = {\url{https://docs.pydantic.dev/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{python-asyncio,
-  title        = {asyncio — Asynchronous I/O. Python 3.12 Documentation},
+@misc{python-asyncio,
+  title        = {asyncio --- Asynchronous I/O. Python 3.12 Documentation},
   year         = {2025},
-  url          = {https://docs.python.org/3/library/asyncio.html},
+  howpublished = {\url{https://docs.python.org/3/library/asyncio.html}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{prometheus-docs,
+@misc{prometheus-docs,
   title        = {Prometheus Documentation},
   year         = {2025},
-  url          = {https://prometheus.io/docs/introduction/overview/},
+  howpublished = {\url{https://prometheus.io/docs/introduction/overview/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{prometheus-exposition,
+@misc{prometheus-exposition,
   title        = {Prometheus Exposition Formats},
   year         = {2025},
-  url          = {https://prometheus.io/docs/instrumenting/exposition_formats/},
+  howpublished = {\url{https://prometheus.io/docs/instrumenting/exposition_formats/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{astra-linux,
-  title        = {Astra Linux Special Edition — официальная документация},
+@misc{astra-linux,
+  title        = {Astra Linux Special Edition --- официальная документация},
   year         = {2025},
-  url          = {https://wiki.astralinux.ru/},
-  note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
+  howpublished = {\url{https://wiki.astralinux.ru/}},
+  note         = {[Электронный ресурс] Дата обращения: 15.02.2026},
+  language     = {russian}
 }
 
-@online{c4model,
+@misc{c4model,
   title        = {The C4 model for visualising software architecture},
   year         = {2025},
-  url          = {https://c4model.com/},
+  howpublished = {\url{https://c4model.com/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{cryptography-fernet,
-  title        = {Cryptography Library — Fernet (symmetric encryption)},
+@misc{cryptography-fernet,
+  title        = {Cryptography Library --- Fernet (symmetric encryption)},
   year         = {2025},
-  url          = {https://cryptography.io/en/latest/fernet/},
+  howpublished = {\url{https://cryptography.io/en/latest/fernet/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{jinja2,
-  title        = {Jinja2 Documentation — The Python Template Engine},
+@misc{jinja2,
+  title        = {Jinja2 Documentation --- The Python Template Engine},
   year         = {2025},
-  url          = {https://jinja.palletsprojects.com/},
+  howpublished = {\url{https://jinja.palletsprojects.com/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{openjdk,
+@misc{openjdk,
   title        = {OpenJDK 17 Documentation},
   year         = {2025},
-  url          = {https://openjdk.org/projects/jdk/17/},
+  howpublished = {\url{https://openjdk.org/projects/jdk/17/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{wildfly,
-  title        = {WildFly — JBoss Application Server Documentation},
+@misc{wildfly,
+  title        = {WildFly --- JBoss Application Server Documentation},
   year         = {2025},
-  url          = {https://www.wildfly.org/documentation/},
+  howpublished = {\url{https://www.wildfly.org/documentation/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{glassfish,
+@misc{glassfish,
   title        = {Eclipse GlassFish Documentation},
   year         = {2025},
-  url          = {https://glassfish.org/documentation},
+  howpublished = {\url{https://glassfish.org/documentation}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{wcag21,
+@misc{wcag21,
   title        = {Web Content Accessibility Guidelines (WCAG) 2.1},
   year         = {2018},
-  url          = {https://www.w3.org/TR/WCAG21/},
+  howpublished = {\url{https://www.w3.org/TR/WCAG21/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{redis-incr,
-  title        = {Redis Commands: INCR — Increment the integer value of a key},
+@misc{redis-incr,
+  title        = {Redis Commands: INCR --- Increment the integer value of a key},
   year         = {2025},
-  url          = {https://redis.io/commands/incr/},
+  howpublished = {\url{https://redis.io/commands/incr/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
 
-@online{asgi-spec,
+@misc{asgi-spec,
   title        = {ASGI (Asynchronous Server Gateway Interface) Specification},
   year         = {2025},
-  url          = {https://asgi.readthedocs.io/en/latest/},
+  howpublished = {\url{https://asgi.readthedocs.io/en/latest/}},
   note         = {[Электронный ресурс] Дата обращения: 15.02.2026}
 }
