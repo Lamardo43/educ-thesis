@@ -220,7 +220,8 @@ class LifecycleManager:
         def check() -> bool:
             try:
                 os.kill(pid, 0)
-            except OSError:
+            except OSError as e:
+                # logger.error(e)
                 return False
             return True
 
