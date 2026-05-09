@@ -1,0 +1,33 @@
+[Unit]
+Description=MockControl — управляющий сервис инфраструктуры имитационных сервисов
+After=network.target redis.service
+Wants=redis.service
+
+[Service]
+KillMode=process
+Type=simple
+User=klim
+WorkingDirectory=/app/educ-thesis/Thesis/cursor
+
+# Путь до интерпретатора Python из виртуального окружения.
+# Если venv не используется — замените на просто: /usr/bin/python3
+ExecStart=/app/educ-thesis/Thesis/cursor/.venv/bin/python main.py
+
+# Перезапуск при аварийном завершении (ненулевой код выхода)
+Restart=on-failure
+RestartSec=5
+
+# Переменные окружения (альтернатива .env — можно указать здесь)
+EnvironmentFile=/app/educ-thesis/Thesis/cursor/.env
+
+# Стандартный вывод и ошибки — в systemd journal
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=mockcontrol
+
+# Немного времени на graceful shutdown перед SIGKILL
+TimeoutStopSec=15
+
+[Install]
+WantedBy=multi-user.target
+
