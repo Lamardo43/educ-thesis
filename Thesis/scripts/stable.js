@@ -20,7 +20,7 @@ import { Rate, Trend, Counter } from 'k6/metrics';
 // ---------------------------------------------------------------------------
 // Целевой URL (переопределяется через -e TARGET_URL=...)
 // ---------------------------------------------------------------------------
-const TARGET_URL = __ENV.TARGET_URL || 'http://localhost:8000/uuid-stub-jdk8-fixed-local.war/api/uuid';
+const TARGET_URL = __ENV.TARGET_URL || 'http://192.168.1.76:8000/uuid-stub-jdk8-1.war/api/uuid';
 
 // ---------------------------------------------------------------------------
 // Конфигурация сценария: ramping-arrival-rate
@@ -37,7 +37,7 @@ export const options = {
       preAllocatedVUs: 150,
       maxVUs: 700,
       stages: [
-        { duration: '600s', target: 100 }
+        { duration: '6000s', target: 100 }
       ],
     },
   },
