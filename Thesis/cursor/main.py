@@ -42,7 +42,8 @@ _SINGLETON_LOCK_ACQUIRE_RETRY_SEC = 3.0
 def _default_uvicorn_workers() -> int:
     """Авточисло воркеров: CPU×2, минимум 1 (если cpu_count недоступен — считаем 1 CPU)."""
     cpus = os.cpu_count() or 1
-    return max(1, 2 * cpus)
+    # return max(1, 2 * cpus)
+    return 1
 
 
 def resolve_uvicorn_workers(settings: Settings) -> int:
@@ -54,7 +55,11 @@ def resolve_uvicorn_workers(settings: Settings) -> int:
 
 def _configure_quiet_logging() -> None:
     """INFO для приложения и uvicorn.error; без access-log (каждый GET), без httpx/httpcore и без спама asyncssh."""
-    logging.getLogger().setLevel(logging.INFO)
+    # logging.getLogger().setLevel(logging.INFO)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
     for name in ("uvicorn.access", "httpx", "httpcore", "asyncssh"):
         logging.getLogger(name).setLevel(logging.WARNING)
 
@@ -171,6 +176,10 @@ async def _run_singleton_background_task(
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup: зависимости, глобальные настройки Redis, восстановление RUNNING, фоновые задачи. Shutdown: отмена задач, закрытие ресурсов."""
+    # logging.basicConfig(
+    #     level=logging.INFO,
+    #     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    # )
     _configure_quiet_logging()
     await init_dependencies(app)
 

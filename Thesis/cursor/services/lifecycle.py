@@ -220,7 +220,8 @@ class LifecycleManager:
         def check() -> bool:
             try:
                 os.kill(pid, 0)
-            except OSError:
+            except OSError as e:
+                # logger.error(e)
                 return False
             return True
 
@@ -572,6 +573,7 @@ class LifecycleManager:
 
     async def restore_state(self) -> None:
         names = await self._redis.smembers(MOCKS_REGISTRY_KEY)
+        
         for filename in names:
             data = await self._redis.hgetall(_mock_key(filename))
             if data.get("status") != "RUNNING":
@@ -612,6 +614,8 @@ class LifecycleManager:
                         except Exception:
                             logger.exception("restore_state: PID check error for %s", filename)
                             alive = False
+
+            # logger.info(filename, alive, port)
 
             if alive and port is not None:
                 timeout = await self._proxy_timeout_sec()
