@@ -376,6 +376,7 @@ class LifecycleManager:
                 argv.extend(shlex.split(jvm_args) if jvm_args.strip() else [])
                 argv.extend(["-jar", artifact_path, f"--server.port={port}"])
                 # argv.extend(["-jar", artifact_path, f"{port}"])
+                # logger.info(argv)
                 proc = await asyncio.create_subprocess_exec(
                     *argv,
                     stdin=asyncio.subprocess.DEVNULL,
@@ -398,8 +399,8 @@ class LifecycleManager:
             mid = f"{jvm_part} " if jvm_part else ""
             cmd = (
                 f"nohup {shlex.quote(java_path)} {mid}"
-                # f"-jar {shlex.quote(artifact_path)} --server.port={int(port)} "
-                f"-jar {shlex.quote(artifact_path)} {int(port)} "
+                f"-jar {shlex.quote(artifact_path)} --server.port={int(port)} "
+                # f"-jar {shlex.quote(artifact_path)} {int(port)} "
                 f">> {shlex.quote(log_remote)} 2>&1 & echo $!"
             )
             proc = await self._ssh.run_command(hostname, user, pwd, cmd, port=ssh_port, timeout=60.0)

@@ -55,12 +55,7 @@ class ProxyRequestObservation:
 
 
 class ProxyClientRegistry:
-    """Глобальный реестр httpx.AsyncClient по имени заглушки (mock_name).
-
-    Горячий путь (клиент уже существует) не захватывает лок: в asyncio event loop
-    dict.get() атомарен — настоящего параллелизма нет, гонок не возникает.
-    Лок берётся только при создании нового клиента (double-checked locking).
-    """
+    """Глобальный реестр httpx.AsyncClient по имени заглушки (mock_name)."""
 
     def __init__(self) -> None:
         self._clients: dict[str, httpx.AsyncClient] = {}
@@ -72,21 +67,10 @@ class ProxyClientRegistry:
         base_url: str,
         timeout: float | httpx.Timeout,
     ) -> httpx.AsyncClient:
-        # Быстрый путь — без лока. Безопасно: asyncio однопоточен,
-        # dict.get() не прерывается между корутинами.
-        existing = self._clients.get(mock_name)
-        if existing is not None:
-            return existing
-
-        # Медленный путь — создание нового клиента. Лок защищает от
-        # двойного создания при одновременных первых запросах к одной заглушке.
         async with self._lock:
-            # Повторная проверка: пока мы ждали лок, другая корутина
-            # могла уже создать клиента.
             existing = self._clients.get(mock_name)
             if existing is not None:
                 return existing
-
             limits = httpx.Limits(
                 max_connections=_PROXY_MAX_CONNECTIONS,
                 max_keepalive_connections=_PROXY_MAX_KEEPALIVE_CONNECTIONS,
