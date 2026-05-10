@@ -12,11 +12,13 @@
 
 Развёртывание программного комплекса выполняется на сервере под управлением операционной системы Astra Linux~\cite{astra-linux, burenin-astra}. Минимальные требования к аппаратной конфигурации управляющего сервера приведены в таблице~\ref{tab:hw-requirements}.
 
+{\small
 \begin{xltabular}{\textwidth}{|l|X|}
 \caption{Минимальные требования к аппаратной конфигурации} \label{tab:hw-requirements} \\
 \hline
 \textbf{Параметр} & \textbf{Значение} \\ \hline
 \endfirsthead
+\multicolumn{2}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 \textbf{Параметр} & \textbf{Значение} \\ \hline
 \endhead
@@ -26,6 +28,7 @@
 Сетевой интерфейс & Ethernet; SSH-доступность целевых хостов \\ \hline
 Операционная система & Astra Linux Special Edition / Common Edition \\ \hline
 \end{xltabular}
+}
 
 На управляющем сервере должны быть установлены следующие программные компоненты:
 
@@ -48,11 +51,13 @@
 
 Все параметры запуска вынесены в файл \texttt{.env}, создаваемый на основе поставляемого шаблона \texttt{.env.example}. Параметры считываются модулем \texttt{pydantic\_settings} через класс \texttt{Settings} при инициализации приложения. Основные параметры приведены в таблице~\ref{tab:env-params}.
 
+{\small
 \begin{xltabular}{\textwidth}{|X|l|X|}
 \caption{Параметры конфигурационного файла .env} \label{tab:env-params} \\
 \hline
 \textbf{Параметр} & \textbf{По умолчанию} & \textbf{Назначение} \\ \hline
 \endfirsthead
+\multicolumn{3}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 \textbf{Параметр} & \textbf{По умолчанию} & \textbf{Назначение} \\ \hline
 \endhead
@@ -64,6 +69,7 @@
 \texttt{DEFAULT\_\-PROXY\_\-TIMEOUT} & \texttt{10} & Тайм-аут ответа заглушки (сек) \\ \hline
 \texttt{DEFAULT\_\-LOG\_\-RETENTION\_\-LINES} & \texttt{1000} & Максимум строк лога в буфере \\ \hline
 \end{xltabular}
+}
 
 \subsection{Генерация ключа шифрования и настройка Redis}
 
@@ -164,7 +170,7 @@
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{test_4.png}
-\caption{Интерфейс Dashboard: заглушка переведена в статус ERROR после обнаружения аварийного завершения процесса}
+\caption{Интерфейс панели управления: заглушка переведена в статус ERROR после обнаружения аварийного завершения процесса}
 \label{fig:hc-error-detected}
 \end{figure}
 
@@ -193,11 +199,13 @@
 
 Результаты всех проведённых сценариев сведены в таблицу~\ref{tab:test-results}.
 
+{\small
 \begin{xltabular}{\textwidth}{|X|l|X|}
 \caption{Результаты испытаний механизмов восстановления} \label{tab:test-results} \\
 \hline
 \textbf{Сценарий} & \textbf{Результат} & \textbf{Примечание} \\ \hline
 \endfirsthead
+\multicolumn{3}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 \textbf{Сценарий} & \textbf{Результат} & \textbf{Примечание} \\ \hline
 \endhead
@@ -207,6 +215,7 @@
 Обнаружение завершения HealthChecker'ом & Пройден & Статус ERROR за $\leq$ 30~сек \\ \hline
 Автовозврат из ERROR после перезапуска & Пройден & Статус RUNNING за $\leq$ 30~сек \\ \hline
 \end{xltabular}
+}
 
 Совокупность проведённых испытаний подтверждает, что реализованные механизмы персистентности и восстановления обеспечивают устойчивость инфраструктуры имитационных сервисов к типичным эксплуатационным сбоям: перезапускам управляющего приложения, аварийному завершению Java-процессов и отказам хранилища данных.
 
@@ -247,11 +256,13 @@
 \label{fig:perf-baseline-grafana}
 \end{figure}
 
+{\small
 \begin{xltabular}{\textwidth}{|X|X|}
 \caption{Задержки этапов конвейера при нагрузке 10~RPS} \label{tab:perf-baseline} \\
 \hline
 \textbf{Этап} & \textbf{Среднее, мс} \\ \hline
 \endfirsthead
+\multicolumn{2}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 \textbf{Этап} & \textbf{Среднее, мс} \\ \hline
 \endhead
@@ -259,6 +270,7 @@
 \texttt{httpx\_pool\_wait\_ms} & 0.00 \\ \hline
 \texttt{proxy\_total\_ms} & 3.90 \\ \hline
 \end{xltabular}
+}
 
 \textbf{Анализ результатов.} При малой нагрузке (10~RPS, 1~соединение) прокси-модуль демонстрирует устойчиво низкую сквозную задержку: среднее значение \texttt{proxy\_total\_ms} составило 3.90~мс. Из них 2.90~мс приходится на этап \texttt{httpx\_proxy\_request\_ms} -- фактическую пересылку запроса к заглушке и получение ответа, -- то есть на долю накладных расходов самого прокси-модуля (разбор записи из Redis, формирование ответа) приходится порядка 1~мс. Задержка ожидания в пуле соединений (\texttt{httpx\_pool\_wait\_ms}) равна нулю: при единственном параллельном соединении конкуренции за пул не возникает. Полученные базовые значения характеризуют «идеальную» задержку системы и служат контрольной точкой для оценки деградации при нарастании нагрузки.
 
@@ -268,11 +280,13 @@
 
 \textbf{Наблюдаемые результаты.} Зависимость сквозной задержки и задержки ожидания в пуле от интенсивности нагрузки приведена в таблице~\ref{tab:perf-load}. Временны́е ряды метрик в ходе испытания представлены на рисунке~\ref{fig:perf-load-grafana}.
 
+{\small
 \begin{xltabular}{\textwidth}{|l|X|X|l|}
 \caption{Зависимость задержки от интенсивности нагрузки} \label{tab:perf-load} \\
 \hline
 \textbf{Нагрузка, RPS} & \textbf{\texttt{proxy\_\-total\_\-ms}, мс} & \textbf{\texttt{httpx\_\-pool\_\-wait\_\-ms}, мс} & \textbf{Факт. RPS} \\ \hline
 \endfirsthead
+\multicolumn{4}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 \textbf{Нагрузка, RPS} & \textbf{\texttt{proxy\_\-total\_\-ms}, мс} & \textbf{\texttt{httpx\_\-pool\_\-wait\_\-ms}, мс} & \textbf{Факт. RPS} \\ \hline
 \endhead
@@ -281,6 +295,7 @@
 500  & 3.01 & 0.00 & 500 \\ \hline
 1000 & 10.52 & 0.00 & 1000 \\ \hline
 \end{xltabular}
+}
 
 \begin{figure}[H]
 \centering
@@ -301,11 +316,13 @@
 
 \textbf{Наблюдаемые результаты.} Значения счётчиков приведены в таблице~\ref{tab:perf-ratelimit}. Распределение ответов по кодам состояния в ходе испытания приведено на рисунке~\ref{fig:perf-ratelimit-grafana}.
 
+{\small
 \begin{xltabular}{\textwidth}{|X|l|}
 \caption{Результаты проверки Rate Limiting под нагрузкой 500~RPS} \label{tab:perf-ratelimit} \\
 \hline
 \textbf{Метрика} & \textbf{Значение} \\ \hline
 \endfirsthead
+\multicolumn{2}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 \textbf{Метрика} & \textbf{Значение} \\ \hline
 \endhead
@@ -317,6 +334,7 @@
 Ожидаемое число принятых за 120~сек & 30\,000 \\ \hline
 Отклонение от теоретического значения, \% & 0.13 \\ \hline
 \end{xltabular}
+}
 
 \begin{figure}[H]
 \centering
@@ -335,11 +353,13 @@
 
 Сводная таблица результатов всех сценариев нагрузочного испытания приведена в таблице~\ref{tab:perf-summary}.
 
+{\small
 \begin{xltabular}{\textwidth}{|X|l|X|}
 \caption{Сводные результаты нагрузочного испытания} \label{tab:perf-summary} \\
 \hline
 \textbf{Сценарий} & \textbf{Результат} & \textbf{Примечание} \\ \hline
 \endfirsthead
+\multicolumn{3}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 \textbf{Сценарий} & \textbf{Результат} & \textbf{Примечание} \\ \hline
 \endhead
@@ -347,6 +367,7 @@
 Нарастающая нагрузка до 1000~RPS & Пройден & Линейный рост до 500~RPS; нелинейный рост задержки при 1000~RPS без отказов \\ \hline
 Rate Limiting при 500~RPS (лимит 250~зап./сек) & Пройден & Отклонение от теоретического лимита 0.13\,\%; атомарность INCR подтверждена \\ \hline
 \end{xltabular}
+}
 
 \textbf{Общий анализ результатов.} Совокупность проведённых нагрузочных испытаний позволяет сделать следующие выводы о производительностных характеристиках разработанного прокси-модуля.
 
