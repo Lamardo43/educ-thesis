@@ -42,8 +42,8 @@ _SINGLETON_LOCK_ACQUIRE_RETRY_SEC = 3.0
 def _default_uvicorn_workers() -> int:
     """Авточисло воркеров: CPU×2, минимум 1 (если cpu_count недоступен — считаем 1 CPU)."""
     cpus = os.cpu_count() or 1
-    # return max(1, 2 * cpus)
-    return 1
+    return max(1, 2 * cpus)
+    # return 1
 
 
 def resolve_uvicorn_workers(settings: Settings) -> int:

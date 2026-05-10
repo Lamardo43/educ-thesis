@@ -374,8 +374,8 @@ class LifecycleManager:
             try:
                 argv = [java_path]
                 argv.extend(shlex.split(jvm_args) if jvm_args.strip() else [])
-                # argv.extend(["-jar", artifact_path, f"--server.port={port}"])
-                argv.extend(["-jar", artifact_path, f"{port}"])
+                argv.extend(["-jar", artifact_path, f"--server.port={port}"])
+                # argv.extend(["-jar", artifact_path, f"{port}"])
                 proc = await asyncio.create_subprocess_exec(
                     *argv,
                     stdin=asyncio.subprocess.DEVNULL,

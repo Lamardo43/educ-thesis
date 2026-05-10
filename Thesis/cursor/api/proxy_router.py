@@ -45,13 +45,12 @@ def get_proxy_registry(request: Request) -> ProxyClientRegistry:
     return reg
 
 
-async def _load_proxy_runtime(redis: Redis, settings: Settings) -> tuple[int, float]:
-    """Окно rate limit и таймаут прокси из `settings:global` с fallback на Settings."""
-    window_raw, timeout_raw = await redis.hmget(
-        "settings:global",
-        "rate_limit_window_size",
-        "proxy_timeout_sec",
-    )
+def _parse_runtime_settings(
+    window_raw: str | None,
+    timeout_raw: str | None,
+    settings: Settings,
+) -> tuple[int, float]:
+    """Окно rate limit и таймаут прокси из сырых значений Redis с fallback на Settings."""
     try:
         window = int(window_raw) if window_raw is not None and str(window_raw).strip() else settings.default_rate_limit_window
     except ValueError:
@@ -103,21 +102,34 @@ async def _handle_proxy(
 
     def _mark(stage: str, stage_started_at: float) -> None:
         timeline[stage] = round((time.perf_counter() - stage_started_at) * 1000.0, 3)
+
     try:
-        key = f"mocks:{mock_name}"
+        # Один pipeline вместо трёх последовательных round-trip к Redis:
+        #   hmget mocks:{mock_name}   → данные заглушки
+        #   hmget settings:global     → runtime-настройки (таймаут, окно rate limit)
+        #   incr  metrics:proxy_total → счётчик запросов
         t = time.perf_counter()
-        hostname_raw, port_raw, status_raw, rate_limit_raw, rate_on_raw = await redis.hmget(
-            key,
-            "hostname",
-            "port",
-            "status",
-            "rate_limit",
-            "rate_limit_enabled",
+        pipe = redis.pipeline(transaction=False)
+        pipe.hmget(
+            f"mocks:{mock_name}",
+            "hostname", "port", "status", "rate_limit", "rate_limit_enabled",
         )
-        _mark("redis_mock_hmget_ms", t)
+        pipe.hmget(
+            "settings:global",
+            "rate_limit_window_size", "proxy_timeout_sec",
+        )
+        pipe.incr(f"metrics:proxy_total:{mock_name}")
+        (
+            (hostname_raw, port_raw, status_raw, rate_limit_raw, rate_on_raw),
+            (window_raw, timeout_raw),
+            _,
+        ) = await pipe.execute()
+        _mark("redis_pipeline_ms", t)
+
         if status_raw is None:
             outcome = "not_found"
             raise HTTPException(status_code=404, detail="Заглушка не найдена")
+
         data = {
             "hostname": hostname_raw or "",
             "port": port_raw or "",
@@ -137,9 +149,7 @@ async def _handle_proxy(
             outcome = "invalid_target"
             raise HTTPException(status_code=503, detail="Сервис заглушки недоступен")
 
-        t = time.perf_counter()
-        window_size, timeout_sec = await _load_proxy_runtime(redis, settings)
-        _mark("redis_runtime_hmget_ms", t)
+        window_size, timeout_sec = _parse_runtime_settings(window_raw, timeout_raw, settings)
 
         if rate_limit_enabled and rate_limit > 0:
             t = time.perf_counter()
@@ -152,10 +162,6 @@ async def _handle_proxy(
                 outcome = "rate_limited"
                 upstream_status = 429
                 raise HTTPException(status_code=429, detail="Превышен лимит запросов")
-
-        t = time.perf_counter()
-        await redis.incr(f"metrics:proxy_total:{mock_name}")
-        _mark("redis_incr_proxy_total_ms", t)
 
         base_url = f"http://{hostname}:{port}"
         t = time.perf_counter()
