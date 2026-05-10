@@ -44,6 +44,8 @@ async def init_redis(settings: Settings) -> None:
         settings.redis_url,
         decode_responses=True,
         encoding="utf-8",
+        max_connections=100,   # с запасом на пики, итого 16×30=480 к Redis
+        # timeout=2,            # ждать не более 2 сек
     )
     _client = Redis(connection_pool=_pool)
     await _client.ping()
