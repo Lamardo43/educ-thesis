@@ -199,7 +199,7 @@ class HealthChecker:
             return False
 
     async def _http_root_ok(self, client: httpx.AsyncClient, hostname: str, port: int) -> bool:
-        url = f"http://{hostname}:{port}/"
+        url = f"http://{hostname}:{port}/actuator"
         try:
             response = await client.get(url)
             # Любой полученный ответ считается «сервис отвечает»; таймауты/обрыв — ошибка.
