@@ -1,12 +1,15 @@
-\chapter{{\fontsize{14pt}{21pt}\selectfont\MakeUppercase{ПРИЛОЖЕНИЕ А}}}
+\stepcounter{appendixnum}
+\renewcommand{\thechapter}{\Asbuk{appendixnum}}
+\chapter{{\fontsize{14pt}{21pt}\selectfont\MakeUppercase{ПРИЛОЖЕНИЕ \appendixletter}}}
 \label{cha:appendix1}
 
 \counterwithin{figure}{chapter}
 \counterwithin{listing}{chapter}
 \setcounter{figure}{0}
 \setcounter{listing}{0}
-\renewcommand{\thefigure}{A.\arabic{figure}}
-\renewcommand{\thelisting}{A.\arabic{listing}}
+\renewcommand{\thefigure}{\appendixletter.\arabic{figure}}
+\renewcommand{\thelisting}{\appendixletter.\arabic{listing}}
+\renewcommand{\theHlisting}{\appendixletter.\arabic{listing}}
 
 \begin{listing}[H]
 \caption{Запуск Java-процесса на локальном хосте}

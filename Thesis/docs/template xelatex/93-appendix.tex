@@ -1,9 +1,12 @@
-\chapter{{\fontsize{14pt}{21pt}\selectfont\MakeUppercase{ПРИЛОЖЕНИЕ Д}}}
+\stepcounter{appendixnum}
+\renewcommand{\thechapter}{\Asbuk{appendixnum}}
+\chapter{{\fontsize{14pt}{21pt}\selectfont\MakeUppercase{ПРИЛОЖЕНИЕ \appendixletter}}}
 \label{cha:appendix5}
 
 \counterwithin{listing}{chapter}
 \setcounter{listing}{0}
-\renewcommand{\thelisting}{Д.\arabic{listing}}
+\renewcommand{\thelisting}{\appendixletter.\arabic{listing}}
+\renewcommand{\theHlisting}{\appendixletter.\arabic{listing}}
 
 \begin{listing}[H]
 \caption{Сценарий~1. Журнал службы mockcontrol: завершение процедуры \texttt{restore\_state} -- все заглушки успешно подтверждены}
