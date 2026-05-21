@@ -25,7 +25,7 @@ async def start_mock(self, filename: str) -> None:
         try:
             argv = [java_path]
             argv.extend(shlex.split(jvm_args) if jvm_args.strip() else [])
-            argv.extend(["-jar", artifact_path, f"{port}"])
+            argv.extend(["-jar", artifact_path, f"--server.port={port}"])
             # Неблокирующий запуск дочернего процесса
             proc = await asyncio.create_subprocess_exec(
                 *argv,
@@ -55,7 +55,7 @@ mid = f"{jvm_part} " if jvm_part else ""
 # Итоговая команда: nohup, перенаправление вывода, вывод PID
 cmd = (
     f"nohup {shlex.quote(java_path)} {mid}"
-    f"-jar {shlex.quote(artifact_path)} {int(port)} "
+    f"-jar {shlex.quote(artifact_path)} --server.port={int(port)} "
     f">> {shlex.quote(log_remote)} 2>&1 & echo $!"
 )
 proc = await self._ssh.run_command(
@@ -232,7 +232,7 @@ async def collect_metrics(redis: Redis) -> str:
 \end{listing}
 
 \begin{listing}[H]
-\caption{Фрагмент ответа эндпоинта \texttt{/metrics}}
+\caption{Фрагмент ответа маршрута \texttt{/metrics}}
 \label{lst:metrics-output}
 \begin{mdframed}
 \begin{minted}{text}

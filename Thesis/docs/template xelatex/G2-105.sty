@@ -25,7 +25,7 @@
 % 3) комментарии в UTF-8;
 % 4) изменены отступы после тире в description;
 % 5) добавлен \paragraph;
-% 6) уменьшены отспупы после заголовков и учеличены --- до (хотя это, возможно, и нарушает 7-32);
+% 6) уменьшены отспупы после заголовков и учеличены -- до (хотя это, возможно, и нарушает 7-32);
 % 7) сделаны отсупы в оглалвнеии (ГОСТ эту тему обходит, как мы поняли);
 % 8) \normalfont
 % 9) разные мелочи.
@@ -136,13 +136,13 @@
 %   расстояние между заголовком и текстом
 
 
-% Уменьшено --- Seva
+% Уменьшено -- Seva
 \newlength\GostAfterTitleSkip    \setlength\GostAfterTitleSkip    {3.2ex}%15mm}
 % \newlength\GostAfterTitleSkip    \setlength\GostAfterTitleSkip    {1.2ex}%5mm}
 
 \newlength\GostBetweenTitleSkip  \setlength\GostBetweenTitleSkip  {1.8ex}%8mm}
 
-% Увеличено --- Seva
+% Увеличено -- Seva
 % \newlength\GostBeforTitleSkip    \setlength\GostBeforTitleSkip    {1.8ex}%\GostAfterTitleSkip}
 \newlength\GostBeforTitleSkip    \setlength\GostBeforTitleSkip    {3.2ex}%\GostAfterTitleSkip}
 \newlength\GostBeforNoTitleSkip  \setlength\GostBeforNoTitleSkip  {1.0ex}
@@ -314,7 +314,7 @@
 \addtolength\GostItemNestedIndent{6mm}
 
 %  ненумерованные перечисления
-\newcommand{\labelitemi}{---}
+\newcommand{\labelitemi}{--}
 
 %  нумерованные перечисления
 \renewcommand\theenumi {\hspace{6.5mm}\asbuk{enumi}}
@@ -337,7 +337,7 @@
 }{%
  \endlist%
 }
-\newcommand*\abbreviationlabel[1]{\hspace\labelsep \textbf{#1}~---}% убран \normalfont
+\newcommand*\abbreviationlabel[1]{\hspace\labelsep \textbf{#1}~--}% убран \normalfont
 
 % 4.2.15 - 4.2.19 Формулы
 
@@ -362,8 +362,8 @@
 }
 % пояснения м.б. в виде
 %  \begin{eqrem}
-%   & X~--- неизвестная \\
-%   & Y~--- ещё неизвестная \\
+%   & X~-- неизвестная \\
+%   & Y~-- ещё неизвестная \\
 %  \end{eqrem}
 
 % ... допускается нумерация формул в пределах раздела
