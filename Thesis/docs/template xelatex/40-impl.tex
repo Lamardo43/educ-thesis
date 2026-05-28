@@ -18,7 +18,7 @@
 \hline
 Параметр & Значение \\ \hline
 \endfirsthead
-\multicolumn{2}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
+\multicolumn{2}{p{\dimexpr\textwidth-2\tabcolsep-2\arrayrulewidth\relax}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 Параметр & Значение \\ \hline
 \endhead
@@ -55,7 +55,7 @@
 \hline
 Параметр & По умолчанию & Назначение \\ \hline
 \endfirsthead
-\multicolumn{3}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
+\multicolumn{3}{p{\dimexpr\textwidth-2\tabcolsep-2\arrayrulewidth\relax}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 Параметр & По умолчанию & Назначение \\ \hline
 \endhead
@@ -167,7 +167,9 @@ DEFAULT\_\-LOG\_\-RETENTION\_\-LINES & 1000 & Максимум строк лог
 
 \begin{figure}[H]
 \centering
+\begin{mdframed}
 \includegraphics[width=\textwidth]{test_4.png}
+\end{mdframed}
 \caption{Интерфейс панели управления: заглушка переведена в статус ERROR после обнаружения аварийного завершения процесса}
 \label{fig:hc-error-detected}
 \end{figure}
@@ -186,7 +188,9 @@ DEFAULT\_\-LOG\_\-RETENTION\_\-LINES & 1000 & Максимум строк лог
 
 \begin{figure}[H]
 \centering
+\begin{mdframed}
 \includegraphics[width=\textwidth]{test_5.png}
+\end{mdframed}
 \caption{Интерфейс панели управления: заглушка вернулась в состояние RUNNING}
 \label{fig:hc-error-restored-pic}
 \end{figure}
@@ -203,7 +207,7 @@ DEFAULT\_\-LOG\_\-RETENTION\_\-LINES & 1000 & Максимум строк лог
 \hline
 Сценарий & Результат & Примечание \\ \hline
 \endfirsthead
-\multicolumn{3}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
+\multicolumn{3}{p{\dimexpr\textwidth-2\tabcolsep-2\arrayrulewidth\relax}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 Сценарий & Результат & Примечание \\ \hline
 \endhead
@@ -249,7 +253,9 @@ DEFAULT\_\-LOG\_\-RETENTION\_\-LINES & 1000 & Максимум строк лог
 
 \begin{figure}[H]
 \centering
+\begin{mdframed}
 \includegraphics[width=\textwidth]{test_2_1.png}
+\end{mdframed}
 \caption{Метрики прокси-модуля при базовой нагрузке 10~RPS: разбивка задержки по этапам конвейера}
 \label{fig:perf-baseline-grafana}
 \end{figure}
@@ -260,7 +266,7 @@ DEFAULT\_\-LOG\_\-RETENTION\_\-LINES & 1000 & Максимум строк лог
 \hline
 Этап & Среднее, мс \\ \hline
 \endfirsthead
-\multicolumn{2}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
+\multicolumn{2}{p{\dimexpr\textwidth-2\tabcolsep-2\arrayrulewidth\relax}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 Этап & Среднее, мс \\ \hline
 \endhead
@@ -284,7 +290,7 @@ proxy\_total\_ms & 3.90 \\ \hline
 \hline
 Нагрузка, RPS & proxy\_\-total\_\-ms, мс & httpx\_\-pool\_\-wait\_\-ms, мс & Факт. RPS \\ \hline
 \endfirsthead
-\multicolumn{4}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
+\multicolumn{4}{p{\dimexpr\textwidth-2\tabcolsep-2\arrayrulewidth\relax}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 Нагрузка, RPS & proxy\_\-total\_\-ms, мс & httpx\_\-pool\_\-wait\_\-ms, мс & Факт. RPS \\ \hline
 \endhead
@@ -297,7 +303,9 @@ proxy\_total\_ms & 3.90 \\ \hline
 
 \begin{figure}[H]
 \centering
+\begin{mdframed}
 \includegraphics[width=\textwidth]{test_2_2.png}
+\end{mdframed}
 \caption{Временны́е ряды метрик прокси-модуля в ходе нагрузочного испытания: нарастающая нагрузка 125--1000~RPS}
 \label{fig:perf-load-grafana}
 \end{figure}
@@ -320,7 +328,7 @@ proxy\_total\_ms & 3.90 \\ \hline
 \hline
 Метрика & Значение \\ \hline
 \endfirsthead
-\multicolumn{2}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
+\multicolumn{2}{p{\dimexpr\textwidth-2\tabcolsep-2\arrayrulewidth\relax}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 Метрика & Значение \\ \hline
 \endhead
@@ -336,7 +344,9 @@ proxy\_total\_ms & 3.90 \\ \hline
 
 \begin{figure}[H]
 \centering
+\begin{mdframed}
 \includegraphics[width=\textwidth]{test_2_3.png}
+\end{mdframed}
 \caption{Распределение ответов по кодам состояния HTTP: Rate Limiting 250~зап./сек при нагрузке 500~RPS}
 \label{fig:perf-ratelimit-grafana}
 \end{figure}
@@ -357,7 +367,7 @@ proxy\_total\_ms & 3.90 \\ \hline
 \hline
 Сценарий & Результат & Примечание \\ \hline
 \endfirsthead
-\multicolumn{3}{p{\textwidth}}{\normalsize Продолжение таблицы~\thetable} \\
+\multicolumn{3}{p{\dimexpr\textwidth-2\tabcolsep-2\arrayrulewidth\relax}}{\normalsize Продолжение таблицы~\thetable} \\
 \hline
 Сценарий & Результат & Примечание \\ \hline
 \endhead
