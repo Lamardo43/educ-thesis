@@ -83,6 +83,7 @@ ENTRY
     language
     booklanguage
     url
+    urldate
   }
   {}
   { label }
@@ -339,24 +340,10 @@ FUNCTION {bbl.edition} %  { "\bbledition{}" }
 }
 
 FUNCTION {bbl.vvolume} %  { "\bblVolume{}" }
-{  curlanguage "english" =
-    {"Volume"}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-        {"Том"}
-        {"language is not defined: " language  "Volume" * * warning$ "Volume"}
-      if$}
-  if$
-}
+{ "Том" }
 
 FUNCTION {bbl.vvol}    %  { "\bblVol{}" }
-{  curlanguage "english" =
-    {"Vol."}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-           {"Т."}
-           {"language is not defined: " language  "Vol." * * warning$ "Vol."}
-      if$}
-  if$
-}
+{ "Т." }
 
 FUNCTION {bbl.iissue}  %  { "\bblIssue{}" }
 {  curlanguage "english" =
@@ -398,57 +385,19 @@ FUNCTION {bbl.of}      %  { "\bblof{}" }
 }
 
 FUNCTION {bbl.etal}      %  { "\bblof{}" }
-{  curlanguage "english" =
-    {"et~al."}
-    { curlanguage "ukrainian" =
-        {"{та~ін.}"}
-        { curlanguage "russian" =
-           {"{и~др.}"}
-           {"language is not defined: " language  "at al" * * warning$ "at al."}
-         if$}
-      if$}
-  if$
-}
+{ "{и~др.}" }
 
 FUNCTION {bbl.nnumber} %  { "\bblNumber{}" }
-{  curlanguage "english" =
-    {"Number"}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-           {"Номер"}
-           {"language is not defined: " language  "Number" * * warning$ "Number"}
-      if$}
-  if$
-}
+{ "Номер" }
 
 FUNCTION {bbl.number}  %  { "\bblnumber{}" }
-{  curlanguage "english" =
-    {"number"}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-           {"{номер}"}
-           {"language is not defined: " language  "number" * * warning$ "number"}
-      if$}
-  if$
-}
+{ "{номер}" }
 
 FUNCTION {bbl.nr}     %   { "\bblno{}" }
-{  curlanguage "english" =
-    {"no."}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-           {"{№}"}
-           {"language is not defined: " language  "no." * * warning$ "no."}
-      if$}
-  if$
-}
+{ "{№}" }
 
 FUNCTION {bbl.nnr}     %   { "\bblno{}" }
-{  curlanguage "english" =
-    {"No."}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-           {"{№}"}
-           {"language is not defined: " language  "No." * * warning$ "No."}
-      if$}
-  if$
-}
+{ "{№}" }
 
 FUNCTION {bbl.in}    %    { "\bblin{}" }
 {  curlanguage "english" =
@@ -471,49 +420,21 @@ FUNCTION {bbl.iin}  %     { "\bblIn{}" }
 }
 
 FUNCTION {bbl.pages}    % { "\bblpp." }
-{  curlanguage "english" =
-    {"pp."}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-           {"{с.}"}
-           {"language is not defined: " language  "pp." * * warning$ "pp."}
-      if$}
-  if$
-}
+{ "{с.}" }
 
 FUNCTION {bbl.page}   %   { "\bblp."
-{  curlanguage "english" =
-    {"p."}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-           {"{с.}"}
-           {"language is not defined: " language  "p." * * warning$ "p."}
-      if$}
-  if$
-}
+{ "{с.}" }
 
 FUNCTION {bbl.ppages}%    { "\bblPp." }
-{  curlanguage "english" =
-    {"Pp."}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-           {"{С.}"}
-           {"language is not defined: " language  "Pp." * * warning$ "Pp."}
-      if$}
-  if$
-}
+{ "{С.}" }
 
 FUNCTION {bbl.ppage}  %   { "\bblP." }
-{  curlanguage "english" =
-    {"P."}
-    { curlanguage "ukrainian" = curlanguage "russian" = or
-           {"{С.}"}
-           {"language is not defined: " language  "P." * * warning$ "P."}
-      if$}
-  if$
-}
+{ "{С.}" }
 
 
-FUNCTION {bbl.techrep}   { "Tech. Rep." }
-FUNCTION {bbl.mthesis}   { "Master's thesis" }
-FUNCTION {bbl.phdthesis} { "Ph.D. thesis" }
+FUNCTION {bbl.techrep}   { "Техн. отчет" }
+FUNCTION {bbl.mthesis}   { "Магистерская диссертация" }
+FUNCTION {bbl.phdthesis} { "Диссертация" }
 
 INTEGERS { nameptr namesleft numnames }
 
@@ -908,11 +829,8 @@ FUNCTION {author.before}
 {
   author empty$
     'skip$
-    {author num.names$ #4 <
-      {format.authors output
-       new.sentence}
-      'skip$
-    if$}
+    {format.authors output
+     new.sentence}
   if$
 }
 
@@ -920,11 +838,8 @@ FUNCTION {bookauthor.before}
 {
   bookauthor empty$
     'skip$
-    {bookauthor num.names$ #4 <
-      {format.bookauthors output
-       new.sentence}
-      'skip$
-    if$}
+    {format.bookauthors output
+     new.sentence}
   if$
 }
 
@@ -968,11 +883,18 @@ FUNCTION {editor.organization.after}
   if$
 }
 
+FUNCTION {format.urldate}
+{ urldate empty$
+    { "" }
+    { " \BibAccessDate{" urldate * "}" * }
+  if$
+}
+
 FUNCTION {format.url}
 { url empty$
     { "" }
     { after.sentence 'output.state :=
-      "\BibUrl{ " url * "}" *
+      "-- URL: \BibUrl{ " url * "}" * format.urldate * ". -- \BibTextElectronic{}" *
     }
   if$
 }
@@ -1187,9 +1109,10 @@ FUNCTION {manual}
 
 FUNCTION {mastersthesis}
 { output.bibitem
-  format.authors "author" output.check
-  new.block
+  author.before
   format.btitle "title" output.check
+  new.slash
+  author.after
   new.block
   bbl.mthesis format.thesis.type output.nonnull
   school "school" output.check
@@ -1219,6 +1142,9 @@ FUNCTION {misc}
   format.annote output
   fin.entry
 }
+
+FUNCTION {online}
+{ misc }
 
 FUNCTION {phdthesis}
 { output.bibitem
@@ -1406,6 +1332,8 @@ FUNCTION {begin.bib}
   "\else\language\csname l@#1\endcsname\fi}"                  write$ newline$
   "\ifx\undefined\url\def\url#1{{\small #1}}\else\fi"                  write$ newline$
   "\ifx\undefined\BibUrl\def\BibUrl#1{\url{#1}}\else\fi"   write$ newline$
+  "\ifx\undefined\BibAccessDate\def\BibAccessDate#1{(дата обращения: #1)}\else\fi"   write$ newline$
+  "\ifx\undefined\BibTextElectronic\def\BibTextElectronic{Текст: электронный}\else\fi"   write$ newline$
   "\ifx\undefined\BibAnnote\long\def\BibAnnote#1{}\else\fi"    write$ newline$
   "\ifx\undefined\BibEmph\def\BibEmph#1{\emph{#1}}\else\fi"    write$ newline$
   preamble$ empty$

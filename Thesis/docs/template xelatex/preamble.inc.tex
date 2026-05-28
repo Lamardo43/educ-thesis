@@ -144,6 +144,9 @@ rightmargin=0pt % Reduces right outer margin
     breaklines=true,
 }
 
+% minted v3 не имеет ключа для стиля номеров — переопределяем через fancyvrb
+\renewcommand{\theFancyVerbLine}{\small\ttfamily\arabic{FancyVerbLine}}
+
 \renewcommand{\listingscaption}{Листинг}
 \renewcommand{\listoflistingscaption}{Листинги}
 
@@ -170,6 +173,10 @@ rightmargin=0pt % Reduces right outer margin
 \AtEndEnvironment{table}{\vspace{-10pt}}
 \AtEndEnvironment{center}{\vspace{-14pt}}
 \AtEndEnvironment{figure}{\vspace{-14pt}}
+
+% Убираем межстрочный пропуск после xltabular/longtable
+\setlength{\LTpost}{0pt}
+% \AtBeginDocument{\setlength{\LTpre}{\baselineskip}}
 
 
 \usepackage{fontspec}

@@ -19,6 +19,9 @@
 % ДОБАВЛЯЛ САМ
 \usepackage{xltabular}
 \usepackage{array}
+\usepackage{makecell}
+\renewcommand\theadfont{\normalfont}
+\renewcommand\theadgape{}
 \newcolumntype{C}{>{\centering\arraybackslash}X}
 % ::::::::::::
 
@@ -34,7 +37,8 @@
 
 % \nobreakingbeforechapters
 % \breakingbeforechapters
-\includepdf[pages={1-5}]{./extra/Title.pdf}
+\includepdf[pages=-]{./extra/Title.pdf}
+% \includepdf{./extra/Title.pdf}
 
 \include{00-abstract}
 
