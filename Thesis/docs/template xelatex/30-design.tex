@@ -1631,7 +1631,7 @@ mockcontrol\_\-proxy\_\-upstream\_\-status\_\-total   & counter & Ответы �
 \end{xltabular}
 }
 
-Все метрики с меткой mock дополнительно агрегируются по значению mock="\_\_all\_\_", что позволяет получать суммарные показатели по всем заглушкам единым Prometheus-запросом. Метка stage принимает значения этапов функции \_handle\_proxy: redis\_mock\_hmget\_ms, rate\_limiter\_check\_ms, httpx\_proxy\_request\_ms, proxy\_total\_ms и др. Метка outcome принимает семь значений: ok, timeout, request\_error, not\_found, not\_running, invalid\_target, rate\_limited.
+Все метрики с меткой mock дополнительно агрегируются по значению mock=\textquotedbl\_\_all\_\_\textquotedbl, что позволяет получать суммарные показатели по всем заглушкам единым Prometheus-запросом. Метка stage принимает значения этапов функции \_handle\_proxy: redis\_mock\_hmget\_ms, rate\_limiter\_check\_ms, httpx\_proxy\_request\_ms, proxy\_total\_ms и др. Метка outcome принимает семь значений: ok, timeout, request\_error, not\_found, not\_running, invalid\_target, rate\_limited.
 
 % \subsection{Накопление метрик и двухпроходная сборка}
 
