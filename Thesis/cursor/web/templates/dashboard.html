@@ -14,7 +14,7 @@
 >
   <div class="section-header section-header--split">
     <h2 style="margin: 0; font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em">
-      Заглушки
+      Сервисы
     </h2>
     <div class="section-header__actions">
       <button
@@ -23,14 +23,14 @@
         data-action="open-register-mock-modal"
         aria-haspopup="dialog"
       >
-        + Зарегистрировать заглушку
+        + Зарегистрировать сервис
       </button>
     </div>
   </div>
 
-  <div class="stat-grid" aria-label="Сводка по заглушкам и хостам">
+  <div class="stat-grid" aria-label="Сводка по сервисам и хостам">
     <article class="card">
-      <p class="card__label">Всего заглушек</p>
+      <p class="card__label">Всего сервисов</p>
       <p class="card__value card__value--white">{{ mocks_total }}</p>
     </article>
     <article class="card">
@@ -138,7 +138,7 @@
         {% else %}
         <tr>
           <td colspan="6" class="text-muted" style="text-align: center; padding: 24px">
-            Нет зарегистрированных заглушек. Нажмите «+ Зарегистрировать заглушку».
+            Нет зарегистрированных сервисов. Нажмите «+ Зарегистрировать сервис».
           </td>
         </tr>
         {% endif %}
@@ -157,7 +157,7 @@
   >
     <div class="modal">
       <div class="modal__header">
-        <h2 id="modal-register-mock-title" class="modal__title">Регистрация заглушки</h2>
+        <h2 id="modal-register-mock-title" class="modal__title">Регистрация сервиса</h2>
         <button
           type="button"
           class="modal__close"

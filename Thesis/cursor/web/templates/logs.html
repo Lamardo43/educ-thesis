@@ -14,15 +14,15 @@
   data-default-lines="1000"
 >
   <div class="logs-toolbar">
-    <label class="sr-only" for="log-mock-select">Заглушка</label>
-    <select id="log-mock-select" class="select" name="mock" aria-label="Выбор заглушки">
+    <label class="sr-only" for="log-mock-select">Сервис</label>
+    <select id="log-mock-select" class="select" name="mock" aria-label="Выбор сервиса">
       {% if mocks %}
-      <option value="" disabled selected>Выберите заглушку…</option>
+      <option value="" disabled selected>Выберите сервис…</option>
       {% for mock in mocks %}
       <option value="{{ mock.filename | e }}">{{ mock.filename | e }}</option>
       {% endfor %}
       {% else %}
-      <option value="" disabled selected>Нет зарегистрированных заглушек</option>
+      <option value="" disabled selected>Нет зарегистрированных сервисов</option>
       {% endif %}
     </select>
 

@@ -169,43 +169,43 @@
 
 %         systemContext mockSystem "SystemContext" {
 %             include *
-%             autolayout lr
 %             title "Рисунок 2.1 – Контекстная диаграмма системы (C4 Level 1)"
 %         }
 
 %         container mockSystem "Containers" {
 %             include *
-%             autolayout lr
 %             title "Рисунок 2.2 – Контейнерная диаграмма (C4 Level 2)"
 %         }
 
 %         component apiLayer "Components" {
 %             include *
-%             autolayout tb
 %             title "Рисунок 2.3 – Компонентная диаграмма REST API (C4 Level 3)"
 %         }
 
 %         styles {
-%             element "Person" { 
-%             shape Person  
-%             background #08427B 
-%             color #ffffff 
-                
+%             element "Person" {
+%                 shape Person
+%                 background #08427B
+%                 color #ffffff
+%                 fontSize 22
 %             }
-%             element "Software System" { 
-%             background #1168BD 
-%             color #ffffff 
-                
+%             element "Software System" {
+%                 background #1168BD
+%                 color #ffffff
+%                 fontSize 24
 %             }
-%             element "Container"       { 
-%             background #438DD5 
-%             color #ffffff 
-                
+%             element "Container" {
+%                 background #438DD5
+%                 color #ffffff
+%                 fontSize 24
 %             }
-%             element "Component"       { 
-%             background #85BBF0 
-%             color #000000 
-                
+%             element "Component" {
+%                 background #85BBF0
+%                 color #000000
+%                 fontSize 24
+%             }
+%             relationship "Relationship" {
+%                 fontSize 26
 %             }
 %         }
 %     }
