@@ -40,6 +40,7 @@ async def start_mock(self, filename: str) -> None:
 \end{mdframed}
 \end{listing}
 
+\clearpage
 \begin{listing}[H]
 \caption{Формирование SSH-команды запуска Java-процесса на удалённом хосте}
 \label{lst:start-remote}
@@ -67,6 +68,7 @@ pid = int(proc.stdout.strip().splitlines()[-1])
 \end{mdframed}
 \end{listing}
 
+\clearpage
 \begin{listing}[H]
 \caption{Методы проверки живости процесса}
 \label{lst:process-alive}
@@ -98,6 +100,7 @@ async def _process_alive_remote(
 \end{mdframed}
 \end{listing}
 
+\clearpage
 \begin{listing}[H]
 \caption{Реестр HTTP-клиентов ProxyClientRegistry}
 \label{lst:proxy-registry}
@@ -139,6 +142,7 @@ class ProxyClientRegistry:
 \end{mdframed}
 \end{listing}
 
+\clearpage
 \begin{listing}[H]
 \caption{Реализация алгоритма Fixed Window Counter}
 \label{lst:rate-limiter-impl}
@@ -169,6 +173,7 @@ class RateLimiter:
 \end{mdframed}
 \end{listing}
 
+\clearpage
 \begin{listing}[H]
 \caption{Маршрут панели управления: конвейерная выборка заглушек из Redis}
 \label{lst:dashboard-route}
@@ -191,6 +196,7 @@ async def dashboard_page(request: Request, redis: RedisClientDep, ...):
 \end{mdframed}
 \end{listing}
 
+\clearpage
 \begin{listing}[H]
 \caption{Двухпроходная конвейерная сборка метрик из Redis}
 \label{lst:collect-metrics}
@@ -231,6 +237,7 @@ async def collect_metrics(redis: Redis) -> str:
 \end{mdframed}
 \end{listing}
 
+\clearpage
 \begin{listing}[H]
 \caption{Фрагмент ответа маршрута /metrics}
 \label{lst:metrics-output}
@@ -371,3 +378,45 @@ mockcontrol_proxy_outcome_total{mock="__all__",outcome="not_found"} 3
 % \end{minted}
 % \end{mdframed}
 % \end{listing}
+
+\clearpage
+\begin{listing}[H]
+\caption{Файл юнита systemd mockcontrol.service}
+\label{lst:mockcontrol-service}
+\begin{mdframed}
+\begin{minted}{text}
+[Unit]
+Description=MockControl — управляющий сервис инфраструктуры имитационных сервисов
+After=network.target redis.service
+Wants=redis.service
+
+[Service]
+KillMode=process
+Type=simple
+User=klim
+WorkingDirectory=/app/educ-thesis/
+
+# Путь до интерпретатора Python из виртуального окружения.
+# Если venv не используется — замените на просто: /usr/bin/python3
+ExecStart=/app/educ-thesis/.venv/bin/python main.py
+
+# Перезапуск при аварийном завершении (ненулевой код выхода)
+Restart=on-failure
+RestartSec=5
+
+# Переменные окружения (альтернатива .env — можно указать здесь)
+EnvironmentFile=/app/educ-thesis/.env
+
+# Стандартный вывод и ошибки — в systemd journal
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=mockcontrol
+
+# Немного времени на graceful shutdown перед SIGKILL
+TimeoutStopSec=15
+
+[Install]
+WantedBy=multi-user.target
+\end{minted}
+\end{mdframed}
+\end{listing}
