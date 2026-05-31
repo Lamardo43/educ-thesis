@@ -15,7 +15,7 @@
 \caption{Запуск Java-процесса на локальном хосте}
 \label{lst:start-local}
 \begin{mdframed}
-\begin{minted}{python}
+\begin{minted}{text}
 async def start_mock(self, filename: str) -> None:
     if self._is_local(hostname):
         port = await self._pick_free_port_local(pmin, pmax)
@@ -44,7 +44,7 @@ async def start_mock(self, filename: str) -> None:
 \caption{Формирование SSH-команды запуска Java-процесса на удалённом хосте}
 \label{lst:start-remote}
 \begin{mdframed}
-\begin{minted}{python}
+\begin{minted}{text}
 # Экранирование JVM-аргументов для безопасной передачи через SSH
 jvm_part = " ".join(
     shlex.quote(t) for t in shlex.split(jvm_args.strip())
@@ -71,7 +71,7 @@ pid = int(proc.stdout.strip().splitlines()[-1])
 \caption{Методы проверки живости процесса}
 \label{lst:process-alive}
 \begin{mdframed}
-\begin{minted}{python}
+\begin{minted}{text}
 # Локальная проверка: системный вызов в пуле потоков
 async def _process_alive_local(self, pid: int) -> bool:
     def check() -> bool:
@@ -102,7 +102,7 @@ async def _process_alive_remote(
 \caption{Реестр HTTP-клиентов ProxyClientRegistry}
 \label{lst:proxy-registry}
 \begin{mdframed}
-\begin{minted}{python}
+\begin{minted}{text}
 class ProxyClientRegistry:
     """Один httpx.AsyncClient на заглушку с пулом соединений."""
     def __init__(self) -> None:
@@ -143,7 +143,7 @@ class ProxyClientRegistry:
 \caption{Реализация алгоритма Fixed Window Counter}
 \label{lst:rate-limiter-impl}
 \begin{mdframed}
-\begin{minted}{python}
+\begin{minted}{text}
 class RateLimiter:
     """Ограничение частоты запросов на заглушку в фиксированных временных окнах."""
 
@@ -173,7 +173,7 @@ class RateLimiter:
 \caption{Маршрут панели управления: конвейерная выборка заглушек из Redis}
 \label{lst:dashboard-route}
 \begin{mdframed}
-\begin{minted}{python}
+\begin{minted}{text}
 @router.get("/", include_in_schema=False)
 async def dashboard_page(request: Request, redis: RedisClientDep, ...):
     names = sorted(await redis.smembers("mocks:registry"))
@@ -195,7 +195,7 @@ async def dashboard_page(request: Request, redis: RedisClientDep, ...):
 \caption{Двухпроходная конвейерная сборка метрик из Redis}
 \label{lst:collect-metrics}
 \begin{mdframed}
-\begin{minted}{python}
+\begin{minted}{text}
 async def collect_metrics(redis: Redis) -> str:
     # Проход 1: реестры
     pipe = redis.pipeline(transaction=False)
@@ -265,7 +265,7 @@ mockcontrol_proxy_outcome_total{mock="__all__",outcome="not_found"} 3
 % \caption{Реализация <<permissions.guard.ts>>}
 % \label{listing:guardPremission}
 % \begin{mdframed}
-% \begin{minted}{typescript}
+% \begin{minted}{text}
 % @Injectable()
 % export class PermissionsGuard implements CanActivate {
 %   constructor(
@@ -295,7 +295,7 @@ mockcontrol_proxy_outcome_total{mock="__all__",outcome="not_found"} 3
 % \caption{Конфигурация для <<docker-compose>>}
 % \label{listing:docker}
 % \begin{mdframed}
-% \begin{minted}{yaml}
+% \begin{minted}{text}
 % services:
 %   documentation:
 %     build: ./docs
@@ -334,7 +334,7 @@ mockcontrol_proxy_outcome_total{mock="__all__",outcome="not_found"} 3
 % \begin{listing}[H]
 % \caption*{Продолжение листинга \ref{listing:docker}}
 % \begin{mdframed}
-% \begin{minted}{yaml}
+% \begin{minted}{text}
 
 %     volumes:
 %       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro

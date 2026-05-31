@@ -55,8 +55,22 @@ citecolor=black, menucolor=black, filecolor=black,
 \usepackage{tabularx} % автоматический подбор ширины столбцов
 \usepackage{dcolumn} % выравнивание чисел по разделителю
 
+% Внутренние отступы ячеек: горизонтальные 6pt с каждой стороны, вертикальные +20%
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+
 \usepackage{setspace} % полуторный интервал
 \setstretch{1.43}
+
+% \small (используется в таблицах) — 12pt + одинарный межстрочный интервал
+% Нельзя использовать \setstretch — она вызывает \@currsize, что даёт бесконечную рекурсию.
+% Напрямую выставляем \baselinestretch и перезапускаем \selectfont.
+\let\originalsmall\small
+\renewcommand{\small}{%
+  \originalsmall%
+  \def\baselinestretch{1.0}%
+  \selectfont%
+}
 
 \newenvironment{compactlist}{%
     \renewcommand{\labelenumi}{\hspace{13mm}\arabic{enumi}.}
@@ -70,6 +84,7 @@ citecolor=black, menucolor=black, filecolor=black,
 }
 
 \makeatletter
+\renewcommand{\l@chapter}{\@dottedtocline{1}{0em}{2.3em}}
 \renewcommand*\l@section{\@dottedtocline{1}{0em}{2.3em}}
 \renewcommand*\l@subsection{\@dottedtocline{2}{0em}{3.2em}}
 \renewcommand*\l@subsubsection{\@dottedtocline{3}{0em}{4.1em}}
@@ -132,6 +147,7 @@ rightmargin=0pt % Reduces right outer margin
 \restylefloat{listing}
 
 \setminted{
+    style=bw,               % без цветной подсветки синтаксиса
     linenos=true,           % включить номера строк
     numberblanklines=false, % не нумеровать пустые строки
     numbersep=5pt,          % расстояние между номерами строк и кодом
