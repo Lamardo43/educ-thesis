@@ -420,3 +420,83 @@ WantedBy=multi-user.target
 \end{minted}
 \end{mdframed}
 \end{listing}
+
+\clearpage
+\begin{listing}[H]
+\caption{Сценарий~1. Журнал службы mockcontrol: завершение процедуры restore\_state -- все заглушки успешно подтверждены}
+\label{lst:restore-ok-log}
+\begin{mdframed}
+\begin{minted}{text}
+май 09 22:13:24 thesis-master systemd[1]: Started MockControl.
+май 09 22:13:25 thesis-master mockcontrol[21458]: INFO:     Started server process [21458]
+май 09 22:13:25 thesis-master mockcontrol[21458]: INFO:     Waiting for application startup.
+май 09 22:13:25 thesis-master mockcontrol[21458]: 2026-05-09 22:13:25,008 INFO core.redis_client: Redis: pool connected (redis://192.168.1.76:6379/0)
+май 09 22:13:25 thesis-master mockcontrol[21458]: 2026-05-09 22:13:25,010 INFO dependencies: Application dependencies initialized.
+май 09 22:13:25 thesis-master mockcontrol[21458]: 2026-05-09 22:13:25,141 INFO services.lifecycle: restore_state: process alive, proxy client restored: uuid-stub-jdk8-2.war
+май 09 22:13:25 thesis-master mockcontrol[21458]: 2026-05-09 22:13:25,155 INFO services.lifecycle: restore_state: process alive, proxy client restored: uuid-stub-jdk8-1.war
+май 09 22:13:25 thesis-master mockcontrol[21458]: INFO:     Application startup complete.
+май 09 22:13:25 thesis-master mockcontrol[21458]: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\clearpage
+\begin{listing}[H]
+\caption{Сценарий~2. Журнал службы: обнаружение завершённых процессов и автоматический перезапуск заглушек в ходе restore\_state}
+\label{lst:restore-restart-log}
+\begin{mdframed}
+\begin{minted}{text}
+май 09 22:16:15 thesis-master systemd[1]: Started MockControl.
+май 09 22:16:16 thesis-master mockcontrol[21494]: INFO:     Started server process [21494]
+май 09 22:16:16 thesis-master mockcontrol[21494]: INFO:     Waiting for application startup.
+май 09 22:16:16 thesis-master mockcontrol[21494]: 2026-05-09 22:16:16,611 INFO core.redis_client: Redis: pool connected (redis://192.168.1.76:6379/0)
+май 09 22:16:16 thesis-master mockcontrol[21494]: 2026-05-09 22:16:16,612 INFO dependencies: Application dependencies initialized.
+май 09 22:16:18 thesis-master mockcontrol[21494]: 2026-05-09 22:16:18,658 INFO services.lifecycle: Mock started: uuid-stub-jdk8-1.war pid=21501 port=8100
+май 09 22:16:18 thesis-master mockcontrol[21494]: 2026-05-09 22:16:18,658 INFO services.lifecycle: restore_state: process restarted: uuid-stub-jdk8-1.war
+май 09 22:16:20 thesis-master mockcontrol[21494]: 2026-05-09 22:16:20,806 INFO services.lifecycle: Mock started: uuid-stub-jdk8-2.war pid=27113 port=8100
+май 09 22:16:20 thesis-master mockcontrol[21494]: 2026-05-09 22:16:20,806 INFO services.lifecycle: restore_state: process restarted: uuid-stub-jdk8-2.war
+май 09 22:16:20 thesis-master mockcontrol[21494]: INFO:     Application startup complete.
+май 09 22:16:20 thesis-master mockcontrol[21494]: 2026-05-09 22:16:20,809 INFO main: Singleton health_checker: lock acquired by pid=21494
+май 09 22:16:20 thesis-master mockcontrol[21494]: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\clearpage
+\begin{listing}[H]
+\caption{Сценарий~3. Журнал файла /var/log/redis/redis-server.log, подтверждающий старт из AOF после аварийного завершения}
+\label{lst:redis-aof-restore-log}
+\begin{mdframed}
+\begin{minted}{text}
+21558:M 09 May 2026 22:22:15.668 # Server initialized
+21558:M 09 May 2026 22:22:15.669 * Reading RDB preamble from AOF file...
+21558:M 09 May 2026 22:22:15.669 * Reading the remaining AOF tail...
+21558:M 09 May 2026 22:22:16.474 * DB loaded from append only file: 0.806 seconds
+21558:M 09 May 2026 22:22:16.474 * Ready to accept connections
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\clearpage
+\begin{listing}[H]
+\caption{Сценарий~4. Журнал службы mockcontrol: заглушка переведена в статус ERROR после обнаружения аварийного завершения процесса}
+\label{lst:hc-error-detected-log}
+\begin{mdframed}
+\begin{minted}{text}
+май 09 22:30:51 thesis-master mockcontrol[21494]: 2026-05-09 22:30:51,982 WARNING services.health_checker: Mock 'uuid-stub-jdk8-1.war': HTTP GET to root failed ('192.168.1.76':8100), attempt 1/3
+май 09 22:31:22 thesis-master mockcontrol[21494]: 2026-05-09 22:31:22,014 WARNING services.health_checker: Mock 'uuid-stub-jdk8-1.war': process not found (pid=21501 on '192.168.1.76')
+май 09 22:31:52 thesis-master mockcontrol[21494]: 2026-05-09 22:31:52,047 WARNING services.health_checker: Mock 'uuid-stub-jdk8-1.war': process not found (pid=21501 on '192.168.1.76')
+\end{minted}
+\end{mdframed}
+\end{listing}
+
+\clearpage
+\begin{listing}[H]
+\caption{Сценарий~5. Журнал службы mockcontrol: заглушка вернулась в состояние RUNNING}
+\label{lst:hc-error-restored-log}
+\begin{mdframed}
+\begin{minted}{text}
+май 09 22:34:44 thesis-master mockcontrol[21494]: 2026-05-09 22:34:44,828 INFO services.lifecycle: Mock started: uuid-stub-jdk8-1.war pid=21616 port=8100
+\end{minted}
+\end{mdframed}
+\end{listing}
